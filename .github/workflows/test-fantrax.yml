@@ -1,0 +1,25 @@
+name: Test Fantrax Connection
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-fantrax:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Fantrax script
+        run: python scripts/fetch_fantrax.py
