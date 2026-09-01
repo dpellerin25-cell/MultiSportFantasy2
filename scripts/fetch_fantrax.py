@@ -1,6 +1,5 @@
 import os
-from requests import Session
-from fantraxapi import League
+import requests
 
 LEAGUE_ID = "xa7tza2hmthqz8bo"
 
@@ -9,7 +8,7 @@ cookie_string = os.environ.get("FANTRAX_COOKIE")
 if not cookie_string:
     raise RuntimeError("FANTRAX_COOKIE GitHub Secret is missing.")
 
-session = Session()
+session = requests.Session()
 
 for cookie in cookie_string.split(";"):
     cookie = cookie.strip()
@@ -21,19 +20,18 @@ for cookie in cookie_string.split(";"):
     session.cookies.set(name.strip(), value.strip())
 
 print("Fantrax cookies loaded.")
-print(f"Connecting to league: {LEAGUE_ID}")
+print(f"Testing league: {LEAGUE_ID}")
 
-league = League(
-    LEAGUE_ID,
-    session=session
-)
+url = "https://www.fantrax.com/fxea/general/getLeagueInfo"
 
-print("Successfully connected to Fantrax.")
+payload = {
+    "leagueId": LEAGUE_ID
+}
 
-standings = league.standings()
+response = session.post(url, json=payload)
 
-print("\nSTANDINGS OBJECT:")
-print(standings)
+print("Status code:", response.status_code)
+print("Content type:", response.headers.get("content-type"))
 
-print("\nRANKS:")
-print(standings.ranks)
+print("\nFirst 3000 characters returned:")
+print(response.text[:3000])
