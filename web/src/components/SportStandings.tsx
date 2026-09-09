@@ -33,57 +33,65 @@ export default function SportStandings({
   title,
   league,
 }: SportStandingsProps) {
-  const standings = scoreLeague(league)
-    .sort(
-      (a, b) =>
-        a.rank - b.rank
-    );
+  const standings = scoreLeague(league).sort(
+    (a, b) => a.rank - b.rank
+  );
 
   return (
     <main className="min-h-screen bg-blue-50 px-4 py-5 text-slate-900 sm:p-8">
       <div className="mx-auto max-w-6xl">
-        <nav className="mb-8 flex items-center gap-6 border-b border-blue-200 pb-4">
+
+        {/* NAVIGATION */}
+
+        <nav className="mb-8 flex items-center justify-around border-b border-blue-200 pb-4 sm:justify-start sm:gap-6">
           <Link
             href="/"
-            className="font-semibold text-blue-800 sm:text-blue-500 hover:text-blue-900 sm:hover:text-blue-600"
+            className="font-semibold text-blue-800 hover:text-blue-900 sm:text-blue-500 sm:hover:text-blue-600"
           >
             Standings
           </Link>
 
           <Link
             href="/sports"
-            className="font-semibold text-blue-800 sm:text-blue-500 hover:text-blue-900 sm:hover:text-blue-600"
+            className="font-semibold text-blue-900 hover:text-blue-950 sm:text-blue-700 sm:hover:text-blue-600"
           >
             Sports
           </Link>
 
           <Link
             href="/scoring"
-            className="font-semibold text-blue-800 sm:text-blue-500 hover:text-blue-900 sm:hover:text-blue-600"
+            className="font-semibold text-blue-800 hover:text-blue-900 sm:text-blue-500 sm:hover:text-blue-600"
           >
             Scoring
           </Link>
         </nav>
 
+        {/* BACK LINK */}
+
         <Link
           href="/sports"
-          className="mb-4 inline-block text-sm font-semibold text-blue-600 hover:underline"
+          className="mb-4 inline-block text-sm font-semibold text-blue-800 hover:underline sm:text-blue-600"
         >
           ← Back to Sports
         </Link>
 
-        <h1 className="mb-2 text-4xl font-bold">
+        {/* PAGE TITLE */}
+
+        <h1 className="mb-2 text-3xl font-bold text-slate-900 sm:text-4xl">
           {title}
         </h1>
 
-        <p className="mb-8 text-blue-500">
+        <p className="mb-8 text-slate-800 sm:text-blue-500">
           Fantasy standings and championship scoring breakdown.
         </p>
 
-        <div className="overflow-x-auto rounded-lg bg-white shadow">
-          <table className="w-full border-collapse">
+        {/* STANDINGS TABLE */}
+
+        <div className="overflow-x-auto rounded-xl border border-blue-100 bg-white shadow-sm">
+          <table className="w-full min-w-[800px] border-collapse text-slate-900">
             <thead>
-              <tr className="border-b bg-blue-50">
+              <tr className="border-b border-blue-100 bg-blue-50 text-slate-900">
+
                 <th className="p-4 text-center">
                   Finish
                 </th>
@@ -122,35 +130,35 @@ export default function SportStandings({
                 return (
                   <tr
                     key={team.team}
-                    className="border-b last:border-b-0"
+                    className="border-b border-blue-50 last:border-b-0 hover:bg-blue-50/50"
                   >
-                    <td className="p-4 text-center font-bold">
+                    <td className="p-4 text-center font-bold text-slate-900">
                       {ordinal(team.rank)}
                     </td>
 
-                    <td className="p-4 font-medium">
+                    <td className="p-4 font-semibold text-slate-900">
                       {team.team}
                     </td>
 
-                    <td className="p-4 text-right">
+                    <td className="p-4 text-right text-slate-800">
                       {team.fantasyPoints.toFixed(1)}
                     </td>
 
-                    <td className="p-4 text-right">
+                    <td className="p-4 text-right text-slate-800">
                       {team.placementPoints.toFixed(0)}
                     </td>
 
-                    <td className="p-4 text-right">
+                    <td className="p-4 text-right text-slate-800">
                       {team.zScore >= 0 ? "+" : ""}
                       {team.zScore.toFixed(2)}
                     </td>
 
-                    <td className="p-4 text-right">
+                    <td className="p-4 text-right text-slate-800">
                       {dominance >= 0 ? "+" : ""}
                       {dominance.toFixed(1)}
                     </td>
 
-                    <td className="p-4 text-right font-bold">
+                    <td className="p-4 text-right font-bold text-blue-800 sm:text-blue-700">
                       {team.sportScore.toFixed(1)}
                     </td>
                   </tr>
@@ -159,8 +167,8 @@ export default function SportStandings({
             </tbody>
           </table>
         </div>
+
       </div>
     </main>
   );
 }
-
