@@ -111,7 +111,7 @@ export default function ScoringPage() {
             the league average.
           </p>
 
-          <div className="space-y-2 rounded-md bg-blue-50 p-4">
+          <div className="space-y-2 rounded-lg bg-blue-50 p-3 text-sm text-slate-900 sm:p-4 sm:text-base">
             <p>
               A Z-score of <strong>+1.50</strong> adds{" "}
               <strong>+15.0 points</strong>.
