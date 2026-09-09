@@ -2,21 +2,165 @@
   "sport": "Premier League",
   "league_id": "j08ymyupmtj415q3",
   "league_name": "2026 Test_EPL",
-  "updated_at": "2026-09-09T18:29:08.081555+00:00",
-  "team_count": 1,
+  "updated_at": "2026-09-09T18:40:42.036926+00:00",
+  "team_count": 9,
   "teams": {
+    "n1ifyr4umtug18ye": {
+      "team_id": "n1ifyr4umtug18ye",
+      "name": "Jack",
+      "short_name": "Jack",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/shoe/blue_oraange2_256.webp"
+    },
+    "dxxlben8mtug18ye": {
+      "team_id": "dxxlben8mtug18ye",
+      "name": "Chris",
+      "short_name": "Chris",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/gloves/black_yellow_256.webp"
+    },
     "y00vzeaumtj4175c": {
       "team_id": "y00vzeaumtj4175c",
       "name": "Doug",
       "short_name": "dugEfres",
       "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/gloves/blue_green2_256.webp"
+    },
+    "yuhhd6skmtug18ye": {
+      "team_id": "yuhhd6skmtug18ye",
+      "name": "Tucker",
+      "short_name": "Tucker",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/shoe/green_purple_red_256.webp"
+    },
+    "hfwwgo47mtug18ye": {
+      "team_id": "hfwwgo47mtug18ye",
+      "name": "Ryan",
+      "short_name": "Ryan",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/gloves/blue_red_white_256.webp"
+    },
+    "288rr3ycmtug18ye": {
+      "team_id": "288rr3ycmtug18ye",
+      "name": "Brendan",
+      "short_name": "Brendan",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/gloves/purple_pink_white_256.webp"
+    },
+    "e98kovyqmtug18ye": {
+      "team_id": "e98kovyqmtug18ye",
+      "name": "Jake",
+      "short_name": "Jake",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/jerseys/orange_yellow_blue_256.webp"
+    },
+    "kgvxraa7mtug18yf": {
+      "team_id": "kgvxraa7mtug18yf",
+      "name": "Nik",
+      "short_name": "Nik",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/shoe/pink_purple_oragne2_256.webp"
+    },
+    "wi8jwabymtug18ye": {
+      "team_id": "wi8jwabymtug18ye",
+      "name": "Jacob",
+      "short_name": "Jacob",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/shoe/pink_purple_oragne_256.webp"
     }
   },
   "standings": [
     {
       "rank": "1",
+      "team": "Brendan",
+      "team_id": "288rr3ycmtug18ye",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "groupname": "0",
+      "wwOrder": "9",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Chris",
+      "team_id": "dxxlben8mtug18ye",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "groupname": "0",
+      "wwOrder": "8",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
       "team": "Doug",
       "team_id": "y00vzeaumtj4175c",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "groupname": "0",
+      "wwOrder": "7",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Jack",
+      "team_id": "n1ifyr4umtug18ye",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "groupname": "0",
+      "wwOrder": "6",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Jacob",
+      "team_id": "wi8jwabymtug18ye",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "groupname": "0",
+      "wwOrder": "5",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Jake",
+      "team_id": "e98kovyqmtug18ye",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "groupname": "0",
+      "wwOrder": "4",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Nik",
+      "team_id": "kgvxraa7mtug18yf",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "groupname": "0",
+      "wwOrder": "3",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Ryan",
+      "team_id": "hfwwgo47mtug18ye",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "groupname": "0",
+      "wwOrder": "2",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Tucker",
+      "team_id": "yuhhd6skmtug18ye",
       "fantasyPoints": "0",
       "pointsBased": "",
       "FPtsPerGame": "0",
