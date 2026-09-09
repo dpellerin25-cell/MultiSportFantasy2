@@ -50,7 +50,7 @@ export default function SportsPage() {
           </Link>
         </nav>
 
-        <h1 className="mb-2 text-4xl font-bold">
+        <h1 className="mb-2 text-4xl font-bold text-slate-900 sm:text-inherit">
           Sports
         </h1>
 
