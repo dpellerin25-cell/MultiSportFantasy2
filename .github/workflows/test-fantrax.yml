@@ -1,4 +1,4 @@
-name: Update Fantrax Standings
+name: Update All Fantrax Standings
 
 on:
   workflow_dispatch:
@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Get repository code
         uses: actions/checkout@v7
 
@@ -24,15 +25,21 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Fetch Fantrax standings
+      - name: Fetch all Fantrax standings
         env:
           FANTRAX_COOKIE: ${{ secrets.FANTRAX_COOKIE }}
         run: python scripts/fetch_fantrax.py
 
-      - name: Save updated standings to GitHub
+      - name: Commit updated standings
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add standings.json
-          git diff --staged --quiet || git commit -m "Update Fantrax standings"
-          git push
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add data/
+
+          if git diff --staged --quiet; then
+            echo "No standings changes to commit."
+          else
+            git commit -m "Update Fantrax standings"
+            git push
+          fi
