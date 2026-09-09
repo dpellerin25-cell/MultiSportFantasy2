@@ -1,3 +1,4 @@
+import Link from "next/link";
 import nfl from "../../data/nfl.json";
 import mlb from "../../data/mlb.json";
 import nba from "../../data/nba.json";
@@ -290,7 +291,14 @@ export default function Home() {
         <p className="mb-2 text-gray-600">
           Overall standings across all five sports
         </p>
-
+<div className="mb-6">
+  <Link
+    href="/scoring"
+    className="font-semibold text-blue-600 hover:underline"
+  >
+    View Scoring System
+  </Link>
+</div>
         <p className="mb-8 text-sm text-gray-500">
           Hover over a sport score to see the scoring breakdown.
         </p>
