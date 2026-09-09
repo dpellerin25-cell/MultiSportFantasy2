@@ -83,7 +83,7 @@ function SportCell({
       <div className="group relative inline-block">
         <button
           type="button"
-          className="min-w-20 rounded-md px-3 py-2 font-semibold hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+          className="min-w-20 rounded-md px-3 py-2 font-semibold hover:bg-blue-100 focus:bg-blue-100 focus:outline-none"
         >
           {result.sportScore.toFixed(1)}
         </button>
@@ -101,7 +101,7 @@ function SportCell({
             -translate-x-1/2
             rounded-lg
             border
-            border-gray-200
+            border-blue-100
             bg-white
             p-4
             text-left
@@ -115,7 +115,7 @@ function SportCell({
               {result.sportScore.toFixed(1)} points
             </div>
 
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-blue-500">
               Final sport score
             </div>
           </div>
@@ -187,7 +187,7 @@ function MobileSportScore({
 }) {
   return (
     <div className="text-center">
-      <div className="text-xs font-semibold text-gray-500">
+      <div className="text-xs font-semibold text-blue-500">
         {label}
       </div>
 
@@ -303,26 +303,26 @@ export default function Home() {
   );
 
   return (
-    <main className="min-h-screen bg-gray-100 px-4 py-5 sm:p-8">
+    <main className="min-h-screen bg-blue-50 px-4 py-5 sm:p-8">
       <div className="mx-auto max-w-7xl">
-        <nav className="mb-6 flex items-center justify-around border-b border-gray-300 pb-4 sm:justify-start sm:gap-8">
+        <nav className="mb-6 flex items-center justify-around border-b border-blue-100 pb-4 sm:justify-start sm:gap-8">
           <Link
             href="/"
-            className="text-sm font-bold text-gray-900 sm:text-base"
+            className="text-sm font-bold text-blue-700 sm:text-base"
           >
             Standings
           </Link>
 
           <Link
             href="/sports"
-            className="text-sm font-semibold text-gray-600 hover:text-blue-600 sm:text-base"
+            className="text-sm font-semibold text-blue-500 hover:text-blue-700 sm:text-base"
           >
             Sports
           </Link>
 
           <Link
             href="/scoring"
-            className="text-sm font-semibold text-gray-600 hover:text-blue-600 sm:text-base"
+            className="text-sm font-semibold text-blue-500 hover:text-blue-700 sm:text-base"
           >
             Scoring
           </Link>
@@ -332,7 +332,7 @@ export default function Home() {
           Multi-Sport Fantasy League
         </h1>
 
-        <p className="mb-6 mt-2 text-sm text-gray-600 sm:text-base">
+        <p className="mb-6 mt-2 text-sm text-blue-500 sm:text-base">
           Overall standings across all five sports
         </p>
 
@@ -344,7 +344,7 @@ export default function Home() {
             >
               <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="text-xl font-bold text-gray-400">
+                  <div className="text-xl font-bold text-blue-400">
                     #{index + 1}
                   </div>
 
@@ -353,7 +353,7 @@ export default function Home() {
                       {team.owner}
                     </div>
 
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-blue-500">
                       Overall rank
                     </div>
                   </div>
@@ -364,13 +364,13 @@ export default function Home() {
                     {team.total.toFixed(1)}
                   </div>
 
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-blue-500">
                     Total points
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-5 gap-1 border-t border-gray-200 pt-3">
+              <div className="grid grid-cols-5 gap-1 border-t border-blue-100 pt-3">
                 <MobileSportScore
                   label="NFL"
                   result={team.NFL}
@@ -403,7 +403,7 @@ export default function Home() {
         <div className="hidden overflow-visible rounded-lg bg-white shadow md:block">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b bg-gray-50">
+              <tr className="border-b bg-blue-50">
                 <th className="p-4 text-center">
                   Overall
                 </th>
