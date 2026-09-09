@@ -2,7 +2,7 @@
   "sport": "Premier League",
   "league_id": "j08ymyupmtj415q3",
   "league_name": "2026 Test_EPL",
-  "updated_at": "2026-09-09T19:06:56.990528+00:00",
+  "updated_at": "2026-09-09T20:08:23.189377+00:00",
   "team_count": 9,
   "teams": {
     "n1ifyr4umtug18ye": {
@@ -43,7 +43,7 @@
     },
     "e98kovyqmtug18ye": {
       "team_id": "e98kovyqmtug18ye",
-      "name": "Jake",
+      "name": "Hatch",
       "short_name": "Jake",
       "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/jerseys/orange_yellow_blue_256.webp"
     },
@@ -99,6 +99,18 @@
     },
     {
       "rank": "1",
+      "team": "Hatch",
+      "team_id": "e98kovyqmtug18ye",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "groupname": "0",
+      "wwOrder": "4",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
       "team": "Jack",
       "team_id": "n1ifyr4umtug18ye",
       "fantasyPoints": "0",
@@ -119,18 +131,6 @@
       "sc": "0",
       "groupname": "0",
       "wwOrder": "5",
-      "pointsBehindLeader": "0"
-    },
-    {
-      "rank": "1",
-      "team": "Jake",
-      "team_id": "e98kovyqmtug18ye",
-      "fantasyPoints": "0",
-      "pointsBased": "",
-      "FPtsPerGame": "0",
-      "sc": "0",
-      "groupname": "0",
-      "wwOrder": "4",
       "pointsBehindLeader": "0"
     },
     {
