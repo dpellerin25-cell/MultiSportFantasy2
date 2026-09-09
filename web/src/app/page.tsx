@@ -115,7 +115,7 @@ function SportCell({
               {result.sportScore.toFixed(1)} points
             </div>
 
-            <div className="text-sm text-slate-500">
+            <div className="text-sm text-slate-700">
               Final sport score
             </div>
           </div>
@@ -187,7 +187,7 @@ function MobileSportScore({
 }) {
   return (
     <div className="text-center">
-      <div className="text-xs font-semibold text-blue-500">
+      <div className="text-xs font-semibold text-blue-700">
         {label}
       </div>
 
@@ -318,14 +318,14 @@ export default function Home() {
 
           <Link
             href="/sports"
-            className="text-sm font-semibold text-blue-500 transition hover:text-blue-700 sm:text-base"
+            className="text-sm font-semibold text-blue-700 transition hover:text-blue-700 sm:text-base"
           >
             Sports
           </Link>
 
           <Link
             href="/scoring"
-            className="text-sm font-semibold text-blue-500 transition hover:text-blue-700 sm:text-base"
+            className="text-sm font-semibold text-blue-700 transition hover:text-blue-700 sm:text-base"
           >
             Scoring
           </Link>
@@ -363,7 +363,7 @@ export default function Home() {
                       {team.owner}
                     </div>
 
-                    <div className="text-xs text-slate-500">
+                    <div className="text-xs text-slate-700">
                       Overall rank
                     </div>
                   </div>
@@ -374,7 +374,7 @@ export default function Home() {
                     {team.total.toFixed(1)}
                   </div>
 
-                  <div className="text-xs text-slate-500">
+                  <div className="text-xs text-slate-700">
                     Total points
                   </div>
                 </div>
