@@ -37,7 +37,7 @@ export default function ScoringPage() {
     Scoring
   </Link>
 </nav>
-        <h1 className="mb-2 text-4xl font-bold">
+        <h1 className="mb-2 text-4xl font-bold text-slate-900 sm:text-inherit">
           Scoring System
         </h1>
 
@@ -46,12 +46,12 @@ export default function ScoringPage() {
         </p>
 
         <section className="mb-8 rounded-lg bg-white p-6 shadow">
-          <h2 className="mb-4 text-2xl font-bold">
+          <h2 className="mb-4 text-2xl font-bold text-slate-900 sm:text-inherit">
             Formula
           </h2>
 
           <div className="rounded-md bg-blue-50 p-4 text-center">
-            <p className="text-lg font-semibold">
+            <p className="text-lg font-semibold text-slate-900 sm:text-inherit">
               Sport Score = Placement Points + Dominance Score
             </p>
 
@@ -65,8 +65,8 @@ export default function ScoringPage() {
           </div>
         </section>
 
-        <section className="mb-8 rounded-lg bg-white p-6 shadow">
-          <h2 className="mb-4 text-2xl font-bold">
+        <section className="mb-8 rounded-lg bg-white p-6 shadow text-slate-900 sm:text-inherit">
+          <h2 className="mb-4 text-2xl font-bold text-slate-900 sm:text-inherit">
             Placement Points
           </h2>
 
