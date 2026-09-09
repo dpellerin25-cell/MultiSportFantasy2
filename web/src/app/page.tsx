@@ -284,6 +284,21 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gray-100 p-8">
       <div className="mx-auto max-w-7xl">
+<nav className="mb-8 flex items-center gap-6 border-b border-gray-300 pb-4">
+  <Link
+    href="/"
+    className="font-semibold text-gray-900 hover:text-blue-600"
+  >
+    Standings
+  </Link>
+
+  <Link
+    href="/scoring"
+    className="font-semibold text-gray-600 hover:text-blue-600"
+  >
+    Scoring
+  </Link>
+</nav>
         <h1 className="mb-2 text-4xl font-bold">
           Multi-Sport Fantasy League
         </h1>
