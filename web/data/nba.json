@@ -1,0 +1,164 @@
+{
+  "sport": "NBA",
+  "league_id": "u1byx3qkmtj47ogg",
+  "league_name": "2026 Test_NBA",
+  "updated_at": "2026-09-09T19:06:56.818269+00:00",
+  "team_count": 9,
+  "teams": {
+    "5x73rx07mtug00lx": {
+      "team_id": "5x73rx07mtug00lx",
+      "name": "Brendan",
+      "short_name": "Brendan",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/shoes/green_yellow_white_256.webp"
+    },
+    "69kbo0xkmtj47p0l": {
+      "team_id": "69kbo0xkmtj47p0l",
+      "name": "Doug",
+      "short_name": "dugEfres",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/hoops/yellow_purple_256.webp"
+    },
+    "2atv7st7mtug00lx": {
+      "team_id": "2atv7st7mtug00lx",
+      "name": "Ryan",
+      "short_name": "Ryan",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/jerseys/blue_beige_256.webp"
+    },
+    "7q88tindmtug00lx": {
+      "team_id": "7q88tindmtug00lx",
+      "name": "Chris",
+      "short_name": "Chris",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/hoops/blue_yellow_white_256.webp"
+    },
+    "e9t2ufe0mtug00lx": {
+      "team_id": "e9t2ufe0mtug00lx",
+      "name": "Jacob",
+      "short_name": "Jacob",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/jerseys/gold_red_black_256.webp"
+    },
+    "h3jcfzhtmtug00lx": {
+      "team_id": "h3jcfzhtmtug00lx",
+      "name": "Jack",
+      "short_name": "Jack",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/shoes/silver_blue_white_256.webp"
+    },
+    "xiq1wt7vmtug00lx": {
+      "team_id": "xiq1wt7vmtug00lx",
+      "name": "Tucker",
+      "short_name": "Tucker",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/jerseys/grey_lightblue_white_256.webp"
+    },
+    "06p6l1himtug00lx": {
+      "team_id": "06p6l1himtug00lx",
+      "name": "Nik",
+      "short_name": "Nik",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/hoops/pink_blue_256.webp"
+    },
+    "dghm6tvbmtug00lx": {
+      "team_id": "dghm6tvbmtug00lx",
+      "name": "Hatch",
+      "short_name": "Hatch",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/shoes/teal_yellowbeige_256.webp"
+    }
+  },
+  "standings": [
+    {
+      "rank": "1",
+      "team": "Brendan",
+      "team_id": "5x73rx07mtug00lx",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "7",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Chris",
+      "team_id": "7q88tindmtug00lx",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "3",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Doug",
+      "team_id": "69kbo0xkmtj47p0l",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "2",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Hatch",
+      "team_id": "dghm6tvbmtug00lx",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "4",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Jack",
+      "team_id": "h3jcfzhtmtug00lx",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "6",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Jacob",
+      "team_id": "e9t2ufe0mtug00lx",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "9",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Nik",
+      "team_id": "06p6l1himtug00lx",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "8",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Ryan",
+      "team_id": "2atv7st7mtug00lx",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "5",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Tucker",
+      "team_id": "xiq1wt7vmtug00lx",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "1",
+      "pointsBehindLeader": "0"
+    }
+  ]
+}
