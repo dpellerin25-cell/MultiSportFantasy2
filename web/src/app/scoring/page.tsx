@@ -13,26 +13,26 @@ const placementPoints = [
 
 export default function ScoringPage() {
   return (
-    <main className="min-h-screen bg-gray-100 p-8">
+    <main className="min-h-screen bg-blue-50 p-8">
       <div className="mx-auto max-w-4xl">
-<nav className="mb-8 flex items-center gap-6 border-b border-gray-300 pb-4">
+<nav className="mb-8 flex items-center gap-6 border-b border-blue-200 pb-4">
   <Link
     href="/"
-    className="font-semibold text-gray-600 hover:text-blue-600"
+    className="font-semibold text-blue-500 hover:text-blue-600"
   >
     Standings
   </Link>
 
   <Link
     href="/sports"
-    className="font-semibold text-gray-600 hover:text-blue-600"
+    className="font-semibold text-blue-500 hover:text-blue-600"
   >
     Sports
   </Link>
 
   <Link
     href="/scoring"
-    className="font-semibold text-gray-900 hover:text-blue-600"
+    className="font-semibold text-blue-700 hover:text-blue-600"
   >
     Scoring
   </Link>
@@ -41,7 +41,7 @@ export default function ScoringPage() {
           Scoring System
         </h1>
 
-        <p className="mb-8 text-gray-600">
+        <p className="mb-8 text-blue-500">
           Each sport rewards both finishing position and dominance.
         </p>
 
@@ -50,16 +50,16 @@ export default function ScoringPage() {
             Formula
           </h2>
 
-          <div className="rounded-md bg-gray-50 p-4 text-center">
+          <div className="rounded-md bg-blue-50 p-4 text-center">
             <p className="text-lg font-semibold">
               Sport Score = Placement Points + Dominance Score
             </p>
 
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2 text-blue-500">
               Dominance Score = 10 × Z-Score
             </p>
 
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2 text-slate-600">
               Z-Score = (Team Fantasy Points - League Average) ÷ Standard Deviation
             </p>
           </div>
@@ -73,7 +73,7 @@ export default function ScoringPage() {
           <div className="overflow-hidden rounded-md border">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="bg-gray-50">
+                <tr className="bg-blue-50">
                   <th className="border-b p-3 text-left">
                     Finish
                   </th>
@@ -105,13 +105,13 @@ export default function ScoringPage() {
             Dominance Score
           </h2>
 
-          <p className="mb-4 text-gray-700">
+          <p className="mb-4 text-slate-700">
             The dominance portion rewards teams that outperform the league
             average by a larger margin and penalizes teams that finish below
             the league average.
           </p>
 
-          <div className="space-y-2 rounded-md bg-gray-50 p-4">
+          <div className="space-y-2 rounded-md bg-blue-50 p-4">
             <p>
               A Z-score of <strong>+1.50</strong> adds{" "}
               <strong>+15.0 points</strong>.
@@ -134,7 +134,7 @@ export default function ScoringPage() {
             Example
           </h2>
 
-          <div className="space-y-2 text-gray-700">
+          <div className="space-y-2 text-slate-700">
             <p>
               A team finishes <strong>2nd</strong>, worth{" "}
               <strong>80 placement points</strong>.
@@ -150,7 +150,7 @@ export default function ScoringPage() {
               <strong>+12.5</strong>.
             </p>
 
-            <div className="mt-4 rounded-md bg-gray-50 p-4 text-lg font-bold">
+            <div className="mt-4 rounded-md bg-blue-50 p-4 text-lg font-bold">
               Final Sport Score = 80 + 12.5 = 92.5
             </div>
           </div>
