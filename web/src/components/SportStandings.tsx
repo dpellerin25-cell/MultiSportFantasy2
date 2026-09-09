@@ -40,26 +40,26 @@ export default function SportStandings({
     );
 
   return (
-    <main className="min-h-screen bg-blue-50 p-8">
+    <main className="min-h-screen bg-blue-50 px-4 py-5 text-slate-900 sm:p-8">
       <div className="mx-auto max-w-6xl">
         <nav className="mb-8 flex items-center gap-6 border-b border-blue-200 pb-4">
           <Link
             href="/"
-            className="font-semibold text-blue-500 hover:text-blue-600"
+            className="font-semibold text-blue-800 sm:text-blue-500 hover:text-blue-900 sm:hover:text-blue-600"
           >
             Standings
           </Link>
 
           <Link
             href="/sports"
-            className="font-semibold text-blue-700 hover:text-blue-600"
+            className="font-semibold text-blue-800 sm:text-blue-500 hover:text-blue-900 sm:hover:text-blue-600"
           >
             Sports
           </Link>
 
           <Link
             href="/scoring"
-            className="font-semibold text-blue-500 hover:text-blue-600"
+            className="font-semibold text-blue-800 sm:text-blue-500 hover:text-blue-900 sm:hover:text-blue-600"
           >
             Scoring
           </Link>
