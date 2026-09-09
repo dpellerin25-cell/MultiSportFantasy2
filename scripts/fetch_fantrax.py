@@ -59,23 +59,40 @@ if standings_table is None:
 
 standings = []
 
-for row in standings_table["rows"]:
-    fixed_cells = row["fixedCells"]
-    stat_cells = row["cells"]
+# Get the stat column names directly from Fantrax
+header_cells = standings_table.get("header", {}).get("cells", [])
 
-    team = {
-        "rank": int(fixed_cells[0]["content"]),
-        "team": fixed_cells[1]["content"],
-        "team_id": fixed_cells[1]["teamId"],
-        "fantasy_points": float(stat_cells[0]["content"]),
-        "points_change": stat_cells[1]["content"],
-        "fantasy_points_per_game": float(stat_cells[2]["content"]),
-        "tournaments_played": int(stat_cells[3]["content"]),
-        "waiver_order": int(stat_cells[4]["content"]),
-        "points_behind_leader": float(stat_cells[5]["content"])
+stat_keys = [
+    cell.get("key", f"stat_{i}")
+    for i, cell in enumerate(header_cells)
+]
+
+print("Stat columns returned by Fantrax:")
+print(stat_keys)
+
+for row in standings_table["rows"]:
+    fixed_cells = row.get("fixedCells", [])
+    stat_cells = row.get("cells", [])
+
+    if len(fixed_cells) < 2:
+        continue
+
+    team_data = {
+        "rank": fixed_cells[0].get("content"),
+        "team": fixed_cells[1].get("content"),
+        "team_id": fixed_cells[1].get("teamId")
     }
 
-    standings.append(team)
+    # Match each returned stat cell to its Fantrax header key
+    for i, cell in enumerate(stat_cells):
+        if i < len(stat_keys):
+            key = stat_keys[i]
+        else:
+            key = f"stat_{i}"
+
+        team_data[key] = cell.get("content")
+
+    standings.append(team_data)
 
 print("\nCLEAN STANDINGS:\n")
 
