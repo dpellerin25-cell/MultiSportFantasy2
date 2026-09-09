@@ -25,26 +25,26 @@ const sports = [
 
 export default function SportsPage() {
   return (
-    <main className="min-h-screen bg-gray-100 p-8">
+    <main className="min-h-screen bg-blue-50 p-8">
       <div className="mx-auto max-w-5xl">
-        <nav className="mb-8 flex items-center gap-6 border-b border-gray-300 pb-4">
+        <nav className="mb-8 flex items-center gap-6 border-b border-blue-200 pb-4">
           <Link
             href="/"
-            className="font-semibold text-gray-600 hover:text-blue-600"
+            className="font-semibold text-slate-600 hover:text-blue-600"
           >
             Standings
           </Link>
 
           <Link
             href="/sports"
-            className="font-semibold text-gray-900 hover:text-blue-600"
+            className="font-semibold text-slate-900 hover:text-blue-600"
           >
             Sports
           </Link>
 
           <Link
             href="/scoring"
-            className="font-semibold text-gray-600 hover:text-blue-600"
+            className="font-semibold text-slate-600 hover:text-blue-600"
           >
             Scoring
           </Link>
@@ -54,7 +54,7 @@ export default function SportsPage() {
           Sports
         </h1>
 
-        <p className="mb-8 text-gray-600">
+        <p className="mb-8 text-slate-600">
           View the standings and championship scoring for each individual sport.
         </p>
 
@@ -69,7 +69,7 @@ export default function SportsPage() {
                 {sport.name}
               </h2>
 
-              <p className="mt-2 text-gray-600">
+              <p className="mt-2 text-slate-600">
                 View standings and scoring breakdown
               </p>
             </Link>
