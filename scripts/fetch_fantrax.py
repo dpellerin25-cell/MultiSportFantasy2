@@ -288,15 +288,16 @@ def save_league_json(
         "standings": standings
     }
 
-    os.makedirs(
-        "data",
-        exist_ok=True
-    )
+os.makedirs(
+    "web/data",
+    exist_ok=True
+)
 
-    filepath = os.path.join(
-        "data",
-        filename
-    )
+filepath = os.path.join(
+    "web",
+    "data",
+    filename
+)
 
     with open(
         filepath,
