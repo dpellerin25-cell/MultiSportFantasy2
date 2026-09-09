@@ -1,0 +1,96 @@
+{
+  "league_id": "xa7tza2hmthqz8bo",
+  "sport": "PGA",
+  "standings": [
+    {
+      "rank": "1",
+      "team": "Brendan",
+      "team_id": "427i3hphmtj6q46k",
+      "fantasyPoints": "0",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "9",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Chris",
+      "team_id": "plyo3at2mtj6q46k",
+      "fantasyPoints": "0",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "8",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Doug",
+      "team_id": "trhdyd34mthqz8ng",
+      "fantasyPoints": "0",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "7",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Hatch",
+      "team_id": "flahplbgmtj6q46k",
+      "fantasyPoints": "0",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "6",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Jack",
+      "team_id": "tsbwv11smtj6q46j",
+      "fantasyPoints": "0",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "5",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Jacob",
+      "team_id": "9099fo49mtj6q46j",
+      "fantasyPoints": "0",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "4",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Nik",
+      "team_id": "ojnvnzywmtj6q46k",
+      "fantasyPoints": "0",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "3",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Ryan",
+      "team_id": "w3mbfb09mtj6q46k",
+      "fantasyPoints": "0",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "2",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "Tucker",
+      "team_id": "y4qgi9k9mtj6q46e",
+      "fantasyPoints": "0",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "1",
+      "pointsBehindLeader": "0"
+    }
+  ]
+}
