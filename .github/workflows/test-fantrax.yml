@@ -1,10 +1,13 @@
-name: Test Fantrax Connection
+name: Update Fantrax Standings
 
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  test-fantrax:
+  update-standings:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,7 +24,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Fantrax script
+      - name: Fetch Fantrax standings
         env:
           FANTRAX_COOKIE: ${{ secrets.FANTRAX_COOKIE }}
         run: python scripts/fetch_fantrax.py
+
+      - name: Save updated standings to GitHub
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add standings.json
+          git diff --staged --quiet || git commit -m "Update Fantrax standings"
+          git push
