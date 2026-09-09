@@ -34,6 +34,10 @@ const leagues = [
 
 type SportResult = {
   rank: number;
+  fantasyPoints: number;
+  leagueAverage: number;
+  standardDeviation: number;
+  zScore: number;
   placementPoints: number;
   dominanceScore: number;
   sportScore: number;
@@ -67,22 +71,106 @@ function SportCell({
       ? `+${result.dominanceScore.toFixed(1)}`
       : result.dominanceScore.toFixed(1);
 
+  const zScore =
+    result.zScore >= 0
+      ? `+${result.zScore.toFixed(2)}`
+      : result.zScore.toFixed(2);
+
   return (
-    <td className="p-4 text-center">
-      <div className="font-bold">
-        {ordinal(result.rank)}
-      </div>
+    <td className="p-3 text-center">
+      <div className="group relative inline-block">
+        <button
+          type="button"
+          className="min-w-20 rounded-md px-3 py-2 font-semibold hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+        >
+          {result.sportScore.toFixed(1)}
+        </button>
 
-      <div className="text-sm text-gray-600">
-        {result.placementPoints.toFixed(0)} placement
-      </div>
+        <div
+          className="
+            pointer-events-none
+            absolute
+            left-1/2
+            top-full
+            z-50
+            mt-2
+            hidden
+            w-64
+            -translate-x-1/2
+            rounded-lg
+            border
+            border-gray-200
+            bg-white
+            p-4
+            text-left
+            shadow-xl
+            group-hover:block
+            group-focus-within:block
+          "
+        >
+          <div className="mb-3 border-b pb-2">
+            <div className="text-lg font-bold">
+              {result.sportScore.toFixed(1)} points
+            </div>
 
-      <div className="text-sm text-gray-600">
-        {dominance} dominance
-      </div>
+            <div className="text-sm text-gray-500">
+              Final sport score
+            </div>
+          </div>
 
-      <div className="mt-1 font-semibold">
-        {result.sportScore.toFixed(1)} pts
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span>Finish</span>
+              <span className="font-semibold">
+                {ordinal(result.rank)}
+              </span>
+            </div>
+
+            <div className="flex justify-between">
+              <span>Placement points</span>
+              <span className="font-semibold">
+                {result.placementPoints.toFixed(0)}
+              </span>
+            </div>
+
+            <div className="flex justify-between">
+              <span>Fantasy points</span>
+              <span className="font-semibold">
+                {result.fantasyPoints.toFixed(1)}
+              </span>
+            </div>
+
+            <div className="flex justify-between">
+              <span>League average</span>
+              <span className="font-semibold">
+                {result.leagueAverage.toFixed(1)}
+              </span>
+            </div>
+
+            <div className="flex justify-between">
+              <span>Z-score</span>
+              <span className="font-semibold">
+                {zScore}
+              </span>
+            </div>
+
+            <div className="flex justify-between">
+              <span>Dominance</span>
+              <span className="font-semibold">
+                {dominance}
+              </span>
+            </div>
+          </div>
+
+          <div className="mt-3 border-t pt-3">
+            <div className="flex justify-between font-bold">
+              <span>Total</span>
+              <span>
+                {result.sportScore.toFixed(1)}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </td>
   );
@@ -124,6 +212,10 @@ export default function Home() {
     if (!team) {
       return {
         rank: 0,
+        fantasyPoints: 0,
+        leagueAverage: 0,
+        standardDeviation: 0,
+        zScore: 0,
         placementPoints: 0,
         dominanceScore: 0,
         sportScore: 0,
@@ -132,6 +224,14 @@ export default function Home() {
 
     return {
       rank: team.rank,
+      fantasyPoints:
+        team.fantasyPoints,
+      leagueAverage:
+        team.leagueAverage,
+      standardDeviation:
+        team.standardDeviation,
+      zScore:
+        team.zScore,
       placementPoints:
         team.placementPoints,
       dominanceScore:
@@ -187,8 +287,12 @@ export default function Home() {
           Multi-Sport Fantasy League
         </h1>
 
-        <p className="mb-8 text-gray-600">
+        <p className="mb-2 text-gray-600">
           Overall standings across all five sports
+        </p>
+
+        <p className="mb-8 text-sm text-gray-500">
+          Hover over a sport score to see the scoring breakdown.
         </p>
 
         <div className="overflow-x-auto rounded-lg bg-white shadow">
@@ -244,25 +348,11 @@ export default function Home() {
                       {team.owner}
                     </td>
 
-                    <SportCell
-                      result={team.NFL}
-                    />
-
-                    <SportCell
-                      result={team.MLB}
-                    />
-
-                    <SportCell
-                      result={team.NBA}
-                    />
-
-                    <SportCell
-                      result={team.EPL}
-                    />
-
-                    <SportCell
-                      result={team.PGA}
-                    />
+                    <SportCell result={team.NFL} />
+                    <SportCell result={team.MLB} />
+                    <SportCell result={team.NBA} />
+                    <SportCell result={team.EPL} />
+                    <SportCell result={team.PGA} />
 
                     <td className="p-4 text-center text-lg font-bold">
                       {team.total.toFixed(1)}
