@@ -83,7 +83,7 @@ function SportCell({
       <div className="group relative inline-block">
         <button
           type="button"
-          className="min-w-20 rounded-md px-3 py-2 font-semibold hover:bg-blue-100 focus:bg-blue-100 focus:outline-none"
+          className="min-w-20 rounded-md px-3 py-2 font-semibold text-slate-800 transition hover:bg-blue-50 focus:bg-blue-50 focus:outline-none"
         >
           {result.sportScore.toFixed(1)}
         </button>
@@ -110,17 +110,17 @@ function SportCell({
             group-focus-within:block
           "
         >
-          <div className="mb-3 border-b pb-2">
-            <div className="text-lg font-bold">
+          <div className="mb-3 border-b border-blue-100 pb-2">
+            <div className="text-lg font-bold text-slate-900">
               {result.sportScore.toFixed(1)} points
             </div>
 
-            <div className="text-sm text-blue-500">
+            <div className="text-sm text-slate-500">
               Final sport score
             </div>
           </div>
 
-          <div className="space-y-2 text-sm">
+          <div className="space-y-2 text-sm text-slate-700">
             <div className="flex justify-between">
               <span>Finish</span>
               <span className="font-semibold">
@@ -164,8 +164,8 @@ function SportCell({
             </div>
           </div>
 
-          <div className="mt-3 border-t pt-3">
-            <div className="flex justify-between font-bold">
+          <div className="mt-3 border-t border-blue-100 pt-3">
+            <div className="flex justify-between font-bold text-blue-700">
               <span>Total</span>
               <span>
                 {result.sportScore.toFixed(1)}
@@ -191,7 +191,7 @@ function MobileSportScore({
         {label}
       </div>
 
-      <div className="mt-1 text-sm font-bold">
+      <div className="mt-1 text-sm font-bold text-slate-800">
         {result.sportScore.toFixed(1)}
       </div>
     </div>
@@ -305,7 +305,10 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-blue-50 px-4 py-5 sm:p-8">
       <div className="mx-auto max-w-7xl">
-        <nav className="mb-6 flex items-center justify-around border-b border-blue-100 pb-4 sm:justify-start sm:gap-8">
+
+        {/* NAVIGATION */}
+
+        <nav className="mb-6 flex items-center justify-around border-b border-blue-200 pb-4 sm:justify-start sm:gap-8">
           <Link
             href="/"
             className="text-sm font-bold text-blue-700 sm:text-base"
@@ -315,62 +318,71 @@ export default function Home() {
 
           <Link
             href="/sports"
-            className="text-sm font-semibold text-blue-500 hover:text-blue-700 sm:text-base"
+            className="text-sm font-semibold text-blue-500 transition hover:text-blue-700 sm:text-base"
           >
             Sports
           </Link>
 
           <Link
             href="/scoring"
-            className="text-sm font-semibold text-blue-500 hover:text-blue-700 sm:text-base"
+            className="text-sm font-semibold text-blue-500 transition hover:text-blue-700 sm:text-base"
           >
             Scoring
           </Link>
         </nav>
 
-        <h1 className="text-3xl font-bold sm:text-4xl">
-          Multi-Sport Fantasy League
-        </h1>
+        {/* PAGE HEADER */}
 
-        <p className="mb-6 mt-2 text-sm text-blue-500 sm:text-base">
-          Overall standings across all five sports
-        </p>
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl">
+            Multi-Sport Fantasy League
+          </h1>
+
+          <p className="mt-2 text-sm text-slate-600 sm:text-base">
+            Overall standings across all five sports
+          </p>
+        </div>
+
+        {/* MOBILE STANDINGS */}
 
         <div className="space-y-3 md:hidden">
           {standings.map((team, index) => (
             <div
               key={team.owner}
-              className="rounded-xl bg-white p-4 shadow"
+              className="rounded-xl border border-blue-100 bg-white p-4 shadow-sm"
             >
               <div className="mb-4 flex items-center justify-between">
+
                 <div className="flex items-center gap-3">
-                  <div className="text-xl font-bold text-blue-400">
-                    #{index + 1}
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-lg font-bold text-blue-700">
+                    {index + 1}
                   </div>
 
                   <div>
-                    <div className="text-lg font-bold">
+                    <div className="text-lg font-bold text-slate-900">
                       {team.owner}
                     </div>
 
-                    <div className="text-xs text-blue-500">
+                    <div className="text-xs text-slate-500">
                       Overall rank
                     </div>
                   </div>
                 </div>
 
                 <div className="text-right">
-                  <div className="text-xl font-bold">
+                  <div className="text-xl font-bold text-blue-700">
                     {team.total.toFixed(1)}
                   </div>
 
-                  <div className="text-xs text-blue-500">
+                  <div className="text-xs text-slate-500">
                     Total points
                   </div>
                 </div>
+
               </div>
 
               <div className="grid grid-cols-5 gap-1 border-t border-blue-100 pt-3">
+
                 <MobileSportScore
                   label="NFL"
                   result={team.NFL}
@@ -395,46 +407,52 @@ export default function Home() {
                   label="PGA"
                   result={team.PGA}
                 />
+
               </div>
             </div>
           ))}
         </div>
 
-        <div className="hidden overflow-visible rounded-lg bg-white shadow md:block">
+        {/* DESKTOP STANDINGS */}
+
+        <div className="hidden overflow-visible rounded-xl border border-blue-100 bg-white shadow-sm md:block">
           <table className="w-full border-collapse">
+
             <thead>
-              <tr className="border-b bg-blue-50">
-                <th className="p-4 text-center">
+              <tr className="border-b border-blue-100 bg-blue-50">
+
+                <th className="p-4 text-center text-slate-700">
                   Overall
                 </th>
 
-                <th className="p-4 text-left">
+                <th className="p-4 text-left text-slate-700">
                   Owner
                 </th>
 
-                <th className="p-4 text-center">
+                <th className="p-4 text-center text-slate-700">
                   NFL
                 </th>
 
-                <th className="p-4 text-center">
+                <th className="p-4 text-center text-slate-700">
                   MLB
                 </th>
 
-                <th className="p-4 text-center">
+                <th className="p-4 text-center text-slate-700">
                   NBA
                 </th>
 
-                <th className="p-4 text-center">
+                <th className="p-4 text-center text-slate-700">
                   EPL
                 </th>
 
-                <th className="p-4 text-center">
+                <th className="p-4 text-center text-slate-700">
                   PGA
                 </th>
 
-                <th className="p-4 text-center">
+                <th className="p-4 text-center text-slate-700">
                   Total
                 </th>
+
               </tr>
             </thead>
 
@@ -443,13 +461,16 @@ export default function Home() {
                 (team, index) => (
                   <tr
                     key={team.owner}
-                    className="border-b last:border-b-0"
+                    className="border-b border-blue-50 transition last:border-b-0 hover:bg-blue-50/50"
                   >
-                    <td className="p-4 text-center text-lg font-bold">
-                      {index + 1}
+
+                    <td className="p-4 text-center">
+                      <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-700">
+                        {index + 1}
+                      </div>
                     </td>
 
-                    <td className="p-4 font-medium">
+                    <td className="p-4 font-semibold text-slate-900">
                       {team.owner}
                     </td>
 
@@ -473,15 +494,18 @@ export default function Home() {
                       result={team.PGA}
                     />
 
-                    <td className="p-4 text-center text-lg font-bold">
+                    <td className="p-4 text-center text-lg font-bold text-blue-700">
                       {team.total.toFixed(1)}
                     </td>
+
                   </tr>
                 )
               )}
             </tbody>
+
           </table>
         </div>
+
       </div>
     </main>
   );
