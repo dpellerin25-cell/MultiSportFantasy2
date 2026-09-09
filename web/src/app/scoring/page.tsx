@@ -18,14 +18,14 @@ export default function ScoringPage() {
 <nav className="mb-8 flex items-center gap-6 border-b border-blue-200 pb-4">
   <Link
     href="/"
-    className="font-semibold text-blue-500 hover:text-blue-600"
+    className="font-semibold text-blue-700 hover:text-blue-600"
   >
     Standings
   </Link>
 
   <Link
     href="/sports"
-    className="font-semibold text-blue-500 hover:text-blue-600"
+    className="font-semibold text-blue-700 hover:text-blue-600"
   >
     Sports
   </Link>
@@ -41,7 +41,7 @@ export default function ScoringPage() {
           Scoring System
         </h1>
 
-        <p className="mb-8 text-blue-500">
+        <p className="mb-8 text-blue-700">
           Each sport rewards both finishing position and dominance.
         </p>
 
@@ -55,11 +55,11 @@ export default function ScoringPage() {
               Sport Score = Placement Points + Dominance Score
             </p>
 
-            <p className="mt-2 text-blue-500">
+            <p className="mt-2 text-blue-700">
               Dominance Score = 10 × Z-Score
             </p>
 
-            <p className="mt-2 text-slate-600">
+            <p className="mt-2 text-slate-700">
               Z-Score = (Team Fantasy Points - League Average) ÷ Standard Deviation
             </p>
           </div>
