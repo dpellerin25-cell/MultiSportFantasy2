@@ -1,0 +1,29 @@
+{
+  "sport": "MLB",
+  "league_id": "60ri2nbhmtj4b0km",
+  "league_name": "2026 Test_MLB",
+  "updated_at": "2026-09-09T18:29:07.889754+00:00",
+  "team_count": 1,
+  "teams": {
+    "ef2fvskgmtj4b1bq": {
+      "team_id": "ef2fvskgmtj4b1bq",
+      "name": "Doug",
+      "short_name": "dugEfres",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/glove/blue_red_256.webp"
+    }
+  },
+  "standings": [
+    {
+      "rank": "1",
+      "team": "Doug",
+      "team_id": "ef2fvskgmtj4b1bq",
+      "fantasyPoints": "0",
+      "pointsBased": "0",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "groupname": "0",
+      "wwOrder": "1",
+      "pointsBehindLeader": "0"
+    }
+  ]
+}

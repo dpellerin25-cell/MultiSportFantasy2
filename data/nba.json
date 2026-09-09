@@ -1,0 +1,28 @@
+{
+  "sport": "NBA",
+  "league_id": "u1byx3qkmtj47ogg",
+  "league_name": "2026 Test_NBA",
+  "updated_at": "2026-09-09T18:29:07.972543+00:00",
+  "team_count": 1,
+  "teams": {
+    "69kbo0xkmtj47p0l": {
+      "team_id": "69kbo0xkmtj47p0l",
+      "name": "Doug",
+      "short_name": "dugEfres",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/hoops/yellow_purple_256.webp"
+    }
+  },
+  "standings": [
+    {
+      "rank": "1",
+      "team": "Doug",
+      "team_id": "69kbo0xkmtj47p0l",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "1",
+      "pointsBehindLeader": "0"
+    }
+  ]
+}
