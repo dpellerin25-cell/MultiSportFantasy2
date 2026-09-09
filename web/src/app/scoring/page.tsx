@@ -101,7 +101,7 @@ export default function ScoringPage() {
         </section>
 
         <section className="mb-8 rounded-lg bg-white p-6 shadow">
-          <h2 className="mb-4 text-2xl font-bold">
+          <h2 className="mb-4 text-2xl font-bold text-slate-900 sm:text-inherit">
             Dominance Score
           </h2>
 
@@ -130,7 +130,7 @@ export default function ScoringPage() {
         </section>
 
         <section className="rounded-lg bg-white p-6 shadow">
-          <h2 className="mb-4 text-2xl font-bold">
+          <h2 className="mb-4 text-2xl font-bold text-slate-900 sm:text-inherit">
             Example
           </h2>
 
