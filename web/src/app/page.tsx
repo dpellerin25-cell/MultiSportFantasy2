@@ -32,15 +32,61 @@ const leagues = [
   },
 ];
 
+type SportResult = {
+  rank: number;
+  placementPoints: number;
+  dominanceScore: number;
+  sportScore: number;
+};
+
 type OverallRow = {
   owner: string;
-  NFL: number;
-  MLB: number;
-  NBA: number;
-  EPL: number;
-  PGA: number;
+  NFL: SportResult;
+  MLB: SportResult;
+  NBA: SportResult;
+  EPL: SportResult;
+  PGA: SportResult;
   total: number;
 };
+
+function ordinal(rank: number) {
+  if (rank === 1) return "1st";
+  if (rank === 2) return "2nd";
+  if (rank === 3) return "3rd";
+
+  return `${rank}th`;
+}
+
+function SportCell({
+  result,
+}: {
+  result: SportResult;
+}) {
+  const dominance =
+    result.dominanceScore >= 0
+      ? `+${result.dominanceScore.toFixed(1)}`
+      : result.dominanceScore.toFixed(1);
+
+  return (
+    <td className="p-4 text-center">
+      <div className="font-bold">
+        {ordinal(result.rank)}
+      </div>
+
+      <div className="text-sm text-gray-600">
+        {result.placementPoints.toFixed(0)} placement
+      </div>
+
+      <div className="text-sm text-gray-600">
+        {dominance} dominance
+      </div>
+
+      <div className="mt-1 font-semibold">
+        {result.sportScore.toFixed(1)} pts
+      </div>
+    </td>
+  );
+}
 
 export default function Home() {
   const scoredLeagues = leagues.map(
@@ -60,30 +106,64 @@ export default function Home() {
     )
   );
 
+  const getSportResult = (
+    owner: string,
+    sport: string
+  ): SportResult => {
+    const league =
+      scoredLeagues.find(
+        (item) => item.key === sport
+      );
+
+    const team =
+      league?.scored.find(
+        (item: ScoredTeam) =>
+          item.team === owner
+      );
+
+    if (!team) {
+      return {
+        rank: 0,
+        placementPoints: 0,
+        dominanceScore: 0,
+        sportScore: 0,
+      };
+    }
+
+    return {
+      rank: team.rank,
+      placementPoints:
+        team.placementPoints,
+      dominanceScore:
+        team.zScore * 10,
+      sportScore:
+        team.sportScore,
+    };
+  };
+
   const standings: OverallRow[] =
     allOwners.map((owner) => {
-      const getScore = (
-        sport: string
-      ) => {
-        const league =
-          scoredLeagues.find(
-            (item) => item.key === sport
-          );
+      const NFL =
+        getSportResult(owner, "NFL");
 
-        const team =
-          league?.scored.find(
-            (item: ScoredTeam) =>
-              item.team === owner
-          );
+      const MLB =
+        getSportResult(owner, "MLB");
 
-        return team?.sportScore ?? 0;
-      };
+      const NBA =
+        getSportResult(owner, "NBA");
 
-      const NFL = getScore("NFL");
-      const MLB = getScore("MLB");
-      const NBA = getScore("NBA");
-      const EPL = getScore("EPL");
-      const PGA = getScore("PGA");
+      const EPL =
+        getSportResult(owner, "EPL");
+
+      const PGA =
+        getSportResult(owner, "PGA");
+
+      const total =
+        NFL.sportScore +
+        MLB.sportScore +
+        NBA.sportScore +
+        EPL.sportScore +
+        PGA.sportScore;
 
       return {
         owner,
@@ -92,12 +172,7 @@ export default function Home() {
         NBA,
         EPL,
         PGA,
-        total:
-          NFL +
-          MLB +
-          NBA +
-          EPL +
-          PGA,
+        total,
       };
     });
 
@@ -161,7 +236,7 @@ export default function Home() {
                     key={team.owner}
                     className="border-b last:border-b-0"
                   >
-                    <td className="p-4 text-center font-bold">
+                    <td className="p-4 text-center text-lg font-bold">
                       {index + 1}
                     </td>
 
@@ -169,27 +244,27 @@ export default function Home() {
                       {team.owner}
                     </td>
 
-                    <td className="p-4 text-center">
-                      {team.NFL.toFixed(1)}
-                    </td>
+                    <SportCell
+                      result={team.NFL}
+                    />
 
-                    <td className="p-4 text-center">
-                      {team.MLB.toFixed(1)}
-                    </td>
+                    <SportCell
+                      result={team.MLB}
+                    />
 
-                    <td className="p-4 text-center">
-                      {team.NBA.toFixed(1)}
-                    </td>
+                    <SportCell
+                      result={team.NBA}
+                    />
 
-                    <td className="p-4 text-center">
-                      {team.EPL.toFixed(1)}
-                    </td>
+                    <SportCell
+                      result={team.EPL}
+                    />
 
-                    <td className="p-4 text-center">
-                      {team.PGA.toFixed(1)}
-                    </td>
+                    <SportCell
+                      result={team.PGA}
+                    />
 
-                    <td className="p-4 text-center font-bold">
+                    <td className="p-4 text-center text-lg font-bold">
                       {team.total.toFixed(1)}
                     </td>
                   </tr>
