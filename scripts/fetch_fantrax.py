@@ -252,23 +252,15 @@ def save_league_json(
     filename,
     standings_data
 ):
-
-    table = find_standings_table(
-        standings_data
-    )
+    table = find_standings_table(standings_data)
 
     if table is None:
         raise RuntimeError(
             f"Could not find standings table for {sport}"
         )
 
-    standings = parse_standings_table(
-        table
-    )
-
-    team_info = extract_team_info(
-        standings_data
-    )
+    standings = parse_standings_table(table)
+    team_info = extract_team_info(standings_data)
 
     league_heading = (
         standings_data
@@ -288,23 +280,22 @@ def save_league_json(
         "standings": standings
     }
 
-os.makedirs(
-    "web/data",
-    exist_ok=True
-)
+    os.makedirs(
+        "web/data",
+        exist_ok=True
+    )
 
-filepath = os.path.join(
-    "web",
-    "data",
-    filename
-)
+    filepath = os.path.join(
+        "web",
+        "data",
+        filename
+    )
 
     with open(
         filepath,
         "w",
         encoding="utf-8"
     ) as file:
-
         json.dump(
             output,
             file,
@@ -312,20 +303,14 @@ filepath = os.path.join(
             ensure_ascii=False
         )
 
-    print(
-        f"SUCCESS: Created {filepath}"
-    )
-
-    print(
-        f"Teams found: {len(standings)}"
-    )
+    print(f"SUCCESS: Created {filepath}")
+    print(f"Teams found: {len(standings)}")
 
     for team in standings:
         print(
             f"  {team.get('rank')} - "
             f"{team.get('team')}"
         )
-
 
 # ---------------------------------------------------------
 # MAIN PROGRAM
