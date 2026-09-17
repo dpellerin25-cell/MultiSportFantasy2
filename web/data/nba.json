@@ -2,62 +2,62 @@
   "sport": "NBA",
   "league_id": "u1byx3qkmtj47ogg",
   "league_name": "2026 Test_NBA",
-  "updated_at": "2026-09-09T23:19:24.875972+00:00",
+  "updated_at": "2026-09-17T22:57:37.585945+00:00",
   "team_count": 9,
   "teams": {
     "5x73rx07mtug00lx": {
       "team_id": "5x73rx07mtug00lx",
       "name": "Brendan",
       "short_name": "Brendan",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/shoes/green_yellow_white_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/shoes/green_yellow_white_512.webp"
     },
     "69kbo0xkmtj47p0l": {
       "team_id": "69kbo0xkmtj47p0l",
       "name": "Doug",
       "short_name": "dugEfres",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/hoops/yellow_purple_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/hoops/yellow_purple_512.webp"
     },
     "2atv7st7mtug00lx": {
       "team_id": "2atv7st7mtug00lx",
       "name": "Ryan",
       "short_name": "Ryan",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/jerseys/blue_beige_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/jerseys/blue_beige_512.webp"
     },
     "7q88tindmtug00lx": {
       "team_id": "7q88tindmtug00lx",
       "name": "Chris",
       "short_name": "Chris",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/hoops/blue_yellow_white_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/hoops/blue_yellow_white_512.webp"
     },
     "e9t2ufe0mtug00lx": {
       "team_id": "e9t2ufe0mtug00lx",
       "name": "Jacob",
       "short_name": "Jacob",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/jerseys/gold_red_black_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/jerseys/gold_red_black_512.webp"
     },
     "h3jcfzhtmtug00lx": {
       "team_id": "h3jcfzhtmtug00lx",
       "name": "Jack",
       "short_name": "Jack",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/shoes/silver_blue_white_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/shoes/silver_blue_white_512.webp"
     },
     "xiq1wt7vmtug00lx": {
       "team_id": "xiq1wt7vmtug00lx",
       "name": "Tucker",
       "short_name": "Tucker",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/jerseys/grey_lightblue_white_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/jerseys/grey_lightblue_white_512.webp"
     },
     "06p6l1himtug00lx": {
       "team_id": "06p6l1himtug00lx",
       "name": "Nik",
       "short_name": "Nik",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/hoops/pink_blue_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/hoops/pink_blue_512.webp"
     },
     "dghm6tvbmtug00lx": {
       "team_id": "dghm6tvbmtug00lx",
       "name": "Hatch",
       "short_name": "Hatch",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/shoes/teal_yellowbeige_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/shoes/teal_yellowbeige_512.webp"
     }
   },
   "standings": [

@@ -1,0 +1,63 @@
+{
+  "sport": "Premier League",
+  "league_id": "j08ymyupmtj415q3",
+  "updated_at": "2026-09-17T22:57:40.411432+00:00",
+  "team_count": 9,
+  "total_players": 0,
+  "rosters": [
+    {
+      "owner": "Jack",
+      "team_id": "n1ifyr4umtug18ye",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Chris",
+      "team_id": "dxxlben8mtug18ye",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Doug",
+      "team_id": "y00vzeaumtj4175c",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Tucker",
+      "team_id": "yuhhd6skmtug18ye",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Ryan",
+      "team_id": "hfwwgo47mtug18ye",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Brendan",
+      "team_id": "288rr3ycmtug18ye",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Hatch",
+      "team_id": "e98kovyqmtug18ye",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Nik",
+      "team_id": "kgvxraa7mtug18yf",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Jacob",
+      "team_id": "wi8jwabymtug18ye",
+      "player_count": 0,
+      "players": []
+    }
+  ]
+}

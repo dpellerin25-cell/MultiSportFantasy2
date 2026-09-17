@@ -1,0 +1,63 @@
+{
+  "sport": "NBA",
+  "league_id": "u1byx3qkmtj47ogg",
+  "updated_at": "2026-09-17T22:57:39.128931+00:00",
+  "team_count": 9,
+  "total_players": 0,
+  "rosters": [
+    {
+      "owner": "Brendan",
+      "team_id": "5x73rx07mtug00lx",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Doug",
+      "team_id": "69kbo0xkmtj47p0l",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Ryan",
+      "team_id": "2atv7st7mtug00lx",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Chris",
+      "team_id": "7q88tindmtug00lx",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Jacob",
+      "team_id": "e9t2ufe0mtug00lx",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Jack",
+      "team_id": "h3jcfzhtmtug00lx",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Tucker",
+      "team_id": "xiq1wt7vmtug00lx",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Nik",
+      "team_id": "06p6l1himtug00lx",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Hatch",
+      "team_id": "dghm6tvbmtug00lx",
+      "player_count": 0,
+      "players": []
+    }
+  ]
+}

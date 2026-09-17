@@ -1,0 +1,74 @@
+{
+  "sport": "NFL",
+  "league_id": "yg0olhfrmtj45dd6",
+  "updated_at": "2026-09-17T22:57:35.923885+00:00",
+  "team_count": 9,
+  "total_players": 1,
+  "rosters": [
+    {
+      "owner": "Jack",
+      "team_id": "fhsj2l6xmtufxavs",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Brendan",
+      "team_id": "ctwavmkjmtufxavs",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Ryan",
+      "team_id": "rjrxjrgomtufxavs",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Jacob",
+      "team_id": "97xlrb7dmtufxavs",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Hatch",
+      "team_id": "deuypysomtufxavs",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Chris",
+      "team_id": "wgssrap3mtufxavs",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Doug",
+      "team_id": "61pwhedumtj45e7v",
+      "player_count": 1,
+      "players": [
+        {
+          "player_id": "04mnz",
+          "name": "Josh Allen",
+          "position": "QB",
+          "pro_team": "BUF",
+          "pro_team_name": "Buffalo Bills",
+          "status_id": "1",
+          "roster_position_id": "100",
+          "headshot_url": "https://fantraximg.com/si/headshots/NFL/hs04mnz_96_9.png"
+        }
+      ]
+    },
+    {
+      "owner": "Nik",
+      "team_id": "g8pbre1zmtufxavs",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Tucker",
+      "team_id": "uf9y3x2kmtufxavs",
+      "player_count": 0,
+      "players": []
+    }
+  ]
+}

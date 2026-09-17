@@ -2,62 +2,62 @@
   "sport": "MLB",
   "league_id": "60ri2nbhmtj4b0km",
   "league_name": "2026 Test_MLB",
-  "updated_at": "2026-09-09T23:19:24.810677+00:00",
+  "updated_at": "2026-09-17T22:57:36.234438+00:00",
   "team_count": 9,
   "teams": {
     "1uucwggdmtufy7wz": {
       "team_id": "1uucwggdmtufy7wz",
       "name": "Hatch",
       "short_name": "Hatch",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/glove/brown_white_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/glove/brown_white_512.webp"
     },
     "9kn5z982mtufy7wz": {
       "team_id": "9kn5z982mtufy7wz",
       "name": "Jack",
       "short_name": "Jack",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/jersey/orange_blue2_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/jersey/orange_blue2_512.webp"
     },
     "8puse3ycmtufy7wz": {
       "team_id": "8puse3ycmtufy7wz",
       "name": "Jacob",
       "short_name": "Jacob",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/helmet/yellow_red_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/helmet/yellow_red_512.webp"
     },
     "c5b40h1dmtufy7x0": {
       "team_id": "c5b40h1dmtufy7x0",
       "name": "Brendan",
       "short_name": "Brendan",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/jersey/teal_beige2_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/jersey/teal_beige2_512.webp"
     },
     "ef2fvskgmtj4b1bq": {
       "team_id": "ef2fvskgmtj4b1bq",
       "name": "Doug",
       "short_name": "dugEfres",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/glove/blue_red_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/glove/blue_red_512.webp"
     },
     "t5a3u18emtufy7wz": {
       "team_id": "t5a3u18emtufy7wz",
       "name": "Tucker",
       "short_name": "Tucker",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/helmet/orange_purple_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/helmet/orange_purple_512.webp"
     },
     "n9kkuo4emtufy7wz": {
       "team_id": "n9kkuo4emtufy7wz",
       "name": "Chris",
       "short_name": "Chris",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/helmet/green_yellow2_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/helmet/green_yellow2_512.webp"
     },
     "dy1zvquwmtufy7wz": {
       "team_id": "dy1zvquwmtufy7wz",
       "name": "Nik",
       "short_name": "Nik",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/jersey/purple_orange_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/jersey/purple_orange_512.webp"
     },
     "5rikaat7mtufy7wz": {
       "team_id": "5rikaat7mtufy7wz",
       "name": "Ryan",
       "short_name": "Ryan",
-      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/jersey/magenta_purple_256.webp"
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/jersey/magenta_purple_512.webp"
     }
   },
   "standings": [
@@ -66,11 +66,10 @@
       "team": "Brendan",
       "team_id": "c5b40h1dmtufy7x0",
       "fantasyPoints": "0",
-      "pointsBased": "",
+      "pointsBased": "0",
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "9",
       "pointsBehindLeader": "0"
     },
     {
@@ -78,11 +77,10 @@
       "team": "Chris",
       "team_id": "n9kkuo4emtufy7wz",
       "fantasyPoints": "0",
-      "pointsBased": "",
+      "pointsBased": "0",
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "8",
       "pointsBehindLeader": "0"
     },
     {
@@ -90,11 +88,10 @@
       "team": "Doug",
       "team_id": "ef2fvskgmtj4b1bq",
       "fantasyPoints": "0",
-      "pointsBased": "",
+      "pointsBased": "0",
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "7",
       "pointsBehindLeader": "0"
     },
     {
@@ -102,11 +99,10 @@
       "team": "Hatch",
       "team_id": "1uucwggdmtufy7wz",
       "fantasyPoints": "0",
-      "pointsBased": "",
+      "pointsBased": "0",
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "6",
       "pointsBehindLeader": "0"
     },
     {
@@ -114,11 +110,10 @@
       "team": "Jack",
       "team_id": "9kn5z982mtufy7wz",
       "fantasyPoints": "0",
-      "pointsBased": "",
+      "pointsBased": "0",
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "5",
       "pointsBehindLeader": "0"
     },
     {
@@ -126,11 +121,10 @@
       "team": "Jacob",
       "team_id": "8puse3ycmtufy7wz",
       "fantasyPoints": "0",
-      "pointsBased": "",
+      "pointsBased": "0",
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "4",
       "pointsBehindLeader": "0"
     },
     {
@@ -138,11 +132,10 @@
       "team": "Nik",
       "team_id": "dy1zvquwmtufy7wz",
       "fantasyPoints": "0",
-      "pointsBased": "",
+      "pointsBased": "0",
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "3",
       "pointsBehindLeader": "0"
     },
     {
@@ -150,11 +143,10 @@
       "team": "Ryan",
       "team_id": "5rikaat7mtufy7wz",
       "fantasyPoints": "0",
-      "pointsBased": "",
+      "pointsBased": "0",
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "2",
       "pointsBehindLeader": "0"
     },
     {
@@ -162,11 +154,10 @@
       "team": "Tucker",
       "team_id": "t5a3u18emtufy7wz",
       "fantasyPoints": "0",
-      "pointsBased": "",
+      "pointsBased": "0",
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "1",
       "pointsBehindLeader": "0"
     }
   ]

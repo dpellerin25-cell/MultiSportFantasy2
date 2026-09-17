@@ -1,0 +1,63 @@
+{
+  "sport": "MLB",
+  "league_id": "60ri2nbhmtj4b0km",
+  "updated_at": "2026-09-17T22:57:37.365066+00:00",
+  "team_count": 9,
+  "total_players": 0,
+  "rosters": [
+    {
+      "owner": "Hatch",
+      "team_id": "1uucwggdmtufy7wz",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Jack",
+      "team_id": "9kn5z982mtufy7wz",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Jacob",
+      "team_id": "8puse3ycmtufy7wz",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Brendan",
+      "team_id": "c5b40h1dmtufy7x0",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Doug",
+      "team_id": "ef2fvskgmtj4b1bq",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Tucker",
+      "team_id": "t5a3u18emtufy7wz",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Chris",
+      "team_id": "n9kkuo4emtufy7wz",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Nik",
+      "team_id": "dy1zvquwmtufy7wz",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Ryan",
+      "team_id": "5rikaat7mtufy7wz",
+      "player_count": 0,
+      "players": []
+    }
+  ]
+}

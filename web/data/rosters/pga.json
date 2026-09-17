@@ -1,0 +1,63 @@
+{
+  "sport": "PGA",
+  "league_id": "xa7tza2hmthqz8bo",
+  "updated_at": "2026-09-17T22:57:41.616435+00:00",
+  "team_count": 9,
+  "total_players": 0,
+  "rosters": [
+    {
+      "owner": "Chris",
+      "team_id": "plyo3at2mtj6q46k",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Ryan",
+      "team_id": "w3mbfb09mtj6q46k",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Jack",
+      "team_id": "tsbwv11smtj6q46j",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Brendan",
+      "team_id": "427i3hphmtj6q46k",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Hatch",
+      "team_id": "flahplbgmtj6q46k",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Jacob",
+      "team_id": "9099fo49mtj6q46j",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Doug",
+      "team_id": "trhdyd34mthqz8ng",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Nik",
+      "team_id": "ojnvnzywmtj6q46k",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Tucker",
+      "team_id": "y4qgi9k9mtj6q46e",
+      "player_count": 0,
+      "players": []
+    }
+  ]
+}
