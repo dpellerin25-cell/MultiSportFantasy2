@@ -57,7 +57,12 @@ export default function SportStandings({
           >
             Sports
           </Link>
-
+<Link
+  href="/rosters"
+  className="font-semibold text-blue-800 hover:text-blue-900 sm:text-blue-500 sm:hover:text-blue-600"
+>
+  Rosters
+</Link>
           <Link
             href="/scoring"
             className="font-semibold text-blue-800 hover:text-blue-900 sm:text-blue-500 sm:hover:text-blue-600"
