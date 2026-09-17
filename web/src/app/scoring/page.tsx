@@ -29,7 +29,12 @@ export default function ScoringPage() {
   >
     Sports
   </Link>
-
+  <Link
+    href="/rosters"
+    className="font-semibold text-blue-700 hover:text-blue-600"
+  >
+    Rosters
+  </Link>
   <Link
     href="/scoring"
     className="font-semibold text-blue-700 hover:text-blue-600"
