@@ -21,6 +21,12 @@ url = "https://www.fantrax.com/fxpa/req"
 payload = {
     "msgs": [
         {
+            "method": "getStandings",
+            "data": {
+                "leagueId": NFL_LEAGUE_ID
+            }
+        },
+        {
             "method": "getTeamRosterInfo",
             "data": {
                 "leagueId": NFL_LEAGUE_ID
@@ -44,8 +50,8 @@ try:
         json.dumps(
             data,
             indent=2
-        )[:20000]
+        )[:100000]
     )
 
 except Exception:
-    print(response.text[:20000])
+    print(response.text[:100000])
