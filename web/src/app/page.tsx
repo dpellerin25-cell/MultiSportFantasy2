@@ -322,7 +322,12 @@ export default function Home() {
           >
             Sports
           </Link>
-
+<Link
+  href="/rosters"
+  className="text-sm font-semibold text-blue-800 hover:text-blue-900 sm:text-base sm:text-blue-500 sm:hover:text-blue-700"
+>
+  Rosters
+</Link>
           <Link
             href="/scoring"
             className="text-sm font-semibold text-blue-700 transition hover:text-blue-700 sm:text-base"
