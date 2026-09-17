@@ -65,24 +65,16 @@ def create_session():
 
 
 # ---------------------------------------------------------
-# FETCH ONE FANTRAX LEAGUE
+# GENERIC FANTRAX REQUEST
 # ---------------------------------------------------------
 
-def fetch_league(session, sport, league_id):
-
-    print()
-    print("=" * 60)
-    print(f"Fetching {sport}")
-    print(f"League ID: {league_id}")
-    print("=" * 60)
+def fantrax_request(session, league_id, method, request_data):
 
     payload = {
         "msgs": [
             {
-                "method": "getStandings",
-                "data": {
-                    "leagueId": league_id
-                }
+                "method": method,
+                "data": request_data
             }
         ]
     }
@@ -98,22 +90,41 @@ def fetch_league(session, sport, league_id):
 
     data = response.json()
 
-    # Check for Fantrax-level errors
     if "error" in data:
         raise RuntimeError(
-            f"Fantrax returned an error for {sport}: {data['error']}"
+            f"Fantrax returned an error: {data['error']}"
         )
 
     responses = data.get("responses", [])
 
     if not responses:
         raise RuntimeError(
-            f"No Fantrax response returned for {sport}"
+            f"No Fantrax response returned for {method}"
         )
 
-    standings_data = responses[0].get("data", {})
+    return responses[0].get("data", {})
 
-    return standings_data
+
+# ---------------------------------------------------------
+# FETCH ONE FANTRAX LEAGUE
+# ---------------------------------------------------------
+
+def fetch_league(session, sport, league_id):
+
+    print()
+    print("=" * 60)
+    print(f"Fetching {sport}")
+    print(f"League ID: {league_id}")
+    print("=" * 60)
+
+    return fantrax_request(
+        session,
+        league_id,
+        "getStandings",
+        {
+            "leagueId": league_id
+        }
+    )
 
 
 # ---------------------------------------------------------
@@ -124,12 +135,10 @@ def find_standings_table(standings_data):
 
     tables = standings_data.get("tableList", [])
 
-    # First try the table explicitly called "Standings"
     for table in tables:
         if table.get("caption") == "Standings":
             return table
 
-    # Fall back to anything with rows and team columns
     for table in tables:
 
         fixed_header = table.get(
@@ -178,7 +187,7 @@ def extract_team_info(standings_data):
 
 
 # ---------------------------------------------------------
-# CONVERT A FANTRAX TABLE TO CLEAN JSON
+# CONVERT FANTRAX STANDINGS TO CLEAN JSON
 # ---------------------------------------------------------
 
 def parse_standings_table(table):
@@ -226,8 +235,6 @@ def parse_standings_table(table):
             "team_id": team_cell.get("teamId")
         }
 
-        # Dynamically attach whatever stats Fantrax provides.
-        # This prevents different sports from breaking the script.
         for index, cell in enumerate(stat_cells):
 
             if index < len(stat_keys):
@@ -243,7 +250,7 @@ def parse_standings_table(table):
 
 
 # ---------------------------------------------------------
-# WRITE ONE SPORT TO JSON
+# WRITE ONE SPORT'S STANDINGS TO JSON
 # ---------------------------------------------------------
 
 def save_league_json(
@@ -312,17 +319,200 @@ def save_league_json(
             f"{team.get('team')}"
         )
 
+
+# ---------------------------------------------------------
+# FETCH ONE FANTASY TEAM'S ROSTER
+# ---------------------------------------------------------
+
+def fetch_team_roster(
+    session,
+    league_id,
+    team_id
+):
+
+    return fantrax_request(
+        session,
+        league_id,
+        "getTeamRosterInfo",
+        {
+            "leagueId": league_id,
+            "teamId": team_id,
+            "view": "SIMPLE"
+        }
+    )
+
+
+# ---------------------------------------------------------
+# PARSE PLAYERS FROM ONE ROSTER
+# ---------------------------------------------------------
+
+def parse_roster(roster_data):
+
+    players = []
+
+    # A Fantrax roster can contain multiple tables.
+    # For example, NFL can separate offense and other
+    # roster groups.
+    for table in roster_data.get("tables", []):
+
+        for row in table.get("rows", []):
+
+            scorer = row.get("scorer")
+
+            # Empty roster slots have no scorer object.
+            if not scorer:
+                continue
+
+            player = {
+                "player_id": scorer.get("scorerId"),
+                "name": scorer.get("name"),
+                "position": scorer.get("posShortNames"),
+                "pro_team": scorer.get("teamShortName"),
+                "pro_team_name": scorer.get("teamName"),
+                "status_id": row.get("statusId"),
+                "roster_position_id": row.get("posId"),
+                "headshot_url": scorer.get("headshotUrl")
+            }
+
+            players.append(player)
+
+    return players
+
+
+# ---------------------------------------------------------
+# FETCH ALL ROSTERS FOR ONE SPORT
+# ---------------------------------------------------------
+
+def fetch_all_rosters(
+    session,
+    sport,
+    league_id,
+    standings_data
+):
+
+    team_info = extract_team_info(
+        standings_data
+    )
+
+    rosters = []
+
+    print()
+    print(f"Fetching {sport} rosters...")
+
+    for team_id, team in team_info.items():
+
+        owner = team.get("name")
+
+        print(
+            f"  Fetching roster: {owner}"
+        )
+
+        roster_data = fetch_team_roster(
+            session,
+            league_id,
+            team_id
+        )
+
+        players = parse_roster(
+            roster_data
+        )
+
+        roster = {
+            "owner": owner,
+            "team_id": team_id,
+            "player_count": len(players),
+            "players": players
+        }
+
+        rosters.append(roster)
+
+        print(
+            f"    {len(players)} player(s)"
+        )
+
+    return rosters
+
+
+# ---------------------------------------------------------
+# WRITE ROSTERS TO JSON
+# ---------------------------------------------------------
+
+def save_roster_json(
+    sport,
+    league_id,
+    filename,
+    rosters
+):
+
+    total_players = sum(
+        roster["player_count"]
+        for roster in rosters
+    )
+
+    output = {
+        "sport": sport,
+        "league_id": league_id,
+        "updated_at": datetime.now(
+            timezone.utc
+        ).isoformat(),
+        "team_count": len(rosters),
+        "total_players": total_players,
+        "rosters": rosters
+    }
+
+    roster_directory = os.path.join(
+        "web",
+        "data",
+        "rosters"
+    )
+
+    os.makedirs(
+        roster_directory,
+        exist_ok=True
+    )
+
+    filepath = os.path.join(
+        roster_directory,
+        filename
+    )
+
+    with open(
+        filepath,
+        "w",
+        encoding="utf-8"
+    ) as file:
+        json.dump(
+            output,
+            file,
+            indent=2,
+            ensure_ascii=False
+        )
+
+    print(
+        f"SUCCESS: Created {filepath}"
+    )
+
+    print(
+        f"Total rostered players in {sport}: "
+        f"{total_players}"
+    )
+
+
 # ---------------------------------------------------------
 # MAIN PROGRAM
 # ---------------------------------------------------------
 
 def main():
 
-    print("Starting Fantrax multi-sport update...")
+    print(
+        "Starting Fantrax multi-sport update..."
+    )
 
     session = create_session()
 
-    print("Fantrax cookies loaded.")
+    print(
+        "Fantrax cookies loaded."
+    )
 
     successful = []
     failed = []
@@ -331,17 +521,42 @@ def main():
 
         try:
 
+            league_id = config["league_id"]
+            filename = config["filename"]
+
+            # ---------------------------------------------
+            # STANDINGS
+            # ---------------------------------------------
+
             standings_data = fetch_league(
                 session,
                 sport,
-                config["league_id"]
+                league_id
             )
 
             save_league_json(
                 sport,
-                config["league_id"],
-                config["filename"],
+                league_id,
+                filename,
                 standings_data
+            )
+
+            # ---------------------------------------------
+            # ROSTERS
+            # ---------------------------------------------
+
+            rosters = fetch_all_rosters(
+                session,
+                sport,
+                league_id,
+                standings_data
+            )
+
+            save_roster_json(
+                sport,
+                league_id,
+                filename,
+                rosters
             )
 
             successful.append(sport)
@@ -372,7 +587,9 @@ def main():
     )
 
     for sport in successful:
-        print(f"  ✓ {sport}")
+        print(
+            f"  ✓ {sport}"
+        )
 
     print(
         f"Failed: {len(failed)}"
@@ -384,8 +601,6 @@ def main():
             f"{failure['error']}"
         )
 
-    # Cause GitHub Action to fail if ANY league failed.
-    # We don't want to silently publish incomplete standings.
     if failed:
         raise RuntimeError(
             f"{len(failed)} league(s) failed to update."
@@ -393,7 +608,8 @@ def main():
 
     print()
     print(
-        "All five Fantrax leagues updated successfully!"
+        "All five Fantrax leagues and rosters "
+        "updated successfully!"
     )
 
 
