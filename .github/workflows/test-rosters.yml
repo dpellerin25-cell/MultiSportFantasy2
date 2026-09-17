@@ -1,0 +1,27 @@
+name: Test Fantrax Rosters
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-rosters:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Test NFL roster
+        env:
+          FANTRAX_COOKIE: ${{ secrets.FANTRAX_COOKIE }}
+        run: python scripts/test_rosters.py
