@@ -9,30 +9,11 @@ import {
 import {
   CURRENT_SEASON,
   getSeason,
+  seasons,
 } from "@/config/seasons";
 
-const leagues = [
-  {
-    key: "NFL",
-    data: getSeasonLeagueData(CURRENT_SEASON, "NFL"),
-  },
-  {
-    key: "MLB",
-    data: getSeasonLeagueData(CURRENT_SEASON, "MLB"),
-  },
-  {
-    key: "NBA",
-    data: getSeasonLeagueData(CURRENT_SEASON, "NBA"),
-  },
-  {
-    key: "EPL",
-    data: getSeasonLeagueData(CURRENT_SEASON, "EPL"),
-  },
-  {
-    key: "PGA",
-    data: getSeasonLeagueData(CURRENT_SEASON, "PGA"),
-  },
-];
+import SeasonSelector from "@/components/SeasonSelector";
+
 
 type SportResult = {
   rank: number;
@@ -178,8 +159,49 @@ function SportCell({
   );
 }
 
-export default function Home() {
-  const currentSeason = getSeason(CURRENT_SEASON);
+type HomeProps = {
+  searchParams: Promise<{
+    season?: string;
+  }>;
+};
+
+export default async function Home({
+  searchParams,
+}: HomeProps) {
+  const params = await searchParams;
+
+  const requestedYear = Number(params.season);
+
+  const selectedYear =
+    Number.isInteger(requestedYear) &&
+    getSeason(requestedYear)
+      ? requestedYear
+      : CURRENT_SEASON;
+
+  const currentSeason = getSeason(selectedYear);
+
+  const leagues = [
+    {
+      key: "NFL",
+      data: getSeasonLeagueData(selectedYear, "NFL"),
+    },
+    {
+      key: "MLB",
+      data: getSeasonLeagueData(selectedYear, "MLB"),
+    },
+    {
+      key: "NBA",
+      data: getSeasonLeagueData(selectedYear, "NBA"),
+    },
+    {
+      key: "EPL",
+      data: getSeasonLeagueData(selectedYear, "EPL"),
+    },
+    {
+      key: "PGA",
+      data: getSeasonLeagueData(selectedYear, "PGA"),
+    },
+  ];
   const scoredLeagues = leagues.map(
     (league) => ({
       ...league,
@@ -322,7 +344,12 @@ export default function Home() {
       <div className="mt-3 inline-flex rounded-full border border-blue-200 bg-white px-3 py-1.5 text-sm font-bold text-blue-800 shadow-sm">
         {currentSeason.name}
       </div>
-
+<div className="mt-4">
+  <SeasonSelector
+    seasons={seasons}
+    selectedYear={selectedYear}
+  />
+</div>
       <div className="mt-4 flex flex-wrap gap-2">
         {currentSeason.sports.map((sport) => (
           <div
