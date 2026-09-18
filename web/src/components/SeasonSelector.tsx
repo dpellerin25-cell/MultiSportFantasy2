@@ -22,11 +22,7 @@ export default function SeasonSelector({
         return (
           <Link
             key={season.year}
-            href={
-              selected
-                ? "/"
-                : `/?season=${season.year}`
-            }
+            href={selected ? "/" : `/?season=${season.year}`}
             className={`rounded-full border px-3 py-1.5 text-sm font-bold transition ${
               selected
                 ? "border-blue-700 bg-blue-700 text-white"
