@@ -15,7 +15,6 @@ import {
 
 import SeasonSelector from "@/components/SeasonSelector";
 
-
 type SportResult = {
   rank: number;
   fantasyPoints: number;
@@ -35,6 +34,12 @@ type OverallRow = {
   EPL: SportResult;
   PGA: SportResult;
   total: number;
+};
+
+type HomeProps = {
+  searchParams: Promise<{
+    season?: string;
+  }>;
 };
 
 function ordinal(rank: number) {
@@ -65,7 +70,7 @@ function SportCell({
       <div className="group relative inline-block">
         <button
           type="button"
-          className="min-w-20 rounded-md px-3 py-2 font-semibold hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+          className="min-w-20 rounded-lg px-3 py-2 font-bold text-slate-900 transition hover:bg-blue-50 focus:bg-blue-50 focus:outline-none"
         >
           {result.sportScore.toFixed(1)}
         </button>
@@ -81,9 +86,9 @@ function SportCell({
             hidden
             w-64
             -translate-x-1/2
-            rounded-lg
+            rounded-xl
             border
-            border-gray-200
+            border-blue-100
             bg-white
             p-4
             text-left
@@ -92,66 +97,64 @@ function SportCell({
             group-focus-within:block
           "
         >
-          <div className="mb-3 border-b pb-2">
-            <div className="text-lg font-bold">
+          <div className="mb-3 border-b border-blue-100 pb-2">
+            <div className="text-lg font-bold text-slate-900">
               {result.sportScore.toFixed(1)} points
             </div>
 
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-slate-600">
               Final sport score
             </div>
           </div>
 
-          <div className="space-y-2 text-sm">
+          <div className="space-y-2 text-sm text-slate-700">
             <div className="flex justify-between">
               <span>Finish</span>
-              <span className="font-semibold">
+              <span className="font-semibold text-slate-900">
                 {ordinal(result.rank)}
               </span>
             </div>
 
             <div className="flex justify-between">
               <span>Placement points</span>
-              <span className="font-semibold">
+              <span className="font-semibold text-slate-900">
                 {result.placementPoints.toFixed(0)}
               </span>
             </div>
 
             <div className="flex justify-between">
               <span>Fantasy points</span>
-              <span className="font-semibold">
+              <span className="font-semibold text-slate-900">
                 {result.fantasyPoints.toFixed(1)}
               </span>
             </div>
 
             <div className="flex justify-between">
               <span>League average</span>
-              <span className="font-semibold">
+              <span className="font-semibold text-slate-900">
                 {result.leagueAverage.toFixed(1)}
               </span>
             </div>
 
             <div className="flex justify-between">
               <span>Z-score</span>
-              <span className="font-semibold">
+              <span className="font-semibold text-slate-900">
                 {zScore}
               </span>
             </div>
 
             <div className="flex justify-between">
               <span>Dominance</span>
-              <span className="font-semibold">
+              <span className="font-semibold text-slate-900">
                 {dominance}
               </span>
             </div>
           </div>
 
-          <div className="mt-3 border-t pt-3">
-            <div className="flex justify-between font-bold">
+          <div className="mt-3 border-t border-blue-100 pt-3">
+            <div className="flex justify-between font-bold text-slate-900">
               <span>Total</span>
-              <span>
-                {result.sportScore.toFixed(1)}
-              </span>
+              <span>{result.sportScore.toFixed(1)}</span>
             </div>
           </div>
         </div>
@@ -159,12 +162,6 @@ function SportCell({
     </td>
   );
 }
-
-type HomeProps = {
-  searchParams: Promise<{
-    season?: string;
-  }>;
-};
 
 export default async function Home({
   searchParams,
@@ -203,6 +200,7 @@ export default async function Home({
       data: getSeasonLeagueData(selectedYear, "PGA"),
     },
   ];
+
   const scoredLeagues = leagues.map(
     (league) => ({
       ...league,
@@ -250,20 +248,13 @@ export default async function Home({
 
     return {
       rank: team.rank,
-      fantasyPoints:
-        team.fantasyPoints,
-      leagueAverage:
-        team.leagueAverage,
-      standardDeviation:
-        team.standardDeviation,
-      zScore:
-        team.zScore,
-      placementPoints:
-        team.placementPoints,
-      dominanceScore:
-        team.zScore * 10,
-      sportScore:
-        team.sportScore,
+      fantasyPoints: team.fantasyPoints,
+      leagueAverage: team.leagueAverage,
+      standardDeviation: team.standardDeviation,
+      zScore: team.zScore,
+      placementPoints: team.placementPoints,
+      dominanceScore: team.zScore * 10,
+      sportScore: team.sportScore,
     };
   };
 
@@ -307,120 +298,131 @@ export default async function Home({
   );
 
   return (
-    <main className="min-h-screen bg-gray-100 p-8">
+    <main className="min-h-screen bg-blue-50 px-4 py-6 sm:p-8">
       <div className="mx-auto max-w-7xl">
-<nav className="mb-8 flex items-center gap-6 border-b border-gray-300 pb-4">
-  <Link
-    href="/"
-    className="font-semibold text-gray-900 hover:text-blue-600"
-  >
-    Standings
-  </Link>
 
-  <Link
-    href="/sports"
-    className="font-semibold text-gray-600 hover:text-blue-600"
-  >
-    Sports
-  </Link>
-
-  <Link
-    href="/scoring"
-    className="font-semibold text-gray-600 hover:text-blue-600"
-  >
-    Scoring
-  </Link>
-</nav>
-        <div className="mb-6">
-  <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl">
-    Multi-Sport Fantasy League
-  </h1>
-
-  <p className="mt-2 text-sm text-slate-600 sm:text-base">
-    Overall standings across all five sports
-  </p>
-{currentSeason && (
-  <>
-    <div className="mt-3">
-      <SeasonSelector
-        seasons={seasons}
-        selectedYear={selectedYear}
-      />
-    </div>
-
-    <div className="mt-4 flex flex-wrap gap-2">
-      {currentSeason.sports.map((sport) => (
-        <div
-          key={sport.sport}
-          className="flex items-center gap-2 rounded-full border border-blue-200 bg-white px-3 py-1.5 shadow-sm"
-        >
-          <span className="text-xs font-semibold text-slate-800 sm:text-sm">
-            {sport.label}
-          </span>
-
-          <span
-            className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
-              sport.status === "final"
-                ? "bg-slate-100 text-slate-700"
-                : sport.status === "live"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-amber-100 text-amber-800"
-            }`}
+        <nav className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-blue-200 pb-4">
+          <Link
+            href="/"
+            className="font-bold text-blue-800"
           >
-            {sport.status}
-          </span>
-        </div>
-      ))}
-    </div>
-  </>
-)}
+            Standings
+          </Link>
 
-</div>
-<div className="mb-6">
-  <Link
-    href="/scoring"
-    className="font-semibold text-blue-600 hover:underline"
-  >
-    View Scoring System
-  </Link>
-</div>
-        <p className="mb-8 text-sm text-gray-500">
+          <Link
+            href="/sports"
+            className="font-semibold text-slate-700 transition hover:text-blue-700"
+          >
+            Sports
+          </Link>
+
+          <Link
+            href="/rosters"
+            className="font-semibold text-slate-700 transition hover:text-blue-700"
+          >
+            Rosters
+          </Link>
+
+          <Link
+            href="/scoring"
+            className="font-semibold text-slate-700 transition hover:text-blue-700"
+          >
+            Scoring
+          </Link>
+        </nav>
+
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl">
+            Multi-Sport Fantasy League
+          </h1>
+
+          <p className="mt-2 text-sm text-slate-700 sm:text-base">
+            Overall standings across all five sports
+          </p>
+
+          {currentSeason && (
+            <>
+              <div className="mt-4">
+                <SeasonSelector
+                  seasons={seasons}
+                  selectedYear={selectedYear}
+                />
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                {currentSeason.sports.map((sport) => (
+                  <div
+                    key={sport.sport}
+                    className="flex items-center gap-2 rounded-full border border-blue-200 bg-white px-3 py-1.5 shadow-sm"
+                  >
+                    <span className="text-xs font-bold text-slate-900 sm:text-sm">
+                      {sport.label}
+                    </span>
+
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                        sport.status === "final"
+                          ? "bg-slate-100 text-slate-700"
+                          : sport.status === "live"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-amber-100 text-amber-800"
+                      }`}
+                    >
+                      {sport.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="mb-6">
+          <Link
+            href="/scoring"
+            className="font-bold text-blue-700 hover:text-blue-900 hover:underline"
+          >
+            View Scoring System
+          </Link>
+        </div>
+
+        <p className="mb-8 text-sm font-medium text-slate-600">
           Hover over a sport score to see the scoring breakdown.
         </p>
 
-        <div className="overflow-x-auto rounded-lg bg-white shadow">
-          <table className="w-full border-collapse">
+        <div className="overflow-x-auto rounded-xl border border-blue-100 bg-white shadow-sm">
+          <table className="w-full min-w-[850px] border-collapse">
             <thead>
-              <tr className="border-b bg-gray-50">
-                <th className="p-4 text-center">
+              <tr className="border-b border-blue-100 bg-blue-50">
+                <th className="p-4 text-center font-bold text-slate-900">
                   Overall
                 </th>
 
-                <th className="p-4 text-left">
+                <th className="p-4 text-left font-bold text-slate-900">
                   Owner
                 </th>
 
-                <th className="p-4 text-center">
+                <th className="p-4 text-center font-bold text-slate-900">
                   NFL
                 </th>
 
-                <th className="p-4 text-center">
+                <th className="p-4 text-center font-bold text-slate-900">
                   MLB
                 </th>
 
-                <th className="p-4 text-center">
+                <th className="p-4 text-center font-bold text-slate-900">
                   NBA
                 </th>
 
-                <th className="p-4 text-center">
+                <th className="p-4 text-center font-bold text-slate-900">
                   EPL
                 </th>
 
-                <th className="p-4 text-center">
+                <th className="p-4 text-center font-bold text-slate-900">
                   PGA
                 </th>
 
-                <th className="p-4 text-center">
+                <th className="p-4 text-center font-bold text-slate-900">
                   Total
                 </th>
               </tr>
@@ -431,13 +433,13 @@ export default async function Home({
                 (team, index) => (
                   <tr
                     key={team.owner}
-                    className="border-b last:border-b-0"
+                    className="border-b border-blue-100 last:border-b-0 hover:bg-blue-50/50"
                   >
-                    <td className="p-4 text-center text-lg font-bold">
+                    <td className="p-4 text-center text-lg font-bold text-slate-900">
                       {index + 1}
                     </td>
 
-                    <td className="p-4 font-medium">
+                    <td className="p-4 font-semibold text-slate-900">
                       {team.owner}
                     </td>
 
@@ -447,7 +449,7 @@ export default async function Home({
                     <SportCell result={team.EPL} />
                     <SportCell result={team.PGA} />
 
-                    <td className="p-4 text-center text-lg font-bold">
+                    <td className="p-4 text-center text-lg font-bold text-blue-900">
                       {team.total.toFixed(1)}
                     </td>
                   </tr>
