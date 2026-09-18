@@ -218,33 +218,63 @@ export default async function Home({
     )
   );
 
-  const getSportResult = (
-    owner: string,
-    sport: string
-  ): SportResult => {
-    const league =
-      scoredLeagues.find(
-        (item) => item.key === sport
-      );
+const getSportResult = (
+  owner: string,
+  sport: "NFL" | "MLB" | "NBA" | "EPL" | "PGA"
+): SportResult => {
+  const sportSeason =
+    currentSeason?.sports.find(
+      (item) => item.sport === sport
+    );
 
-    const team =
-      league?.scored.find(
-        (item: ScoredTeam) =>
-          item.team === owner
-      );
+  if (sportSeason?.status === "upcoming") {
+    return {
+      rank: 0,
+      fantasyPoints: 0,
+      leagueAverage: 0,
+      standardDeviation: 0,
+      zScore: 0,
+      placementPoints: 0,
+      dominanceScore: 0,
+      sportScore: 0,
+    };
+  }
 
-    if (!team) {
-      return {
-        rank: 0,
-        fantasyPoints: 0,
-        leagueAverage: 0,
-        standardDeviation: 0,
-        zScore: 0,
-        placementPoints: 0,
-        dominanceScore: 0,
-        sportScore: 0,
-      };
-    }
+  const league =
+    scoredLeagues.find(
+      (item) => item.key === sport
+    );
+
+  const team =
+    league?.scored.find(
+      (item: ScoredTeam) =>
+        item.team === owner
+    );
+
+  if (!team) {
+    return {
+      rank: 0,
+      fantasyPoints: 0,
+      leagueAverage: 0,
+      standardDeviation: 0,
+      zScore: 0,
+      placementPoints: 0,
+      dominanceScore: 0,
+      sportScore: 0,
+    };
+  }
+
+  return {
+    rank: team.rank,
+    fantasyPoints: team.fantasyPoints,
+    leagueAverage: team.leagueAverage,
+    standardDeviation: team.standardDeviation,
+    zScore: team.zScore,
+    placementPoints: team.placementPoints,
+    dominanceScore: team.zScore * 10,
+    sportScore: team.sportScore,
+  };
+};
 
     return {
       rank: team.rank,
