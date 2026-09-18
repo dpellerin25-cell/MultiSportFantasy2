@@ -344,15 +344,32 @@ export default function Home() {
 
         {/* PAGE HEADER */}
 
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl">
-            Multi-Sport Fantasy League
-          </h1>
+<div className="mb-6">
+  <div className="mb-2 text-sm font-bold uppercase tracking-wide text-blue-700">
+    {currentSeason?.name ?? `${CURRENT_SEASON} Championship`}
+  </div>
 
-          <p className="mt-2 text-sm text-slate-600 sm:text-base">
-            Overall standings across all five sports
-          </p>
-        </div>
+  <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl">
+    Multi-Sport Fantasy League
+  </h1>
+
+  <p className="mt-2 text-sm text-slate-700 sm:text-base sm:text-slate-600">
+    Overall standings across all five sports
+  </p>
+
+  {currentSeason && (
+    <div className="mt-4 flex flex-wrap gap-2">
+      {currentSeason.sports.map((sport) => (
+        <span
+          key={sport.sport}
+          className="rounded-full border border-blue-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-800 shadow-sm sm:text-sm"
+        >
+          {sport.label}
+        </span>
+      ))}
+    </div>
+  )}
+</div>
 
         {/* MOBILE STANDINGS */}
 
