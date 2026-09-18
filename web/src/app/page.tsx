@@ -11,6 +11,11 @@ import {
   ScoredTeam,
 } from "@/lib/scoring";
 
+import {
+  CURRENT_SEASON,
+  getSeason,
+} from "@/config/seasons";
+
 const leagues = [
   {
     key: "NFL",
