@@ -204,6 +204,7 @@ function MobileSportScore({
 }
 
 export default function Home() {
+    const currentSeason = getSeason(CURRENT_SEASON);
   const scoredLeagues = leagues.map(
     (league) => ({
       ...league,
