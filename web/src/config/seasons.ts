@@ -33,7 +33,7 @@ export const seasons: MultisportSeason[] = [
       {
         sport: "EPL",
         label: "2026–27 Premier League",
-        status: "upcoming",
+        status: "live",
       },
       {
         sport: "PGA",
