@@ -72,7 +72,9 @@ function SportCell({
           type="button"
           className="min-w-20 rounded-lg px-3 py-2 font-bold text-slate-900 transition hover:bg-blue-50 focus:bg-blue-50 focus:outline-none"
         >
-          {result.sportScore.toFixed(1)}
+          {result.rank === 0
+  ? "—"
+  : result.sportScore.toFixed(1)}
         </button>
 
         <div
