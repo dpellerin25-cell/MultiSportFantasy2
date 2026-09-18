@@ -2,7 +2,7 @@
   "sport": "NFL",
   "league_id": "yg0olhfrmtj45dd6",
   "league_name": "2026 Test_NFL",
-  "updated_at": "2026-09-17T23:14:25.424560+00:00",
+  "updated_at": "2026-09-18T09:02:04.430671+00:00",
   "team_count": 9,
   "teams": {
     "fhsj2l6xmtufxavs": {
@@ -65,10 +65,10 @@
       "rank": "1",
       "team": "Doug",
       "team_id": "61pwhedumtj45e7v",
-      "fantasyPoints": "39",
-      "pointsBased": "39",
-      "FPtsPerGame": "39",
-      "sc": "1",
+      "fantasyPoints": "82.3",
+      "pointsBased": "43.3",
+      "FPtsPerGame": "41.15",
+      "sc": "2",
       "groupname": "0",
       "wwOrder": "7",
       "pointsBehindLeader": "0"
@@ -83,7 +83,7 @@
       "sc": "0",
       "groupname": "0",
       "wwOrder": "2",
-      "pointsBehindLeader": "39"
+      "pointsBehindLeader": "82.3"
     },
     {
       "rank": "2",
@@ -95,7 +95,7 @@
       "sc": "0",
       "groupname": "0",
       "wwOrder": "1",
-      "pointsBehindLeader": "39"
+      "pointsBehindLeader": "82.3"
     },
     {
       "rank": "2",
@@ -107,7 +107,7 @@
       "sc": "0",
       "groupname": "0",
       "wwOrder": "5",
-      "pointsBehindLeader": "39"
+      "pointsBehindLeader": "82.3"
     },
     {
       "rank": "2",
@@ -119,7 +119,7 @@
       "sc": "0",
       "groupname": "0",
       "wwOrder": "6",
-      "pointsBehindLeader": "39"
+      "pointsBehindLeader": "82.3"
     },
     {
       "rank": "2",
@@ -131,7 +131,7 @@
       "sc": "0",
       "groupname": "0",
       "wwOrder": "3",
-      "pointsBehindLeader": "39"
+      "pointsBehindLeader": "82.3"
     },
     {
       "rank": "2",
@@ -143,7 +143,7 @@
       "sc": "0",
       "groupname": "0",
       "wwOrder": "4",
-      "pointsBehindLeader": "39"
+      "pointsBehindLeader": "82.3"
     },
     {
       "rank": "2",
@@ -155,7 +155,7 @@
       "sc": "0",
       "groupname": "0",
       "wwOrder": "9",
-      "pointsBehindLeader": "39"
+      "pointsBehindLeader": "82.3"
     },
     {
       "rank": "2",
@@ -167,7 +167,7 @@
       "sc": "0",
       "groupname": "0",
       "wwOrder": "8",
-      "pointsBehindLeader": "39"
+      "pointsBehindLeader": "82.3"
     }
   ]
 }
