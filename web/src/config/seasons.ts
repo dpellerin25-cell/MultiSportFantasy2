@@ -1,4 +1,7 @@
-export type SportStatus = "upcoming" | "live" | "final";
+export type SportStatus =
+  | "upcoming"
+  | "live"
+  | "final";
 
 export type SportSeason = {
   sport: "NFL" | "MLB" | "NBA" | "EPL" | "PGA";
@@ -25,22 +28,22 @@ export const seasons: MultisportSeason[] = [
       {
         sport: "NBA",
         label: "2026–27 NBA",
-        status: "live",
+        status: "upcoming",
       },
       {
         sport: "EPL",
         label: "2026–27 Premier League",
-        status: "live",
+        status: "upcoming",
       },
       {
         sport: "PGA",
         label: "2027 PGA",
-        status: "live",
+        status: "upcoming",
       },
       {
         sport: "MLB",
         label: "2027 MLB",
-        status: "live",
+        status: "upcoming",
       },
     ],
   },
@@ -49,5 +52,7 @@ export const seasons: MultisportSeason[] = [
 export const CURRENT_SEASON = 2027;
 
 export function getSeason(year: number) {
-  return seasons.find((season) => season.year === year);
+  return seasons.find(
+    (season) => season.year === year
+  );
 }
