@@ -1,9 +1,5 @@
 import Link from "next/link";
-import nfl from "../../data/nfl.json";
-import mlb from "../../data/mlb.json";
-import nba from "../../data/nba.json";
-import premierLeague from "../../data/premier-league.json";
-import pga from "../../data/pga.json";
+import { getSeasonLeagueData } from "@/lib/seasonData";
 
 import {
   scoreLeague,
@@ -18,23 +14,23 @@ import {
 const leagues = [
   {
     key: "NFL",
-    data: nfl,
+    data: getSeasonLeagueData(CURRENT_SEASON, "NFL"),
   },
   {
     key: "MLB",
-    data: mlb,
+    data: getSeasonLeagueData(CURRENT_SEASON, "MLB"),
   },
   {
     key: "NBA",
-    data: nba,
+    data: getSeasonLeagueData(CURRENT_SEASON, "NBA"),
   },
   {
     key: "EPL",
-    data: premierLeague,
+    data: getSeasonLeagueData(CURRENT_SEASON, "EPL"),
   },
   {
     key: "PGA",
-    data: pga,
+    data: getSeasonLeagueData(CURRENT_SEASON, "PGA"),
   },
 ];
 
