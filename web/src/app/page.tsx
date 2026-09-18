@@ -10,6 +10,11 @@ import {
   ScoredTeam,
 } from "@/lib/scoring";
 
+import {
+  CURRENT_SEASON,
+  getSeason,
+} from "@/config/seasons";
+
 const leagues = [
   {
     key: "NFL",
@@ -178,6 +183,7 @@ function SportCell({
 }
 
 export default function Home() {
+  const currentSeason = getSeason(CURRENT_SEASON);
   const scoredLeagues = leagues.map(
     (league) => ({
       ...league,
@@ -306,13 +312,48 @@ export default function Home() {
     Scoring
   </Link>
 </nav>
-        <h1 className="mb-2 text-4xl font-bold">
-          Multi-Sport Fantasy League
-        </h1>
+        <div className="mb-6">
+  <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl">
+    Multi-Sport Fantasy League
+  </h1>
 
-        <p className="mb-2 text-gray-600">
-          Overall standings across all five sports
-        </p>
+  <p className="mt-2 text-sm text-slate-600 sm:text-base">
+    Overall standings across all five sports
+  </p>
+
+  {currentSeason && (
+    <>
+      <div className="mt-3 inline-flex rounded-full border border-blue-200 bg-white px-3 py-1.5 text-sm font-bold text-blue-800 shadow-sm">
+        {currentSeason.name}
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {currentSeason.sports.map((sport) => (
+          <div
+            key={sport.sport}
+            className="flex items-center gap-2 rounded-full border border-blue-200 bg-white px-3 py-1.5 shadow-sm"
+          >
+            <span className="text-xs font-semibold text-slate-800 sm:text-sm">
+              {sport.label}
+            </span>
+
+            <span
+              className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                sport.status === "final"
+                  ? "bg-slate-100 text-slate-700"
+                  : sport.status === "live"
+                    ? "bg-green-100 text-green-800"
+                    : "bg-amber-100 text-amber-800"
+              }`}
+            >
+              {sport.status}
+            </span>
+          </div>
+        ))}
+      </div>
+    </>
+  )}
+</div>
 <div className="mb-6">
   <Link
     href="/scoring"
