@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import { useRouter } from "next/navigation";
 
 type SeasonOption = {
   year: number;
@@ -14,25 +16,42 @@ export default function SeasonSelector({
   seasons,
   selectedYear,
 }: SeasonSelectorProps) {
-  return (
-    <div className="flex flex-wrap gap-2">
-      {seasons.map((season) => {
-        const selected = season.year === selectedYear;
+  const router = useRouter();
 
-        return (
-          <Link
-            key={season.year}
-            href={selected ? "/" : `/?season=${season.year}`}
-            className={`rounded-full border px-3 py-1.5 text-sm font-bold transition ${
-              selected
-                ? "border-blue-700 bg-blue-700 text-white"
-                : "border-blue-200 bg-white text-blue-800 hover:bg-blue-50"
-            }`}
-          >
-            {season.name}
-          </Link>
-        );
-      })}
+  function handleChange(
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) {
+    const year = event.target.value;
+
+    router.push(`/?season=${year}`);
+  }
+
+  return (
+    <div className="inline-flex items-center gap-2">
+      <label
+        htmlFor="season-selector"
+        className="text-sm font-semibold text-slate-700"
+      >
+        Season
+      </label>
+
+      <select
+        id="season-selector"
+        value={selectedYear}
+        onChange={handleChange}
+        className="rounded-lg border border-blue-200 bg-white px-3 py-2 text-sm font-bold text-blue-800 shadow-sm outline-none transition hover:border-blue-300 focus:border-blue-500"
+      >
+        {[...seasons]
+          .sort((a, b) => b.year - a.year)
+          .map((season) => (
+            <option
+              key={season.year}
+              value={season.year}
+            >
+              {season.name}
+            </option>
+          ))}
+      </select>
     </div>
   );
 }
