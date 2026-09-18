@@ -357,18 +357,32 @@ export default function Home() {
     Overall standings across all five sports
   </p>
 
-  {currentSeason && (
-    <div className="mt-4 flex flex-wrap gap-2">
-      {currentSeason.sports.map((sport) => (
-        <span
-          key={sport.sport}
-          className="rounded-full border border-blue-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-800 shadow-sm sm:text-sm"
-        >
+{currentSeason && (
+  <div className="mt-4 flex flex-wrap gap-2">
+    {currentSeason.sports.map((sport) => (
+      <div
+        key={sport.sport}
+        className="flex items-center gap-2 rounded-full border border-blue-200 bg-white px-3 py-1.5 shadow-sm"
+      >
+        <span className="text-xs font-semibold text-slate-800 sm:text-sm">
           {sport.label}
         </span>
-      ))}
-    </div>
-  )}
+
+        <span
+          className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+            sport.status === "final"
+              ? "bg-slate-100 text-slate-700"
+              : sport.status === "live"
+                ? "bg-green-100 text-green-800"
+                : "bg-amber-100 text-amber-800"
+          }`}
+        >
+          {sport.status}
+        </span>
+      </div>
+    ))}
+  </div>
+)}
 </div>
 
         {/* MOBILE STANDINGS */}
