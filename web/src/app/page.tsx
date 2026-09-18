@@ -1,5 +1,4 @@
 import Link from "next/link";
-
 import nfl from "../../data/nfl.json";
 import mlb from "../../data/mlb.json";
 import nba from "../../data/nba.json";
@@ -10,11 +9,6 @@ import {
   scoreLeague,
   ScoredTeam,
 } from "@/lib/scoring";
-
-import {
-  CURRENT_SEASON,
-  getSeason,
-} from "@/config/seasons";
 
 const leagues = [
   {
@@ -88,7 +82,7 @@ function SportCell({
       <div className="group relative inline-block">
         <button
           type="button"
-          className="min-w-20 rounded-md px-3 py-2 font-semibold text-slate-800 transition hover:bg-blue-50 focus:bg-blue-50 focus:outline-none"
+          className="min-w-20 rounded-md px-3 py-2 font-semibold hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
         >
           {result.sportScore.toFixed(1)}
         </button>
@@ -106,7 +100,7 @@ function SportCell({
             -translate-x-1/2
             rounded-lg
             border
-            border-blue-100
+            border-gray-200
             bg-white
             p-4
             text-left
@@ -115,17 +109,17 @@ function SportCell({
             group-focus-within:block
           "
         >
-          <div className="mb-3 border-b border-blue-100 pb-2">
-            <div className="text-lg font-bold text-slate-900">
+          <div className="mb-3 border-b pb-2">
+            <div className="text-lg font-bold">
               {result.sportScore.toFixed(1)} points
             </div>
 
-            <div className="text-sm text-slate-700">
+            <div className="text-sm text-gray-500">
               Final sport score
             </div>
           </div>
 
-          <div className="space-y-2 text-sm text-slate-700">
+          <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span>Finish</span>
               <span className="font-semibold">
@@ -169,8 +163,8 @@ function SportCell({
             </div>
           </div>
 
-          <div className="mt-3 border-t border-blue-100 pt-3">
-            <div className="flex justify-between font-bold text-blue-700">
+          <div className="mt-3 border-t pt-3">
+            <div className="flex justify-between font-bold">
               <span>Total</span>
               <span>
                 {result.sportScore.toFixed(1)}
@@ -183,28 +177,7 @@ function SportCell({
   );
 }
 
-function MobileSportScore({
-  label,
-  result,
-}: {
-  label: string;
-  result: SportResult;
-}) {
-  return (
-    <div className="text-center">
-      <div className="text-xs font-semibold text-blue-700">
-        {label}
-      </div>
-
-      <div className="mt-1 text-sm font-bold text-slate-800">
-        {result.sportScore.toFixed(1)}
-      </div>
-    </div>
-  );
-}
-
 export default function Home() {
-    const currentSeason = getSeason(CURRENT_SEASON);
   const scoredLeagues = leagues.map(
     (league) => ({
       ...league,
@@ -309,192 +282,84 @@ export default function Home() {
   );
 
   return (
-    <main className="min-h-screen bg-blue-50 px-4 py-5 sm:p-8">
+    <main className="min-h-screen bg-gray-100 p-8">
       <div className="mx-auto max-w-7xl">
+<nav className="mb-8 flex items-center gap-6 border-b border-gray-300 pb-4">
+  <Link
+    href="/"
+    className="font-semibold text-gray-900 hover:text-blue-600"
+  >
+    Standings
+  </Link>
 
-        {/* NAVIGATION */}
+  <Link
+    href="/sports"
+    className="font-semibold text-gray-600 hover:text-blue-600"
+  >
+    Sports
+  </Link>
 
-        <nav className="mb-6 flex items-center justify-around border-b border-blue-200 pb-4 sm:justify-start sm:gap-8">
-          <Link
-            href="/"
-            className="text-sm font-bold text-blue-700 sm:text-base"
-          >
-            Standings
-          </Link>
+  <Link
+    href="/scoring"
+    className="font-semibold text-gray-600 hover:text-blue-600"
+  >
+    Scoring
+  </Link>
+</nav>
+        <h1 className="mb-2 text-4xl font-bold">
+          Multi-Sport Fantasy League
+        </h1>
 
-          <Link
-            href="/sports"
-            className="text-sm font-semibold text-blue-700 transition hover:text-blue-700 sm:text-base"
-          >
-            Sports
-          </Link>
-<Link
-  href="/rosters"
-  className="text-sm font-semibold text-blue-700 transition hover:text-blue-700 sm:text-base"
->
-  Rosters
-</Link>
-          <Link
-            href="/scoring"
-            className="text-sm font-semibold text-blue-700 transition hover:text-blue-700 sm:text-base"
-          >
-            Scoring
-          </Link>
-        </nav>
-
-        {/* PAGE HEADER */}
-
+        <p className="mb-2 text-gray-600">
+          Overall standings across all five sports
+        </p>
 <div className="mb-6">
-  <div className="mb-2 text-sm font-bold uppercase tracking-wide text-blue-700">
-    {currentSeason?.name ?? `${CURRENT_SEASON} Championship`}
-  </div>
-
-  <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl">
-    Multi-Sport Fantasy League
-  </h1>
-
-  <p className="mt-2 text-sm text-slate-700 sm:text-base sm:text-slate-600">
-    Overall standings across all five sports
-  </p>
-
-{currentSeason && (
-  <div className="mt-4 flex flex-wrap gap-2">
-    {currentSeason.sports.map((sport) => (
-      <div
-        key={sport.sport}
-        className="flex items-center gap-2 rounded-full border border-blue-200 bg-white px-3 py-1.5 shadow-sm"
-      >
-        <span className="text-xs font-semibold text-slate-800 sm:text-sm">
-          {sport.label}
-        </span>
-
-        <span
-          className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
-            sport.status === "final"
-              ? "bg-slate-100 text-slate-700"
-              : sport.status === "live"
-                ? "bg-green-100 text-green-800"
-                : "bg-amber-100 text-amber-800"
-          }`}
-        >
-          {sport.status}
-        </span>
-      </div>
-    ))}
-  </div>
-)}
+  <Link
+    href="/scoring"
+    className="font-semibold text-blue-600 hover:underline"
+  >
+    View Scoring System
+  </Link>
 </div>
+        <p className="mb-8 text-sm text-gray-500">
+          Hover over a sport score to see the scoring breakdown.
+        </p>
 
-        {/* MOBILE STANDINGS */}
-
-        <div className="space-y-3 md:hidden">
-          {standings.map((team, index) => (
-            <div
-              key={team.owner}
-              className="rounded-xl border border-blue-100 bg-white p-4 shadow-sm"
-            >
-              <div className="mb-4 flex items-center justify-between">
-
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-lg font-bold text-blue-700">
-                    {index + 1}
-                  </div>
-
-                  <div>
-                    <div className="text-lg font-bold text-slate-900">
-                      {team.owner}
-                    </div>
-
-                    <div className="text-xs text-slate-700">
-                      Overall rank
-                    </div>
-                  </div>
-                </div>
-
-                <div className="text-right">
-                  <div className="text-xl font-bold text-blue-700">
-                    {team.total.toFixed(1)}
-                  </div>
-
-                  <div className="text-xs text-slate-700">
-                    Total points
-                  </div>
-                </div>
-
-              </div>
-
-              <div className="grid grid-cols-5 gap-1 border-t border-blue-100 pt-3">
-
-                <MobileSportScore
-                  label="NFL"
-                  result={team.NFL}
-                />
-
-                <MobileSportScore
-                  label="MLB"
-                  result={team.MLB}
-                />
-
-                <MobileSportScore
-                  label="NBA"
-                  result={team.NBA}
-                />
-
-                <MobileSportScore
-                  label="EPL"
-                  result={team.EPL}
-                />
-
-                <MobileSportScore
-                  label="PGA"
-                  result={team.PGA}
-                />
-
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* DESKTOP STANDINGS */}
-
-        <div className="hidden overflow-visible rounded-xl border border-blue-100 bg-white shadow-sm md:block">
+        <div className="overflow-x-auto rounded-lg bg-white shadow">
           <table className="w-full border-collapse">
-
             <thead>
-              <tr className="border-b border-blue-100 bg-blue-50">
-
-                <th className="p-4 text-center text-slate-700">
+              <tr className="border-b bg-gray-50">
+                <th className="p-4 text-center">
                   Overall
                 </th>
 
-                <th className="p-4 text-left text-slate-700">
+                <th className="p-4 text-left">
                   Owner
                 </th>
 
-                <th className="p-4 text-center text-slate-700">
+                <th className="p-4 text-center">
                   NFL
                 </th>
 
-                <th className="p-4 text-center text-slate-700">
+                <th className="p-4 text-center">
                   MLB
                 </th>
 
-                <th className="p-4 text-center text-slate-700">
+                <th className="p-4 text-center">
                   NBA
                 </th>
 
-                <th className="p-4 text-center text-slate-700">
+                <th className="p-4 text-center">
                   EPL
                 </th>
 
-                <th className="p-4 text-center text-slate-700">
+                <th className="p-4 text-center">
                   PGA
                 </th>
 
-                <th className="p-4 text-center text-slate-700">
+                <th className="p-4 text-center">
                   Total
                 </th>
-
               </tr>
             </thead>
 
@@ -503,51 +368,31 @@ export default function Home() {
                 (team, index) => (
                   <tr
                     key={team.owner}
-                    className="border-b border-blue-50 transition last:border-b-0 hover:bg-blue-50/50"
+                    className="border-b last:border-b-0"
                   >
-
-                    <td className="p-4 text-center">
-                      <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-700">
-                        {index + 1}
-                      </div>
+                    <td className="p-4 text-center text-lg font-bold">
+                      {index + 1}
                     </td>
 
-                    <td className="p-4 font-semibold text-slate-900">
+                    <td className="p-4 font-medium">
                       {team.owner}
                     </td>
 
-                    <SportCell
-                      result={team.NFL}
-                    />
+                    <SportCell result={team.NFL} />
+                    <SportCell result={team.MLB} />
+                    <SportCell result={team.NBA} />
+                    <SportCell result={team.EPL} />
+                    <SportCell result={team.PGA} />
 
-                    <SportCell
-                      result={team.MLB}
-                    />
-
-                    <SportCell
-                      result={team.NBA}
-                    />
-
-                    <SportCell
-                      result={team.EPL}
-                    />
-
-                    <SportCell
-                      result={team.PGA}
-                    />
-
-                    <td className="p-4 text-center text-lg font-bold text-blue-700">
+                    <td className="p-4 text-center text-lg font-bold">
                       {team.total.toFixed(1)}
                     </td>
-
                   </tr>
                 )
               )}
             </tbody>
-
           </table>
         </div>
-
       </div>
     </main>
   );
