@@ -339,12 +339,16 @@ export default async function Home({
     Overall standings across all five sports
   </p>
 
-  {currentSeason && (
-    <>
-      <div className="mt-3 inline-flex rounded-full border border-blue-200 bg-white px-3 py-1.5 text-sm font-bold text-blue-800 shadow-sm">
-        {currentSeason.name}
-      </div>
-<div className="mt-4">
+{currentSeason && (
+  <>
+    <div className="mt-3">
+      <SeasonSelector
+        seasons={seasons}
+        selectedYear={selectedYear}
+      />
+    </div>
+
+    <div className="mt-4 flex flex-wrap gap-2">
   <SeasonSelector
     seasons={seasons}
     selectedYear={selectedYear}
