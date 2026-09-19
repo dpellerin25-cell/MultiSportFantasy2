@@ -278,17 +278,7 @@ const getSportResult = (
   };
 };
 
-    return {
-      rank: team.rank,
-      fantasyPoints: team.fantasyPoints,
-      leagueAverage: team.leagueAverage,
-      standardDeviation: team.standardDeviation,
-      zScore: team.zScore,
-      placementPoints: team.placementPoints,
-      dominanceScore: team.zScore * 10,
-      sportScore: team.sportScore,
-    };
-  };
+
 
   const standings: OverallRow[] =
     allOwners.map((owner) => {
