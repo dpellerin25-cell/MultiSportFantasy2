@@ -2,7 +2,7 @@
   "sport": "NFL",
   "league_id": "yg0olhfrmtj45dd6",
   "league_name": "2026 Test_NFL",
-  "updated_at": "2026-09-20T09:02:06.584976+00:00",
+  "updated_at": "2026-09-20T21:39:40.326575+00:00",
   "team_count": 9,
   "teams": {
     "fhsj2l6xmtufxavs": {
@@ -66,7 +66,7 @@
       "team": "Doug",
       "team_id": "61pwhedumtj45e7v",
       "fantasyPoints": "82.3",
-      "pointsBased": "43.3",
+      "pointsBased": "0",
       "FPtsPerGame": "41.15",
       "sc": "2",
       "groupname": "0",
