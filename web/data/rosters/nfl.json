@@ -1,9 +1,9 @@
 {
   "sport": "NFL",
   "league_id": "yg0olhfrmtj45dd6",
-  "updated_at": "2026-09-20T21:39:41.082334+00:00",
+  "updated_at": "2026-09-20T22:04:39.180205+00:00",
   "team_count": 9,
-  "total_players": 1,
+  "total_players": 2,
   "rosters": [
     {
       "owner": "Jack",
@@ -14,8 +14,19 @@
     {
       "owner": "Brendan",
       "team_id": "ctwavmkjmtufxavs",
-      "player_count": 0,
-      "players": []
+      "player_count": 1,
+      "players": [
+        {
+          "player_id": "06amz",
+          "name": "Bryce Young",
+          "position": "QB",
+          "pro_team": "CAR",
+          "pro_team_name": "Carolina Panthers",
+          "status_id": "1",
+          "roster_position_id": "100",
+          "headshot_url": "https://fantraximg.com/si/headshots/NFL/hs06amz_96_5.png"
+        }
+      ]
     },
     {
       "owner": "Ryan",

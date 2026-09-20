@@ -1,9 +1,9 @@
 {
   "sport": "Premier League",
   "league_id": "j08ymyupmtj415q3",
-  "updated_at": "2026-09-20T21:39:44.431796+00:00",
+  "updated_at": "2026-09-20T22:04:42.171019+00:00",
   "team_count": 9,
-  "total_players": 0,
+  "total_players": 2,
   "rosters": [
     {
       "owner": "Jack",
@@ -14,8 +14,19 @@
     {
       "owner": "Chris",
       "team_id": "dxxlben8mtug18ye",
-      "player_count": 0,
-      "players": []
+      "player_count": 1,
+      "players": [
+        {
+          "player_id": "061vq",
+          "name": "Erling Haaland",
+          "position": "F",
+          "pro_team": "MCI",
+          "pro_team_name": "Manchester City",
+          "status_id": "1",
+          "roster_position_id": "701",
+          "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Manchester_City.png"
+        }
+      ]
     },
     {
       "owner": "Doug",
@@ -56,8 +67,19 @@
     {
       "owner": "Jacob",
       "team_id": "wi8jwabymtug18ye",
-      "player_count": 0,
-      "players": []
+      "player_count": 1,
+      "players": [
+        {
+          "player_id": "05r9b",
+          "name": "Martin Odegaard",
+          "position": "M",
+          "pro_team": "ARS",
+          "pro_team_name": "Arsenal",
+          "status_id": "1",
+          "roster_position_id": "702",
+          "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Arsenal.png"
+        }
+      ]
     }
   ]
 }
