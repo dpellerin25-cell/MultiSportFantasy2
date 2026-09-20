@@ -1,40 +1,9 @@
+import MainNavigation from "@/components/MainNavigation";
 import Link from "next/link";
 
-import { getSeasonLeagueData } from "@/lib/seasonData";
-
-import {
-  scoreLeague,
-  ScoredTeam,
-} from "@/lib/scoring";
-
-import {
-  CURRENT_SEASON,
-  getSeason,
-  seasons,
-} from "@/config/seasons";
-
+import { getOverallStandings, type SportResult } from "@/lib/overallStandings";
+import { CURRENT_SEASON, getSeason, seasons } from "@/config/seasons";
 import SeasonSelector from "@/components/SeasonSelector";
-
-type SportResult = {
-  rank: number;
-  fantasyPoints: number;
-  leagueAverage: number;
-  standardDeviation: number;
-  zScore: number;
-  placementPoints: number;
-  dominanceScore: number;
-  sportScore: number;
-};
-
-type OverallRow = {
-  owner: string;
-  NFL: SportResult;
-  MLB: SportResult;
-  NBA: SportResult;
-  EPL: SportResult;
-  PGA: SportResult;
-  total: number;
-};
 
 type HomeProps = {
   searchParams: Promise<{
@@ -179,179 +148,13 @@ export default async function Home({
       : CURRENT_SEASON;
 
   const currentSeason = getSeason(selectedYear);
-
-  const leagues = [
-    {
-      key: "NFL",
-      data: getSeasonLeagueData(selectedYear, "NFL"),
-    },
-    {
-      key: "MLB",
-      data: getSeasonLeagueData(selectedYear, "MLB"),
-    },
-    {
-      key: "NBA",
-      data: getSeasonLeagueData(selectedYear, "NBA"),
-    },
-    {
-      key: "EPL",
-      data: getSeasonLeagueData(selectedYear, "EPL"),
-    },
-    {
-      key: "PGA",
-      data: getSeasonLeagueData(selectedYear, "PGA"),
-    },
-  ];
-
-  const scoredLeagues = leagues.map(
-    (league) => ({
-      ...league,
-      scored: scoreLeague(league.data),
-    })
-  );
-
-  const allOwners = Array.from(
-    new Set(
-      scoredLeagues.flatMap((league) =>
-        league.scored.map(
-          (team) => team.team
-        )
-      )
-    )
-  );
-
-const getSportResult = (
-  owner: string,
-  sport: "NFL" | "MLB" | "NBA" | "EPL" | "PGA"
-): SportResult => {
-  const sportSeason =
-    currentSeason?.sports.find(
-      (item) => item.sport === sport
-    );
-
-  if (sportSeason?.status === "upcoming") {
-    return {
-      rank: 0,
-      fantasyPoints: 0,
-      leagueAverage: 0,
-      standardDeviation: 0,
-      zScore: 0,
-      placementPoints: 0,
-      dominanceScore: 0,
-      sportScore: 0,
-    };
-  }
-
-  const league =
-    scoredLeagues.find(
-      (item) => item.key === sport
-    );
-
-  const team =
-    league?.scored.find(
-      (item: ScoredTeam) =>
-        item.team === owner
-    );
-
-  if (!team) {
-    return {
-      rank: 0,
-      fantasyPoints: 0,
-      leagueAverage: 0,
-      standardDeviation: 0,
-      zScore: 0,
-      placementPoints: 0,
-      dominanceScore: 0,
-      sportScore: 0,
-    };
-  }
-
-  return {
-    rank: team.rank,
-    fantasyPoints: team.fantasyPoints,
-    leagueAverage: team.leagueAverage,
-    standardDeviation: team.standardDeviation,
-    zScore: team.zScore,
-    placementPoints: team.placementPoints,
-    dominanceScore: team.zScore * 10,
-    sportScore: team.sportScore,
-  };
-};
-
-
-
-  const standings: OverallRow[] =
-    allOwners.map((owner) => {
-      const NFL =
-        getSportResult(owner, "NFL");
-
-      const MLB =
-        getSportResult(owner, "MLB");
-
-      const NBA =
-        getSportResult(owner, "NBA");
-
-      const EPL =
-        getSportResult(owner, "EPL");
-
-      const PGA =
-        getSportResult(owner, "PGA");
-
-      const total =
-        NFL.sportScore +
-        MLB.sportScore +
-        NBA.sportScore +
-        EPL.sportScore +
-        PGA.sportScore;
-
-      return {
-        owner,
-        NFL,
-        MLB,
-        NBA,
-        EPL,
-        PGA,
-        total,
-      };
-    });
-
-  standings.sort(
-    (a, b) => b.total - a.total
-  );
+  const standings = getOverallStandings(selectedYear);
 
   return (
     <main className="min-h-screen bg-blue-50 px-4 py-6 sm:p-8">
       <div className="mx-auto max-w-7xl">
 
-        <nav className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-blue-200 pb-4">
-          <Link
-            href="/"
-            className="font-bold text-blue-800"
-          >
-            Standings
-          </Link>
-
-          <Link
-            href="/sports"
-            className="font-semibold text-slate-700 transition hover:text-blue-700"
-          >
-            Sports
-          </Link>
-
-          <Link
-            href="/rosters"
-            className="font-semibold text-slate-700 transition hover:text-blue-700"
-          >
-            Rosters
-          </Link>
-
-          <Link
-            href="/scoring"
-            className="font-semibold text-slate-700 transition hover:text-blue-700"
-          >
-            Scoring
-          </Link>
-        </nav>
+        <MainNavigation />
 
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl">
@@ -462,7 +265,12 @@ const getSportResult = (
                     </td>
 
                     <td className="p-4 font-semibold text-slate-900">
-                      {team.owner}
+                      <Link
+                        href={`/teams/${encodeURIComponent(team.owner)}?season=${selectedYear}`}
+                        className="inline-flex min-h-11 items-center rounded text-blue-800 underline decoration-blue-200 underline-offset-4 transition hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-700"
+                      >
+                        {team.owner}
+                      </Link>
                     </td>
 
                     <SportCell result={team.NFL} />

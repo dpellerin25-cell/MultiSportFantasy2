@@ -1,3 +1,4 @@
+import MainNavigation from "@/components/MainNavigation";
 import Link from "next/link";
 import {
   scoreLeague,
@@ -43,33 +44,7 @@ export default function SportStandings({
 
         {/* NAVIGATION */}
 
-        <nav className="mb-8 flex items-center justify-around border-b border-blue-200 pb-4 sm:justify-start sm:gap-6">
-          <Link
-            href="/"
-            className="font-semibold text-blue-800 hover:text-blue-900 sm:text-blue-500 sm:hover:text-blue-600"
-          >
-            Standings
-          </Link>
-
-          <Link
-            href="/sports"
-            className="font-semibold text-blue-900 hover:text-blue-950 sm:text-blue-700 sm:hover:text-blue-600"
-          >
-            Sports
-          </Link>
-<Link
-  href="/rosters"
-  className="font-semibold text-blue-800 hover:text-blue-900 sm:text-blue-500 sm:hover:text-blue-600"
->
-  Rosters
-</Link>
-          <Link
-            href="/scoring"
-            className="font-semibold text-blue-800 hover:text-blue-900 sm:text-blue-500 sm:hover:text-blue-600"
-          >
-            Scoring
-          </Link>
-        </nav>
+        <MainNavigation />
 
         {/* BACK LINK */}
 

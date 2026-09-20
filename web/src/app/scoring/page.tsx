@@ -1,4 +1,4 @@
-import Link from "next/link";
+import MainNavigation from "@/components/MainNavigation";
 const placementPoints = [
   { finish: "1st", points: 100 },
   { finish: "2nd", points: 80 },
@@ -15,33 +15,7 @@ export default function ScoringPage() {
   return (
     <main className="min-h-screen bg-blue-50 p-8">
       <div className="mx-auto max-w-4xl">
-<nav className="mb-8 flex items-center gap-6 border-b border-blue-200 pb-4">
-  <Link
-    href="/"
-    className="font-semibold text-blue-700 hover:text-blue-600"
-  >
-    Standings
-  </Link>
-
-  <Link
-    href="/sports"
-    className="font-semibold text-blue-700 hover:text-blue-600"
-  >
-    Sports
-  </Link>
-  <Link
-    href="/rosters"
-    className="font-semibold text-blue-700 hover:text-blue-600"
-  >
-    Rosters
-  </Link>
-  <Link
-    href="/scoring"
-    className="font-semibold text-blue-700 hover:text-blue-600"
-  >
-    Scoring
-  </Link>
-</nav>
+<MainNavigation />
         <h1 className="mb-2 text-4xl font-bold text-slate-900 sm:text-inherit">
           Scoring System
         </h1>
