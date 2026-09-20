@@ -247,7 +247,7 @@ export default async function Home({
                   PGA
                 </th>
 
-                <th className="p-4 text-center font-bold text-slate-900">
+                <th className="border-l-2 border-blue-300 bg-blue-800 p-4 text-center font-extrabold text-white">
                   Total
                 </th>
               </tr>
@@ -279,7 +279,7 @@ export default async function Home({
                     <SportCell result={team.EPL} />
                     <SportCell result={team.PGA} />
 
-                    <td className="p-4 text-center text-lg font-bold text-blue-900">
+                    <td className="border-l-2 border-blue-200 bg-blue-100 p-4 text-center text-2xl font-extrabold tabular-nums text-blue-950">
                       {team.total.toFixed(1)}
                     </td>
                   </tr>
