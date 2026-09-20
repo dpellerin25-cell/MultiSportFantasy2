@@ -10,11 +10,13 @@ type SeasonOption = {
 type SeasonSelectorProps = {
   seasons: SeasonOption[];
   selectedYear: number;
+  basePath?: string;
 };
 
 export default function SeasonSelector({
   seasons,
   selectedYear,
+  basePath = "/",
 }: SeasonSelectorProps) {
   const router = useRouter();
 
@@ -23,7 +25,7 @@ export default function SeasonSelector({
   ) {
     const year = event.target.value;
 
-    router.push(`/?season=${year}`);
+    router.push(`${basePath}?season=${year}`);
   }
 
   return (

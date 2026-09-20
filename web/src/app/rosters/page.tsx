@@ -1,4 +1,8 @@
-import Link from "next/link";
+import MainNavigation from "@/components/MainNavigation";
+import { connection } from "next/server";
+import { RookieDraftProvider, OwnerRookiePicks } from "@/components/RookieDraft";
+import { buildRookiePicks, getDraftYears } from "@/lib/rookieDraft";
+import { readDraftLedger, canWriteDrafts } from "@/lib/rookieDraftStore";
 
 import nfl from "../../../data/rosters/nfl.json";
 import mlb from "../../../data/rosters/mlb.json";
@@ -121,41 +125,22 @@ function buildCombinedRosters(): OwnerRoster[] {
   );
 }
 
-export default function RostersPage() {
+export default async function RostersPage() {
+  await connection();
   const owners = buildCombinedRosters();
+  const ledger = await readDraftLedger();
+  const years = getDraftYears();
+  const draft = {
+    years,
+    picks: buildRookiePicks(ledger, years),
+    trades: ledger.trades.filter((trade) => years.includes(trade.year)),
+    editingAvailable: canWriteDrafts(),
+  };
 
   return (
     <main className="min-h-screen bg-blue-50 px-4 py-5 text-slate-900 sm:p-8">
       <div className="mx-auto max-w-6xl">
-        <nav className="mb-8 flex items-center justify-around border-b border-blue-200 pb-4 sm:justify-start sm:gap-8">
-          <Link
-            href="/"
-            className="text-sm font-semibold text-blue-800 hover:text-blue-900 sm:text-base sm:text-blue-500 sm:hover:text-blue-700"
-          >
-            Standings
-          </Link>
-
-          <Link
-            href="/sports"
-            className="text-sm font-semibold text-blue-800 hover:text-blue-900 sm:text-base sm:text-blue-500 sm:hover:text-blue-700"
-          >
-            Sports
-          </Link>
-          <Link
-            href="/rosters"
-            className="text-sm font-bold text-blue-900 sm:text-base sm:text-blue-700"
-          >
-            Rosters
-          </Link>
-          <Link
-            href="/scoring"
-            className="text-sm font-semibold text-blue-800 hover:text-blue-900 sm:text-base sm:text-blue-500 sm:hover:text-blue-700"
-          >
-            Scoring
-          </Link>
-
-
-        </nav>
+        <MainNavigation />
 
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl">
@@ -169,7 +154,7 @@ export default function RostersPage() {
         </div>
 
         <div className="mb-6 rounded-xl border border-blue-100 bg-white p-4 shadow-sm sm:p-5">
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-sm font-semibold text-slate-600">
                 Global roster cap
@@ -186,16 +171,20 @@ export default function RostersPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <RookieDraftProvider initial={draft}>
+        <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
           {owners.map((owner) => (
             <RosterCard
               key={owner.owner}
               owner={owner.owner}
               sports={owner.sports}
               maxRosterSize={65}
-            />
+            >
+              <OwnerRookiePicks owner={owner.owner} />
+            </RosterCard>
           ))}
         </div>
+        </RookieDraftProvider>
       </div>
     </main>
   );

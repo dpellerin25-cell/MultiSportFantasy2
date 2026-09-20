@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Temporary files used for atomic rookie draft saves
+/data/rookie-draft.json.lock
+/data/rookie-draft.json.*.tmp

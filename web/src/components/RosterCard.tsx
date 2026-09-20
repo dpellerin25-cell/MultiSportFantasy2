@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 export type RosterPlayer = {
   player_id: string | null;
@@ -22,6 +22,7 @@ type RosterCardProps = {
   owner: string;
   sports: SportRoster[];
   maxRosterSize?: number;
+  children?: ReactNode;
 };
 
 function getCountStyle(count: number, max: number) {
@@ -42,6 +43,7 @@ export default function RosterCard({
   owner,
   sports,
   maxRosterSize = 65,
+  children,
 }: RosterCardProps) {
   const [expanded, setExpanded] = useState(false);
 
@@ -90,6 +92,7 @@ export default function RosterCard({
 
       {expanded && (
         <div className="border-t border-blue-100">
+          {children}
           {sports.map((sport) => (
             <section
               key={sport.sport}
