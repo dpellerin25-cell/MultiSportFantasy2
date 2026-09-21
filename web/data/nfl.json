@@ -2,7 +2,7 @@
   "sport": "NFL",
   "league_id": "yg0olhfrmtj45dd6",
   "league_name": "2026 Test_NFL",
-  "updated_at": "2026-09-20T22:04:38.482035+00:00",
+  "updated_at": "2026-09-21T09:02:16.211660+00:00",
   "team_count": 9,
   "teams": {
     "fhsj2l6xmtufxavs": {
@@ -78,7 +78,7 @@
       "team": "Brendan",
       "team_id": "ctwavmkjmtufxavs",
       "fantasyPoints": "63",
-      "pointsBased": "63",
+      "pointsBased": "26.95",
       "FPtsPerGame": "31.5",
       "sc": "2",
       "groupname": "0",
