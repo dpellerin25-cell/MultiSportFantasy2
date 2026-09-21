@@ -2,7 +2,7 @@
   "sport": "Premier League",
   "league_id": "j08ymyupmtj415q3",
   "league_name": "2026 Test_EPL",
-  "updated_at": "2026-09-21T09:02:18.832241+00:00",
+  "updated_at": "2026-09-21T21:42:05.752147+00:00",
   "team_count": 9,
   "teams": {
     "n1ifyr4umtug18ye": {
@@ -74,17 +74,6 @@
     },
     {
       "rank": "2",
-      "team": "Jacob",
-      "team_id": "wi8jwabymtug18ye",
-      "fantasyPoints": "57.5",
-      "pointsBased": "",
-      "FPtsPerGame": "11.5",
-      "sc": "5",
-      "groupname": "57.5",
-      "pointsBehindLeader": "18.75"
-    },
-    {
-      "rank": "3",
       "team": "Brendan",
       "team_id": "288rr3ycmtug18ye",
       "fantasyPoints": "0",
@@ -95,7 +84,7 @@
       "pointsBehindLeader": "76.25"
     },
     {
-      "rank": "3",
+      "rank": "2",
       "team": "Doug",
       "team_id": "y00vzeaumtj4175c",
       "fantasyPoints": "0",
@@ -106,7 +95,7 @@
       "pointsBehindLeader": "76.25"
     },
     {
-      "rank": "3",
+      "rank": "2",
       "team": "Hatch",
       "team_id": "e98kovyqmtug18ye",
       "fantasyPoints": "0",
@@ -117,7 +106,7 @@
       "pointsBehindLeader": "76.25"
     },
     {
-      "rank": "3",
+      "rank": "2",
       "team": "Jack",
       "team_id": "n1ifyr4umtug18ye",
       "fantasyPoints": "0",
@@ -128,7 +117,18 @@
       "pointsBehindLeader": "76.25"
     },
     {
-      "rank": "3",
+      "rank": "2",
+      "team": "Jacob",
+      "team_id": "wi8jwabymtug18ye",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "groupname": "0",
+      "pointsBehindLeader": "76.25"
+    },
+    {
+      "rank": "2",
       "team": "Nik",
       "team_id": "kgvxraa7mtug18yf",
       "fantasyPoints": "0",
@@ -139,7 +139,7 @@
       "pointsBehindLeader": "76.25"
     },
     {
-      "rank": "3",
+      "rank": "2",
       "team": "Ryan",
       "team_id": "hfwwgo47mtug18ye",
       "fantasyPoints": "0",
@@ -150,7 +150,7 @@
       "pointsBehindLeader": "76.25"
     },
     {
-      "rank": "3",
+      "rank": "2",
       "team": "Tucker",
       "team_id": "yuhhd6skmtug18ye",
       "fantasyPoints": "0",

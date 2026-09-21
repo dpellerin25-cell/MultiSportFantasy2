@@ -2,7 +2,7 @@
   "sport": "MLB",
   "league_id": "60ri2nbhmtj4b0km",
   "league_name": "2026 Test_MLB",
-  "updated_at": "2026-09-21T09:02:16.866361+00:00",
+  "updated_at": "2026-09-21T21:42:03.867988+00:00",
   "team_count": 9,
   "teams": {
     "1uucwggdmtufy7wz": {
@@ -66,7 +66,7 @@
       "team": "Brendan",
       "team_id": "c5b40h1dmtufy7x0",
       "fantasyPoints": "0",
-      "pointsBased": "0",
+      "pointsBased": "",
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",

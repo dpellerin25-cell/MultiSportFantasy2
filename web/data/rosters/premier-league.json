@@ -1,9 +1,9 @@
 {
   "sport": "Premier League",
   "league_id": "j08ymyupmtj415q3",
-  "updated_at": "2026-09-21T09:02:19.262518+00:00",
+  "updated_at": "2026-09-21T21:42:06.203895+00:00",
   "team_count": 9,
-  "total_players": 2,
+  "total_players": 1,
   "rosters": [
     {
       "owner": "Jack",
@@ -67,19 +67,8 @@
     {
       "owner": "Jacob",
       "team_id": "wi8jwabymtug18ye",
-      "player_count": 1,
-      "players": [
-        {
-          "player_id": "05r9b",
-          "name": "Martin Odegaard",
-          "position": "M",
-          "pro_team": "ARS",
-          "pro_team_name": "Arsenal",
-          "status_id": "1",
-          "roster_position_id": "702",
-          "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Arsenal.png"
-        }
-      ]
+      "player_count": 0,
+      "players": []
     }
   ]
 }
