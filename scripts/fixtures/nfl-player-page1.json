@@ -1,0 +1,786 @@
+{
+  "displayedStatusOrTeam": "ALL_AVAILABLE",
+  "displayedPosOrGroup": "FOOTBALL_OFFENSE",
+  "paginatedResultSet": {
+    "totalNumPages": 126,
+    "pageNumber": 1,
+    "maxResultsPerPage": 20,
+    "totalNumResults": 2520
+  },
+  "displayedSelections": {
+    "searchName": "",
+    "displayedMiscDisplayType": "1"
+  },
+  "tableHeader": {
+    "cells": [
+      {
+        "key": "rankOv"
+      },
+      {
+        "key": "status"
+      },
+      {
+        "key": "age"
+      },
+      {
+        "key": "opponent"
+      },
+      {
+        "key": "fpts"
+      },
+      {
+        "key": null
+      },
+      {
+        "key": null
+      },
+      {
+        "key": "bye"
+      },
+      {
+        "key": null
+      },
+      {
+        "key": null
+      },
+      {
+        "key": "1010#2870#-1"
+      },
+      {
+        "key": "1010#2860#-1"
+      },
+      {
+        "key": "1010#2760#-1"
+      },
+      {
+        "key": "1010#3050#-1"
+      },
+      {
+        "key": "1010#3040#-1"
+      },
+      {
+        "key": "1010#2890#-1"
+      },
+      {
+        "key": "1010#2880#-1"
+      },
+      {
+        "key": "1010#3127#-1"
+      },
+      {
+        "key": "1010#2670#-1"
+      },
+      {
+        "key": "1010#2701#-1"
+      },
+      {
+        "key": "1010#3217#-1"
+      },
+      {
+        "key": "1010#3147#-1"
+      }
+    ]
+  },
+  "statsTable": [
+    {
+      "scorer": {
+        "scorerId": "06an9",
+        "name": "Jaxon Smith-Njigba",
+        "posShortNames": "WR",
+        "teamShortName": "SEA"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "03wr8",
+        "name": "Jared Goff",
+        "posShortNames": "QB",
+        "teamShortName": "DET"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "04ca6",
+        "name": "Patrick Mahomes",
+        "posShortNames": "QB",
+        "teamShortName": "KC"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "040ha",
+        "name": "Dak Prescott",
+        "posShortNames": "QB",
+        "teamShortName": "DAL"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "060tt",
+        "name": "Brock Purdy",
+        "posShortNames": "QB",
+        "teamShortName": "SF"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05gu3",
+        "name": "CeeDee Lamb",
+        "posShortNames": "WR",
+        "teamShortName": "DAL"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05roj",
+        "name": "Amon-Ra St. Brown",
+        "posShortNames": "WR",
+        "teamShortName": "DET"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05gu7",
+        "name": "Jonathan Taylor",
+        "posShortNames": "RB",
+        "teamShortName": "IND"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "06sgg",
+        "name": "Tyler Shough",
+        "posShortNames": "QB",
+        "teamShortName": "NO"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "02jak",
+        "name": "Kirk Cousins",
+        "posShortNames": "QB",
+        "teamShortName": "LV"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "04yn4",
+        "name": "Drew Lock",
+        "posShortNames": "QB",
+        "teamShortName": "SEA"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "048vi",
+        "name": "Deshaun Watson",
+        "posShortNames": "QB",
+        "teamShortName": "CLE"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "06jek",
+        "name": "Cam Ward",
+        "posShortNames": "QB",
+        "teamShortName": "TEN"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05gv4",
+        "name": "Jalen Hurts",
+        "posShortNames": "QB",
+        "teamShortName": "PHI"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "06amy",
+        "name": "C.J. Stroud",
+        "posShortNames": "QB",
+        "teamShortName": "HOU"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "06s74",
+        "name": "Jaxson Dart",
+        "posShortNames": "QB",
+        "teamShortName": "NYG"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "060rf",
+        "name": "James Cook",
+        "posShortNames": "RB",
+        "teamShortName": "BUF"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05rlf",
+        "name": "Ja'Marr Chase",
+        "posShortNames": "WR",
+        "teamShortName": "CIN"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "01cdj",
+        "name": "Matthew Stafford",
+        "posShortNames": "QB",
+        "teamShortName": "LAR"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "048xf",
+        "name": "Christian McCaffrey",
+        "posShortNames": "RB",
+        "teamShortName": "SF"
+      },
+      "cells": [
+        {},
+        {
+          "content": "W <small>(Wed)</small>",
+          "toolTip": "Waiver Wire - Off Wed Sep 23, 9:00 PM EDT"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    }
+  ]
+}

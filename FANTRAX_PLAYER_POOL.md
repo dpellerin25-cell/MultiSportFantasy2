@@ -1,5 +1,48 @@
 # Fantrax player-pool investigation
 
+## Full-pool diagnostic (based on supplied live captures)
+
+The supplied page 1 and 2 responses report 126 pages, 20 rows per page, and
+2,520 total results. These are observations, not hard-coded limits. Both confirm
+ALL_AVAILABLE and FOOTBALL_OFFENSE, labeled All Players in this league's position
+list. This scope is the configured offensive player category, not every conceivable
+NFL position. The status column is identified by tableHeader.cells[].key=status;
+its toolTip explicitly distinguishes Free Agent and Waiver Wire. Numeric scorer
+status IDs are not used to infer availability. Unrecognized labels remain unknown.
+
+After copying the updated scripts into Codespaces (these edits are not pushed),
+with FANTRAX_COOKIE already configured, run from the repository root:
+
+```bash
+python scripts/diagnose_nfl_players.py --all-pages
+```
+
+The CLI also requires scripts/nfl_player_pool.py and the existing NFL roster
+snapshot. It prints progress to stderr and a JSON summary plus five normalized
+examples to stdout. It follows paginatedResultSet, checks page numbers, unchanged
+totals, filter scope, page lengths, repeated pages, and conflicting duplicates.
+The default 500-page safety cap is configurable with --max-pages. It deduplicates
+by scorerId; a unique count below the advertised total returns incomplete and
+exits nonzero. Unknown availability produces null exact status totals alongside
+identified counts. This is not an atomic snapshot: concurrent league changes can
+require a rerun even when the server remains responsive.
+
+Known rostered IDs are checked using web/data/rosters/nfl.json; the report includes
+the snapshot timestamp. This is not a live roster verification, and an overlap
+requires checking whether the snapshot is stale. Production data is never written.
+
+Sanitized fixtures preserve pagination, filters, status cells, and player identity
+from both captures. All unrelated account metadata has been excluded. Test cases
+with adjusted totals are synthetic termination tests, not evidence of a full live
+fetch. Run tests using:
+
+```bash
+python -B -m unittest discover -s scripts -p test_diagnose_nfl_players.py -v
+python -B -m unittest discover -s scripts -p test_nfl_player_pool.py -v
+```
+
+The historical investigation notes below precede these supplied captures.
+
 ## Follow-up: a supported diagnostic request
 
 The user's subsequent NFL browser capture explicitly calls `getPlayerStats`
