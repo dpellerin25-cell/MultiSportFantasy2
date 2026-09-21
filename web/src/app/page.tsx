@@ -41,9 +41,14 @@ function SportCell({
           type="button"
           className="min-w-20 rounded-lg px-3 py-2 font-bold text-slate-900 transition hover:bg-blue-50 focus:bg-blue-50 focus:outline-none"
         >
-          {result.rank === 0
-  ? "—"
-  : result.sportScore.toFixed(1)}
+          <span className="block">
+            {result.rank === 0 ? "—" : result.sportScore.toFixed(1)}
+          </span>
+          {result.rank > 0 && (
+            <span className="mt-1 block text-xs font-normal text-slate-500">
+              {ordinal(result.rank)}
+            </span>
+          )}
         </button>
 
         <div
@@ -279,7 +284,7 @@ export default async function Home({
                     <SportCell result={team.EPL} />
                     <SportCell result={team.PGA} />
 
-                    <td className="border-l-2 border-blue-200 bg-blue-100 p-4 text-center text-2xl font-extrabold tabular-nums text-blue-950">
+                    <td className="border-l-2 border-blue-200 bg-blue-100 p-4 text-center text-lg font-extrabold tabular-nums text-blue-950">
                       {team.total.toFixed(1)}
                     </td>
                   </tr>

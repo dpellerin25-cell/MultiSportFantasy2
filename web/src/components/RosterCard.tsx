@@ -92,7 +92,6 @@ export default function RosterCard({
 
       {expanded && (
         <div className="border-t border-blue-100">
-          {children}
           {sports.map((sport) => (
             <section
               key={sport.sport}
@@ -153,6 +152,7 @@ export default function RosterCard({
               )}
             </section>
           ))}
+          {children}
         </div>
       )}
     </div>
