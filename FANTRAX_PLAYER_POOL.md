@@ -1,5 +1,37 @@
 # Fantrax player-pool investigation
 
+## Multi-sport diagnostic transfer checkpoint
+
+MLB/NBA/EPL full pagination is now implemented using the supplied first-page
+responses: filters ALL / BASKETBALL_PLAYER / ALL, respectively. The diagnostic
+explicitly sends these positionOrGroup values and checks the returned selections.
+The safety cap defaults to 1,000 pages (MLB reported 532). Existing NFL defaults
+remain unchanged. Full runs still need live validation in Codespaces.
+
+Transfer updated scripts/diagnose_sport_players.py and scripts/nfl_player_pool.py
+to Codespaces. Keep the existing scripts/diagnose_nfl_players.py dependency there.
+With FANTRAX_COOKIE already configured, run from the repository root:
+
+```bash
+python scripts/diagnose_sport_players.py --sport all --all-pages > /tmp/fantrax-full-pools.json
+python scripts/diagnose_sport_players.py --sport PGA --check-pga-filter > /tmp/fantrax-pga-filter-check.json
+```
+
+In full mode, `all` means MLB, NBA, and EPL only. Individual runs use --sport MLB,
+--sport NBA, or --sport EPL. Any failure or incomplete result exits nonzero;
+inspect each result even when other sports succeed. Summary counts are compared
+against server totals, and saved roster snapshots are checked (not live rosters).
+
+PGA compares page 1 of explicit POS_500 with explicit GOLF_GOLFER, retaining both
+raw responses. Neither matching first pages nor matching totals prove equivalence
+of complete sets. Manual review is required before enabling full PGA retrieval.
+Missing PGA position names and professional teams remain null in normalization.
+
+New sanitized fixtures retain only player identity, status cells, selections,
+and pagination from each capture. Synthetic multi-page tests exercise termination;
+they do not represent a completed live multi-sport run. Raw account captures and
+credentials are not included. Production importers and workflows are untouched.
+
 ## Full-pool diagnostic (based on supplied live captures)
 
 The supplied page 1 and 2 responses report 126 pages, 20 rows per page, and

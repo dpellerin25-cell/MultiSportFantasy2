@@ -1,0 +1,694 @@
+{
+  "displayedStatusOrTeam": "ALL_AVAILABLE",
+  "displayedPosOrGroup": "POS_500",
+  "paginatedResultSet": {
+    "totalNumPages": 194,
+    "pageNumber": 1,
+    "maxResultsPerPage": 20,
+    "totalNumResults": 3880
+  },
+  "displayedSelections": {
+    "searchName": "",
+    "displayedMiscDisplayType": "1"
+  },
+  "tableHeader": {
+    "cells": [
+      {
+        "key": "rankOv"
+      },
+      {
+        "key": "status"
+      },
+      {
+        "key": "age"
+      },
+      {
+        "key": "fpts"
+      },
+      {
+        "key": "fptsPerGame"
+      },
+      {
+        "key": null
+      },
+      {
+        "key": null
+      },
+      {
+        "key": "6010#7725#-1"
+      },
+      {
+        "key": "6010#7020#-1"
+      },
+      {
+        "key": "6010#7130#-1"
+      },
+      {
+        "key": "6010#7030#-1"
+      },
+      {
+        "key": "6010#7080#-1"
+      },
+      {
+        "key": "6010#7960#-1"
+      },
+      {
+        "key": "6010#7590#-1"
+      },
+      {
+        "key": "6010#7650#-1"
+      },
+      {
+        "key": "6010#7005#-1"
+      },
+      {
+        "key": "6010#7230#-1"
+      },
+      {
+        "key": "6010#7140#-1"
+      }
+    ]
+  },
+  "statsTable": [
+    {
+      "scorer": {
+        "scorerId": "03cp4",
+        "name": "Scottie Scheffler",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "02yk2",
+        "name": "Si Woo Kim",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "060z5",
+        "name": "Jacob Bridgeman",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "060g2",
+        "name": "Chris Gotterup",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "04ece",
+        "name": "Wyndham Clark",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "0510x",
+        "name": "Cameron Young",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "061qz",
+        "name": "Ryan Gerard",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "031vh",
+        "name": "Matt Fitzpatrick",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "025ci",
+        "name": "Hideki Matsuyama",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05xp0",
+        "name": "Ryo Hisatsune",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "039u6",
+        "name": "Tommy Fleetwood",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05lo8",
+        "name": "Ludvig Aberg",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "03nur",
+        "name": "Sam Burns",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "041j5",
+        "name": "Keith Mitchell",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "042vf",
+        "name": "Collin Morikawa",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "04ant",
+        "name": "Sahith Theegala",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "01uqg",
+        "name": "Russell Henley",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "0401u",
+        "name": "Xander Schauffele",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "050qw",
+        "name": "Tom Kim",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "03d9y",
+        "name": "Maverick McNealy",
+        "posShortNames": null,
+        "teamShortName": null
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    }
+  ]
+}
