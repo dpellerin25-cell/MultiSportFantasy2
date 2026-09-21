@@ -1,4 +1,4 @@
-"""Read-only MLB/NBA/EPL full-pool diagnostic and separate PGA filter check.
+"""Read-only MLB/NBA/EPL/PGA full-pool diagnostic and PGA filter comparison.
 
 Default mode preserves the original single-page raw-response inspection.
 """
@@ -20,8 +20,10 @@ LEAGUES = {
 }
 
 
-FILTERS = {"MLB": "ALL", "NBA": "BASKETBALL_PLAYER", "EPL": "ALL"}
-ROSTERS = {"MLB": "mlb", "NBA": "nba", "EPL": "premier-league"}
+FILTERS = {"MLB": "ALL", "NBA": "BASKETBALL_PLAYER", "EPL": "ALL", "PGA": "POS_500"}
+# Captured PGA All Players requests return POS_500 as the effective filter.
+REQUEST_FILTERS = {**FILTERS, "PGA": "GOLF_GOLFER"}
+ROSTERS = {"MLB": "mlb", "NBA": "nba", "EPL": "premier-league", "PGA": "pga"}
 
 
 def inspect_page(session, sport, page=1, position_filter=None):
@@ -62,7 +64,7 @@ def inspect_page(session, sport, page=1, position_filter=None):
 
 def full_pool(session, sport, max_pages):
     if sport not in FILTERS:
-        raise ValueError("PGA full pagination is not enabled; run --check-pga-filter first.")
+        raise ValueError("Unsupported sport for this diagnostic.")
     path = Path(__file__).resolve().parents[1] / "web/data/rosters" / (ROSTERS[sport] + ".json")
     roster = json.loads(path.read_text(encoding="utf-8-sig"))
     if roster.get("league_id") != LEAGUES[sport]:
@@ -70,13 +72,15 @@ def full_pool(session, sport, max_pages):
     ids = {p["player_id"] for r in roster["rosters"] for p in r["players"]}
     def fetch(page):
         print(f"Reading {sport} page {page}", file=sys.stderr)
-        result = inspect_page(session, sport, page, FILTERS[sport])
+        result = inspect_page(session, sport, page, REQUEST_FILTERS[sport])
         if not result["validated"]:
             raise ValueError(result["error"])
         return result["raw_response"]["responses"][0]["data"]
     result = collect_pool(fetch, LEAGUES[sport], ids, max_pages,
                           sport=sport, position_filter=FILTERS[sport])
     result["sport"] = sport
+    result["summary"]["requested_position_filter"] = REQUEST_FILTERS[sport]
+    result["summary"]["effective_position_filter"] = FILTERS[sport]
     result["summary"]["roster_snapshot_updated_at"] = roster.get("updated_at")
     result["summary"]["roster_check_scope"] = "Saved snapshot only; not a live roster verification"
     result["validated"] = result["summary"]["complete"]
@@ -94,7 +98,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sport", choices=[*LEAGUES, "all"], required=True)
     parser.add_argument("--page", type=int, default=1)
-    parser.add_argument("--all-pages", action="store_true", help="Full MLB/NBA/EPL diagnostic; all excludes PGA")
+    parser.add_argument("--all-pages", action="store_true", help="Full MLB/NBA/EPL/PGA diagnostic; all includes all four")
     parser.add_argument("--max-pages", type=int, default=1000)
     parser.add_argument("--check-pga-filter", action="store_true")
     args = parser.parse_args(argv)
@@ -102,8 +106,8 @@ def main(argv=None):
         parser.error("--max-pages must be positive")
     if args.check_pga_filter and (args.sport != "PGA" or args.all_pages or args.page != 1):
         parser.error("Use --sport PGA --check-pga-filter alone")
-    if args.all_pages and (args.sport == "PGA" or args.page != 1):
-        parser.error("--all-pages supports MLB/NBA/EPL/all and starts at page 1")
+    if args.all_pages and args.page != 1:
+        parser.error("--all-pages starts at page 1")
     try:
         build_payload(args.page)
     except ValueError as error:

@@ -58,8 +58,21 @@ class MultiSportTests(unittest.TestCase):
         self.assertEqual(inspect.call_args_list[0].args,(session,"PGA",1,"POS_500"))
         self.assertEqual(inspect.call_args_list[1].args,(session,"PGA",1,"GOLF_GOLFER"))
 
-    def test_pga_full_pool_disabled(self):
-        with self.assertRaises(ValueError):diagnostic.full_pool(Mock(),"PGA",1000)
+    @patch.object(Path, "read_text")
+    def test_pga_full_pool_request_and_normalization(self, read):
+        body=json.loads((Path(__file__).parent / "fixtures/pga-player-page1.json").read_bytes())
+        body["paginatedResultSet"].update(totalNumPages=1,totalNumResults=20)
+        read.return_value=json.dumps({"league_id":diagnostic.LEAGUES["PGA"],"rosters":[],"updated_at":"test"})
+        session=Mock();session.post.return_value.status_code=200
+        session.post.return_value.json.return_value={"responses":[{"data":body}]}
+        result=diagnostic.full_pool(session,"PGA",1000)
+        self.assertTrue(result["validated"])
+        self.assertEqual(result["sample"][0]["sport"],"PGA")
+        self.assertIsNone(result["sample"][0]["position"])
+        self.assertIsNone(result["sample"][0]["professional_team"])
+        self.assertEqual(session.post.call_args.kwargs["json"]["msgs"][0]["data"]["positionOrGroup"],"GOLF_GOLFER")
+        body["displayedPosOrGroup"]="UNEXPECTED"
+        with self.assertRaises(ValueError):diagnostic.full_pool(session,"PGA",1000)
 
     def test_explicit_filter_payload(self):
         session=Mock();session.post.return_value.status_code=200

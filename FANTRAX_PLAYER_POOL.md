@@ -1,5 +1,28 @@
 # Fantrax player-pool investigation
 
+## PGA full pagination enabled
+
+The supplied live filter comparison returned POS_500 for both POS_500 and
+GOLF_GOLFER requests, with matching first-page IDs and 3,880 reported results.
+PGA full pagination now explicitly requests GOLF_GOLFER and requires POS_500
+in every response. Matching first pages did not prove full-set equivalence;
+the full diagnostic still needs a live run. Totals are read dynamically.
+Missing PGA position names and professional teams remain null.
+
+After transferring these updates to GitHub/main and pulling them into Codespaces:
+
+```bash
+git pull origin main
+python scripts/diagnose_sport_players.py --sport PGA --all-pages > /tmp/fantrax-pga-full-pool.json
+cat /tmp/fantrax-pga-full-pool.json
+```
+
+FANTRAX_COOKIE must already be configured privately. `--sport all --all-pages`
+now includes PGA as well as MLB/NBA/EPL. Existing NFL behavior is unchanged.
+All full-pool safeguards and snapshot roster checks apply to PGA. Reports include
+both requested and effective position filters. No production updates are made.
+Earlier transfer notes below describe the pre-PGA version.
+
 ## Multi-sport diagnostic transfer checkpoint
 
 MLB/NBA/EPL full pagination is now implemented using the supplied first-page
