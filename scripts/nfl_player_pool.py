@@ -2,7 +2,7 @@
 from collections import Counter
 
 
-def normalize(row, headers, league_id):
+def normalize(row, headers, league_id, sport="NFL"):
     scorer = row.get("scorer", {})
     player_id, name = scorer.get("scorerId"), scorer.get("name")
     if not isinstance(player_id, str) or not player_id or not isinstance(name, str) or not name:
@@ -17,14 +17,14 @@ def normalize(row, headers, league_id):
         elif tooltip.strip().casefold() == "free agent" or cell.get("content", "").strip().casefold() == "free agent":
             status = "free_agent"
     return {
-        "player_id": player_id, "player_name": name, "sport": "NFL",
+        "player_id": player_id, "player_name": name, "sport": sport,
         "position": scorer.get("posShortNames") or None,
         "professional_team": scorer.get("teamShortName") or None,
         "availability_status": status, "league_id": league_id,
     }
 
 
-def collect_pool(fetch, league_id, rostered_ids, max_pages=500):
+def collect_pool(fetch, league_id, rostered_ids, max_pages=500, *, sport="NFL", position_filter="FOOTBALL_OFFENSE"):
     if type(max_pages) is not int or max_pages < 1:
         raise ValueError("max_pages must be positive.")
     players, fingerprints = {}, set()
@@ -32,11 +32,13 @@ def collect_pool(fetch, league_id, rostered_ids, max_pages=500):
     raw_count = 0
     for page in range(1, max_pages + 1):
         body = fetch(page)
-        if body.get("displayedStatusOrTeam") != "ALL_AVAILABLE" or body.get("displayedPosOrGroup") != "FOOTBALL_OFFENSE":
+        if body.get("displayedStatusOrTeam") != "ALL_AVAILABLE" or body.get("displayedPosOrGroup") != position_filter:
             raise ValueError("Unexpected availability or position filter.")
         selections = body.get("displayedSelections", {})
         if selections.get("searchName") != "" or selections.get("displayedMiscDisplayType") != "1":
             raise ValueError("Unexpected search or rookie filter.")
+        if selections.get("datePlaying", "ALL") != "ALL":
+            raise ValueError("Unexpected date-playing filter.")
         meta = body.get("paginatedResultSet", {})
         values = [meta.get(k) for k in ("pageNumber", "totalNumPages", "totalNumResults", "maxResultsPerPage")]
         if any(type(v) is not int for v in values):
@@ -55,7 +57,7 @@ def collect_pool(fetch, league_id, rostered_ids, max_pages=500):
         rows = body.get("statsTable")
         if not isinstance(rows, list) or len(rows) != min(size, max(0, total - (page - 1) * size)):
             raise ValueError("Short/malformed page; incomplete result.")
-        normalized = [normalize(r, body.get("tableHeader", {}).get("cells", []), league_id) for r in rows]
+        normalized = [normalize(r, body.get("tableHeader", {}).get("cells", []), league_id, sport) for r in rows]
         fingerprint = tuple(sorted(p["player_id"] for p in normalized))
         if rows and fingerprint in fingerprints:
             raise ValueError("Repeated player page; pagination did not advance.")

@@ -1,0 +1,603 @@
+{
+  "displayedStatusOrTeam": "ALL_AVAILABLE",
+  "displayedPosOrGroup": "BASKETBALL_PLAYER",
+  "paginatedResultSet": {
+    "totalNumPages": 90,
+    "pageNumber": 1,
+    "maxResultsPerPage": 20,
+    "totalNumResults": 1800
+  },
+  "displayedSelections": {
+    "datePlaying": "ALL",
+    "searchName": "",
+    "displayedMiscDisplayType": "1"
+  },
+  "tableHeader": {
+    "cells": [
+      {
+        "key": "rankOv"
+      },
+      {
+        "key": "status"
+      },
+      {
+        "key": "age"
+      },
+      {
+        "key": "opponent"
+      },
+      {
+        "key": "fpts"
+      },
+      {
+        "key": "fptsPerGame"
+      },
+      {
+        "key": null
+      },
+      {
+        "key": null
+      },
+      {
+        "key": "3010#1590#-1"
+      },
+      {
+        "key": "3010#1600#-1"
+      },
+      {
+        "key": "3010#1470#-1"
+      },
+      {
+        "key": "3010#1610#-1"
+      },
+      {
+        "key": "3010#1480#-1"
+      },
+      {
+        "key": "3010#1650#-1"
+      }
+    ]
+  },
+  "statsTable": [
+    {
+      "scorer": {
+        "scorerId": "04kj6",
+        "name": "Luka Doncic",
+        "posShortNames": "G",
+        "teamShortName": "LAL"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "03e75",
+        "name": "Nikola Jokic",
+        "posShortNames": "F/C",
+        "teamShortName": "DEN"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "031m2",
+        "name": "Giannis Antetokounmpo",
+        "posShortNames": "F/C",
+        "teamShortName": "MIA"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "04qro",
+        "name": "Shai Gilgeous-Alexander",
+        "posShortNames": "G",
+        "teamShortName": "OKC"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05uib",
+        "name": "Cade Cunningham",
+        "posShortNames": "G",
+        "teamShortName": "DET"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05uie",
+        "name": "Scottie Barnes",
+        "posShortNames": "F/C",
+        "teamShortName": "TOR"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "06cch",
+        "name": "Victor Wembanyama",
+        "posShortNames": "F/C",
+        "teamShortName": "SA"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "03xmv",
+        "name": "Jayson Tatum",
+        "posShortNames": "F/C",
+        "teamShortName": "BOS"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05qug",
+        "name": "Anthony Edwards",
+        "posShortNames": "G,F/C",
+        "teamShortName": "MIN"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "02nf1",
+        "name": "Anthony Davis",
+        "posShortNames": "F/C",
+        "teamShortName": "WAS"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05uiu",
+        "name": "Jalen Johnson",
+        "posShortNames": "F/C",
+        "teamShortName": "ATL"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "03nwm",
+        "name": "Devin Booker",
+        "posShortNames": "G,F/C",
+        "teamShortName": "PHO"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "04qrk",
+        "name": "Trae Young",
+        "posShortNames": "G",
+        "teamShortName": "WAS"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "042n7",
+        "name": "Domantas Sabonis",
+        "posShortNames": "F/C",
+        "teamShortName": "SAC"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "04qsa",
+        "name": "Jalen Brunson",
+        "posShortNames": "G",
+        "teamShortName": "NY"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "001aw",
+        "name": "Kevin Durant",
+        "posShortNames": "G,F/C",
+        "teamShortName": "HOU"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "06210",
+        "name": "Paolo Banchero",
+        "posShortNames": "F/C",
+        "teamShortName": "ORL"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "03ajv",
+        "name": "Julius Randle",
+        "posShortNames": "F/C",
+        "teamShortName": "BKN"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05uiq",
+        "name": "Alperen Sengun",
+        "posShortNames": "F/C",
+        "teamShortName": "HOU"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "06ca8",
+        "name": "Amen Thompson",
+        "posShortNames": "G,F/C",
+        "teamShortName": "HOU"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    }
+  ]
+}

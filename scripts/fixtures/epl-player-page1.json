@@ -1,0 +1,510 @@
+{
+  "displayedStatusOrTeam": "ALL_AVAILABLE",
+  "displayedPosOrGroup": "ALL",
+  "paginatedResultSet": {
+    "totalNumPages": 35,
+    "pageNumber": 1,
+    "maxResultsPerPage": 20,
+    "totalNumResults": 686
+  },
+  "displayedSelections": {
+    "searchName": "",
+    "displayedMiscDisplayType": "1"
+  },
+  "tableHeader": {
+    "cells": [
+      {
+        "key": "rankOv"
+      },
+      {
+        "key": "status"
+      },
+      {
+        "key": "age"
+      },
+      {
+        "key": "opponent"
+      },
+      {
+        "key": "fpts"
+      },
+      {
+        "key": "fptsPerGame"
+      },
+      {
+        "key": null
+      },
+      {
+        "key": null
+      },
+      {
+        "key": null
+      },
+      {
+        "key": null
+      }
+    ]
+  },
+  "statsTable": [
+    {
+      "scorer": {
+        "scorerId": "04fk1",
+        "name": "Pascal Gross",
+        "posShortNames": "M",
+        "teamShortName": "BHA"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "0427d",
+        "name": "James Tarkowski",
+        "posShortNames": "D",
+        "teamShortName": "EVE"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05gcr",
+        "name": "Bruno Fernandes",
+        "posShortNames": "M",
+        "teamShortName": "MUN"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "04y92",
+        "name": "Bukayo Saka",
+        "posShortNames": "M",
+        "teamShortName": "ARS"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "06ex4",
+        "name": "Josko Gvardiol",
+        "posShortNames": "D",
+        "teamShortName": "MCI"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05uht",
+        "name": "Morgan Rogers",
+        "posShortNames": "M",
+        "teamShortName": "CHE"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "06v07",
+        "name": "Rayan Cherki",
+        "posShortNames": "M",
+        "teamShortName": "MCI"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "076dq",
+        "name": "Mohamed Belloumi",
+        "posShortNames": "M",
+        "teamShortName": "HUL"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "06y9m",
+        "name": "Maxim De Cuyper",
+        "posShortNames": "D",
+        "teamShortName": "BHA"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05g2o",
+        "name": "Joao Pedro",
+        "posShortNames": "F",
+        "teamShortName": "CHE"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "067zv",
+        "name": "Kevin Schade",
+        "posShortNames": "F",
+        "teamShortName": "BRF"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "068y0",
+        "name": "Antoine Semenyo",
+        "posShortNames": "F",
+        "teamShortName": "MCI"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "067yv",
+        "name": "Cody Gakpo",
+        "posShortNames": "F",
+        "teamShortName": "LIV"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05trb",
+        "name": "Bryan Mbeumo",
+        "posShortNames": "F",
+        "teamShortName": "MUN"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05l8q",
+        "name": "Cole Palmer",
+        "posShortNames": "M",
+        "teamShortName": "CHE"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "078az",
+        "name": "Konstantinos Tzolakis",
+        "posShortNames": "G",
+        "teamShortName": "HUL"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "0639x",
+        "name": "Marcus Tavernier",
+        "posShortNames": "M",
+        "teamShortName": "BOU"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "0784y",
+        "name": "Tarik Muharemovic",
+        "posShortNames": "D",
+        "teamShortName": "LEE"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05o8o",
+        "name": "Jayden Bogle",
+        "posShortNames": "D",
+        "teamShortName": "LEE"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "04qr9",
+        "name": "Morgan Gibbs-White",
+        "posShortNames": "M",
+        "teamShortName": "NOT"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    }
+  ]
+}

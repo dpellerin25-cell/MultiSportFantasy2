@@ -1,0 +1,487 @@
+{
+  "displayedStatusOrTeam": "ALL_AVAILABLE",
+  "displayedPosOrGroup": "ALL",
+  "paginatedResultSet": {
+    "totalNumPages": 532,
+    "pageNumber": 1,
+    "maxResultsPerPage": 20,
+    "totalNumResults": 10621
+  },
+  "displayedSelections": {
+    "searchName": "",
+    "displayedMiscDisplayType": "1"
+  },
+  "tableHeader": {
+    "cells": [
+      {
+        "key": "rankOv"
+      },
+      {
+        "key": "status"
+      },
+      {
+        "key": "age"
+      },
+      {
+        "key": "fpts"
+      },
+      {
+        "key": "fptsPerGame"
+      },
+      {
+        "key": null
+      },
+      {
+        "key": null
+      },
+      {
+        "key": null
+      },
+      {
+        "key": null
+      }
+    ]
+  },
+  "statsTable": [
+    {
+      "scorer": {
+        "scorerId": "051wv",
+        "name": "Pete Crow-Armstrong",
+        "posShortNames": "OF",
+        "teamShortName": "CHC"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "04355",
+        "name": "Yordan Alvarez",
+        "posShortNames": "OF",
+        "teamShortName": "HOU"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "04ru7",
+        "name": "Miguel Vargas",
+        "posShortNames": "INF",
+        "teamShortName": "CHW"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "03zbh",
+        "name": "Fernando Tatis Jr.",
+        "posShortNames": "INF,OF",
+        "teamShortName": "SD"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "04qk8",
+        "name": "CJ Abrams",
+        "posShortNames": "INF",
+        "teamShortName": "WSH"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05xch",
+        "name": "Junior Caminero",
+        "posShortNames": "INF",
+        "teamShortName": "TB"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "041pz",
+        "name": "Pete Alonso",
+        "posShortNames": "INF",
+        "teamShortName": "BAL"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "03cag",
+        "name": "Kyle Schwarber",
+        "posShortNames": "UT",
+        "teamShortName": "PHI"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "040b5",
+        "name": "Randy Arozarena",
+        "posShortNames": "OF",
+        "teamShortName": "SEA"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05yo5",
+        "name": "Ben Rice",
+        "posShortNames": "INF",
+        "teamShortName": "NYY"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05rat",
+        "name": "James Wood",
+        "posShortNames": "OF",
+        "teamShortName": "WSH"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05udp",
+        "name": "Elly De La Cruz",
+        "posShortNames": "INF",
+        "teamShortName": "CIN"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05u9o",
+        "name": "Sal Stewart",
+        "posShortNames": "INF",
+        "teamShortName": "CIN"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "052c8",
+        "name": "Cristopher Sanchez",
+        "posShortNames": "SP",
+        "teamShortName": "PHI"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "01fh9",
+        "name": "Bryce Harper",
+        "posShortNames": "INF,OF",
+        "teamShortName": "PHI"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "02mwm",
+        "name": "Matt Olson",
+        "posShortNames": "INF",
+        "teamShortName": "ATL"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05gbf",
+        "name": "Jordan Walker",
+        "posShortNames": "OF",
+        "teamShortName": "STL"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "04b00",
+        "name": "Brice Turang",
+        "posShortNames": "INF",
+        "teamShortName": "MIL"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "061yu",
+        "name": "Jacob Misiorowski",
+        "posShortNames": "SP",
+        "teamShortName": "MIL"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "scorer": {
+        "scorerId": "05u6q",
+        "name": "Cam Schlittler",
+        "posShortNames": "SP",
+        "teamShortName": "NYY"
+      },
+      "cells": [
+        {},
+        {
+          "content": "FA",
+          "toolTip": "Free Agent"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    }
+  ]
+}
