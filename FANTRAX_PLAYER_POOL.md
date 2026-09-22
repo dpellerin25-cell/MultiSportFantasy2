@@ -1,5 +1,36 @@
 # Fantrax player-pool investigation
 
+## Combined export
+
+`scripts/export_player_pool.py` fetches all five leagues sequentially and writes
+all normalized player records, not just samples. It reuses the validated filters
+and pagination checks. It writes only after all five counts reconcile; failures
+leave no published partial export. The output must be a new filename outside
+web/ and .git/. A temporary file is published using a hard link, then removed;
+the destination filesystem must support hard links (normal Codespaces storage does).
+Existing exports are never overwritten.
+
+After transferring the updated scripts to Codespaces, with FANTRAX_COOKIE set:
+
+```bash
+python scripts/export_player_pool.py --output /tmp/fantrax-player-pool.json
+```
+
+Use a new filename on subsequent runs. Transfer export_player_pool.py and the
+updated nfl_player_pool.py together; retain diagnose_nfl_players.py and
+diagnose_sport_players.py and the repository roster snapshots as dependencies.
+The schema includes schema_version, source, timestamps, per-sport summaries,
+total_players, and players. Identity is (league_id, player_id), not name or a
+player ID alone across leagues. Unknown statuses remain unknown; inclusion does
+not determine draft eligibility. PGA position/team fields can be null.
+
+Each sport includes read timestamps, effective filters, server totals, duplicate
+counts, status counts, and the roster snapshot timestamp. This is a sequential
+export, not an atomic live snapshot. Saved roster checks are not live verification.
+No credentials, raw API responses, or environment values are written. Keep generated
+exports out of Git; the /tmp example is outside the repository. No production
+workflow, website, database, or draft functionality is changed.
+
 ## PGA full pagination enabled
 
 The supplied live filter comparison returned POS_500 for both POS_500 and
