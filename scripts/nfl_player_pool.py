@@ -24,7 +24,7 @@ def normalize(row, headers, league_id, sport="NFL"):
     }
 
 
-def collect_pool(fetch, league_id, rostered_ids, max_pages=500, *, sport="NFL", position_filter="FOOTBALL_OFFENSE"):
+def collect_pool(fetch, league_id, rostered_ids, max_pages=500, *, sport="NFL", position_filter="FOOTBALL_OFFENSE", include_players=False):
     if type(max_pages) is not int or max_pages < 1:
         raise ValueError("max_pages must be positive.")
     players, fingerprints = {}, set()
@@ -84,5 +84,8 @@ def collect_pool(fetch, league_id, rostered_ids, max_pages=500, *, sport="NFL", 
                 "unknown_status_count": counts["unknown"],
                 "roster_snapshot_ids_checked": len(rostered_ids),
             }
-            return {"summary": summary, "sample": list(players.values())[:5]}
+            result = {"summary": summary, "sample": list(players.values())[:5]}
+            if include_players:
+                result["players"] = list(players.values())
+            return result
     raise ValueError("Page safety limit reached; incomplete result.")
