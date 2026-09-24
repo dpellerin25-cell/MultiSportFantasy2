@@ -1,0 +1,1 @@
+{"name":"draft-database-tests","private":true,"type":"module","scripts":{"test":"node schema.test.mjs && node commands.test.mjs","test:concurrency":"node concurrency.test.mjs"},"devDependencies":{"@electric-sql/pglite":"0.3.14","pg":"8.16.3"}}
