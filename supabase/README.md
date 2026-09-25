@@ -1,5 +1,9 @@
 # Draft database foundation
 
+Validated player-pool importing is now available locally. See
+[PLAYER_POOL_IMPORT.md](PLAYER_POOL_IMPORT.md) for the test-only workflow and
+the new, not-yet-applied `202609250001_import_snapshot_guards.sql` migration.
+
 The three migrations have been applied by the league administrator to the isolated
 `MultiSportFantasy-Draft-Test` project, not production. For the next validation
 step see [HOSTED_VALIDATION.md](HOSTED_VALIDATION.md). The hosted runner is opt-in;
