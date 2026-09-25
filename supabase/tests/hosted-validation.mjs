@@ -37,7 +37,7 @@ export async function validateHostedCommands(db, doug, other, report=console.log
   assert.equal((await q('select 1 from draft.league_roles where auth_user_id=any($1::uuid[])',[[doug,other]])).length,0,'Use accounts without existing commissioner roles');
   await q('insert into draft.owner_accounts values($1,$2),($3,$4)',[doug,owners[0].id,other,owners[1].id]);
   await q("insert into draft.league_roles values($1,'commissioner')",[doug]);
-  const imp=(await q("insert into draft.player_pool_imports(checksum,schema_version,status,completed_at) values($1,1,'ready',now()) returning id",[randomUUID().replaceAll('-','').repeat(2)]))[0].id;
+  const imp=(await q("insert into draft.player_pool_imports(checksum,schema_version,status,completed_at) values($1,1,'staging',now()) returning id",[randomUUID().replaceAll('-','').repeat(2)]))[0].id;
   const d=(await q("insert into draft.drafts(name,kind,championship_year,rounds,participant_count,import_id) values('ROLLBACK ONLY hosted validation','free_agent',2027,1,2,$1) returning id",[imp]))[0].id;
   const players=[];
   for(let i=0;i<2;i++) {
@@ -48,6 +48,7 @@ export async function validateHostedCommands(db, doug, other, report=console.log
     await q("insert into draft.draft_pool_players values($1,$2,$3,'NFL',$4,null,null,'free_agent',true)",[d,imp,p,name]);
     players.push(p);
   }
+  await q("update draft.player_pool_imports set status='ready' where id=$1",[imp]);
   async function asRole(who,role,fn) {
     await q('savepoint permission_check');
     try {

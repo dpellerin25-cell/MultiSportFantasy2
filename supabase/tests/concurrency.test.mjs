@@ -29,7 +29,7 @@ try{
   await admin.query("insert into draft.league_roles values($1,'commissioner')",[actor]);
   const owners=(await admin.query("select id from draft.owners where slug in ('doug','chris') order by slug desc")).rows;
   await admin.query('insert into draft.owner_accounts values($1,$2)',[actor,owners[0].id]);
-  const imp=(await admin.query("insert into draft.player_pool_imports(checksum,schema_version,status,completed_at) values(repeat('c',64),1,'ready',now()) returning id")).rows[0].id;
+  const imp=(await admin.query("insert into draft.player_pool_imports(checksum,schema_version,status,completed_at) values(repeat('c',64),1,'staging',now()) returning id")).rows[0].id;
   const d=(await admin.query("insert into draft.drafts(name,kind,championship_year,rounds,participant_count,import_id) values('race','free_agent',2027,1,2,$1) returning id",[imp])).rows[0].id;
   const players=[];
   for(let i=0;i<2;i++){
@@ -39,6 +39,7 @@ try{
     await admin.query("insert into draft.draft_pool_players values($1,$2,$3,'NFL','race player',null,null,'free_agent',true)",[d,imp,p]);
     players.push(p);
   }
+  await admin.query("update draft.player_pool_imports set status='ready' where id=$1",[imp]);
   await admin.query("select set_config('request.jwt.claim.sub',$1,false)",[actor]);
   const command=(c,rev,action,args,request=randomUUID())=>c.query('select draft.command($1,$2,$3,$4,$5) result',[d,request,rev,action,JSON.stringify(args)]);
   await command(admin,0,'set_order',{owners:owners.map(x=>x.id)});

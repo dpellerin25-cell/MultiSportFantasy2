@@ -25,7 +25,7 @@ try{
   await q('insert into auth.users values($1),($2),($3)',[doug,other,outsider]);
   await q('insert into draft.owner_accounts values($1,$2),($3,$4)',[doug,owners[0].id,other,owners[1].id]);
   await q("insert into draft.league_roles values($1,'commissioner')",[doug]);
-  const imp=(await q("insert into draft.player_pool_imports(checksum,schema_version,status,completed_at) values(repeat('b',64),1,'ready',now()) returning id"))[0].id;
+  const imp=(await q("insert into draft.player_pool_imports(checksum,schema_version,status,completed_at) values(repeat('b',64),1,'staging',now()) returning id"))[0].id;
   draftId=(await q("insert into draft.drafts(name,kind,championship_year,rounds,participant_count,import_id) values('commands','free_agent',2027,2,2,$1) returning id",[imp]))[0].id;
   await q("insert into draft.draft_sport_rules values($1,'NFL',1,null),($1,'PGA',1,null)",[draftId]);
   players=[];
@@ -36,6 +36,7 @@ try{
     await q("insert into draft.draft_pool_players(draft_id,import_id,player_id,sport,name,availability,eligible) values($1,$2,$3,$4,$5,'free_agent',true)",[draftId,imp,id,sport,`Test ${players.length}`]);
     players.push(id);
   }
+  await q("update draft.player_pool_imports set status='ready' where id=$1",[imp]);
   await test('unauthenticated and outsiders rejected',async()=>{
     await assert.rejects(()=>call('start',{},null),/Authentication/);
     await assert.rejects(()=>call('start',{},outsider),/access denied/);
