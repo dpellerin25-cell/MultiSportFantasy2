@@ -106,11 +106,11 @@ try {
       } finally {await db.exec('reset role');}
     }
   });
-  await test('every table has RLS and only the authorized command is SECURITY DEFINER',async()=>{
+  await test('every table has RLS and only the authorized command and membership helper are SECURITY DEFINER',async()=>{
     assert.equal((await sql(`select count(*)::int n from pg_class c join pg_namespace n on n.oid=c.relnamespace
       where n.nspname='draft' and c.relkind='r' and not c.relrowsecurity`))[0].n,0);
     assert.equal((await sql(`select count(*)::int n from pg_proc p join pg_namespace n on n.oid=p.pronamespace
-      where n.nspname='draft' and p.prosecdef and p.proname<>'command'`))[0].n,0);
+      where n.nspname='draft' and p.prosecdef and p.proname not in ('command','can_read_live')`))[0].n,0);
   });
   console.log(`${count} database tests passed. In-memory only; no Supabase connection.`);
 } finally { await db.close(); }
