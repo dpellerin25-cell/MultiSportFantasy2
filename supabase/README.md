@@ -1,5 +1,9 @@
 # Draft database foundation
 
+For unstarted startup rehearsal setup and snake-order previews, see
+[DRAFT_SETUP.md](DRAFT_SETUP.md). This administrative tool targets only the
+isolated test project and requires explicit order and timer choices.
+
 Validated player-pool importing is now available locally. See
 [PLAYER_POOL_IMPORT.md](PLAYER_POOL_IMPORT.md) for the test-only workflow and
 the new, not-yet-applied `202609250001_import_snapshot_guards.sql` migration.

@@ -1,0 +1,51 @@
+import {PGlite} from '@electric-sql/pglite';
+import assert from 'node:assert/strict';
+import {readFile,readdir} from 'node:fs/promises';
+import {randomUUID} from 'node:crypto';
+import {OWNER_SLUGS,validateSetup,snakePreview,prepareDraft} from './draft-setup.mjs';
+const db=await PGlite.create(),q=async(s,p=[])=>(await db.query(s,p)).rows;
+try{
+  await db.exec(`create role anon;create role authenticated;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql as $$select null::uuid$$;`);
+  const dir=new URL('../migrations/',import.meta.url);
+  for(const f of (await readdir(dir)).filter(f=>f.endsWith('.sql')).sort())await db.exec(await readFile(new URL(f,dir),'utf8'));
+  const sports=['NFL','MLB','NBA','EPL','PGA'];
+  const meta={validator:'fantrax-export-v1',total_players:750,completed_at:'2026-09-25T00:00:00Z',sports:Object.fromEntries(sports.map(s=>[s,{total:150}]))};
+  const imp=(await q("insert into draft.player_pool_imports(checksum,schema_version,metadata) values(repeat('a',64),1,$1) returning id",[JSON.stringify(meta)]))[0].id;
+  for(const sport of sports){
+    await q("insert into draft.players(sport,name) select $1,'Fixture '||n from generate_series(1,150) n",[sport]);
+  }
+  await q("insert into draft.player_source_ids(player_id,provider,league_id,external_player_id) select id,'fixture',sport::text,id::text from draft.players");
+  await q("insert into draft.player_pool_entries select $1,p.id,s.id,p.sport,p.name,null,null,'free_agent' from draft.players p join draft.player_source_ids s on s.player_id=p.id",[imp]);
+  await q("update draft.player_pool_imports set status='ready',completed_at=now() where id=$1",[imp]);
+  const config={draft_id:randomUUID(),import_id:imp,name:'Test startup',championship_year:2027,timer_seconds:90,owner_order:[...OWNER_SLUGS].reverse()};
+  for(const patch of [{timer_seconds:null},{timer_seconds:0},{owner_order:[]},{owner_order:Array(9).fill('doug')},{draft_id:'bad'},{rounds:64}])assert.throws(()=>validateSetup({...config,...patch}));
+  const preview=snakePreview(config.owner_order);assert.equal(preview.length,585);
+  assert.deepEqual(preview.slice(0,9).map(p=>p.owner),config.owner_order);
+  assert.deepEqual(preview.slice(9,18).map(p=>p.owner),[...config.owner_order].reverse());
+  for(const owner of OWNER_SLUGS)assert.equal(preview.filter(p=>p.owner===owner).length,65);
+  console.log('PASS explicit settings, nine unique owners and 585 snake preview slots');
+  await assert.rejects(()=>prepareDraft(db,{...config,import_id:randomUUID()}),/finalized validated/);
+  await q("update draft.owners set active=false where slug='doug'");
+  await assert.rejects(()=>prepareDraft(db,config),/Active owners/);
+  await q("update draft.owners set active=true where slug='doug'");
+  const bad=(await q("insert into draft.player_pool_imports(checksum,schema_version,status,completed_at,metadata) values(repeat('b',64),1,'ready',now(),$1) returning id",[JSON.stringify(meta)]))[0].id;
+  await assert.rejects(()=>prepareDraft(db,{...config,import_id:bad}),/five sports/);
+  console.log('PASS missing/unpopulated snapshots and inactive owners rejected');
+  await prepareDraft(db,config);assert.equal((await q('select count(*)::int n from draft.drafts'))[0].n,0);
+  const created=await prepareDraft(db,config,{create:true});assert.equal(created.pool_players,750);
+  assert.equal((await q('select count(*)::int n from draft.draft_picks'))[0].n,0);
+  const state=(await q('select status,deadline_at,current_pick_number from draft.drafts'))[0];
+  assert.deepEqual(state,{status:'setup',deadline_at:null,current_pick_number:null});
+  assert.equal((await prepareDraft(db,config,{create:true})).already_exists,true);
+  assert.equal((await q('select count(*)::int n from draft.draft_events'))[0].n,1);
+  await assert.rejects(()=>prepareDraft(db,{...config,timer_seconds:100},{create:true}),/different settings/);
+  console.log('PASS read-only preview, atomic setup, copied pool, no clock/start, idempotent retry and mismatch rejection');
+  await q("update draft.drafts set status='paused' where id=$1",[config.draft_id]);
+  await assert.rejects(()=>prepareDraft(db,config,{create:true}),/already started/);
+  await db.exec("alter table draft.draft_events add constraint reject_setup check(event_type<>'admin_setup') not valid");
+  await assert.rejects(()=>prepareDraft(db,{...config,draft_id:randomUUID()},{create:true}),/reject_setup/);
+  assert.equal((await q('select count(*)::int n from draft.drafts'))[0].n,1);
+  assert.equal((await q('select count(*)::int n from draft.draft_pool_players'))[0].n,750);
+  assert.equal((await q('select count(*)::int n from draft.owner_accounts'))[0].n,0);
+  console.log('PASS started-draft protection, rollback of failed setup and no account grants');
+}finally{await db.close();}
