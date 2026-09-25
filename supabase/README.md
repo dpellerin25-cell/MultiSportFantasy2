@@ -1,5 +1,9 @@
 # Draft database foundation
 
+For the authenticated HTTP endpoints and verified test-account linking workflow,
+see [AUTHENTICATED_API.md](AUTHENTICATED_API.md). The new API migration has not
+been applied to hosted Supabase by the implementation task.
+
 For unstarted startup rehearsal setup and snake-order previews, see
 [DRAFT_SETUP.md](DRAFT_SETUP.md). This administrative tool targets only the
 isolated test project and requires explicit order and timer choices.
