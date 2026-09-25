@@ -1,0 +1,36 @@
+import {PGlite} from '@electric-sql/pglite';
+import {readFile,readdir} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+const db=await PGlite.create(),q=async(s,p=[])=>(await db.query(s,p)).rows;
+try{
+  await db.exec(`create role anon;create role authenticated;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth to authenticated;`);
+  const dir=new URL('../migrations/',import.meta.url);
+  for(const f of (await readdir(dir)).filter(f=>f.endsWith('.sql')).sort())await db.exec(await readFile(new URL(f,dir),'utf8'));
+  const owners=await q("select id from draft.owners where slug in ('doug','chris') order by slug");
+  const id=(await q("insert into draft.drafts(name,kind,championship_year,rounds,participant_count,pick_duration_seconds) values('timer','free_agent',2027,1,2,60) returning id"))[0].id;
+  for(let i=0;i<2;i++)await q('insert into draft.draft_participants values($1,$2,$3)',[id,owners[i].id,i+1]);
+  await q('select draft.generate_snake_picks($1)',[id]);
+  const expire=async()=>Number((await q('select draft.expire_due_picks() n'))[0].n);
+  assert.equal(await expire(),0);
+  await q("update draft.drafts set status='running',current_pick_number=1,deadline_at=now()-interval '1 hour' where id=$1",[id]);
+  await q('begin');assert.equal(await expire(),1);await q('rollback');
+  assert.equal((await q('select revision from draft.live_updates where draft_id=$1',[id]))[0].revision,0);
+  assert.equal(await expire(),1);assert.equal(await expire(),0);
+  let state=(await q('select * from draft.drafts where id=$1',[id]))[0];assert.equal(state.current_pick_number,2);assert.equal(state.revision,1);
+  assert.ok(new Date(state.deadline_at)>new Date());
+  assert.equal((await q('select count(*)::int n from draft.draft_selections'))[0].n,0);
+  assert.equal((await q('select count(*)::int n from draft.draft_picks where skipped_at is not null'))[0].n,1);
+  assert.equal((await q("select count(*)::int n from draft.draft_events where event_type='timer_expire' and actor_user_id is null"))[0].n,1);
+  await q("update draft.drafts set status='paused',deadline_at=null,paused_remaining_seconds=20 where id=$1",[id]);assert.equal(await expire(),0);
+  await q("update draft.drafts set status='running',deadline_at=now()-interval '1 second',paused_remaining_seconds=null where id=$1",[id]);assert.equal(await expire(),1);
+  state=(await q('select * from draft.drafts where id=$1',[id]))[0];assert.equal(state.status,'awaiting_makeups');assert.equal(state.deadline_at,null);assert.equal(await expire(),0);
+  console.log('PASS timer rollback, expiry once, fresh next deadline, paused exclusion, unfilled skips, completion and system audit');
+  const user=randomUUID();await q('insert into auth.users values($1)',[user]);await q('insert into draft.owner_accounts values($1,$2)',[user,owners[0].id]);
+  await q("select set_config('request.jwt.claim.sub',$1,false)",[user]);await q('set role authenticated');
+  assert.equal((await q('select * from draft.live_updates')).length,1);
+  await assert.rejects(()=>q('select draft.expire_due_picks()'),/permission denied/);
+  await assert.rejects(()=>q('update draft.live_updates set revision=999'),/permission denied/);
+  await q('reset role');await q("select set_config('request.jwt.claim.sub',$1,false)",[randomUUID()]);await q('set role authenticated');assert.equal((await q('select * from draft.live_updates')).length,0);await q('reset role');
+  console.log('PASS realtime member-only rows and no client timer/signal writes');
+}finally{await db.close();}

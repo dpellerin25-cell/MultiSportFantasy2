@@ -87,6 +87,20 @@ try{
   await assertBlocked();await a.query('commit');
   assert.equal((await duplicate).error?.code,'23505');await b.query('rollback');
   console.log('PASS two independent sessions: duplicate-player race rejected by unique index');
+  // A background worker holds the same draft-row lock as commands. A second
+  // worker skips locked work and must never expire the following turn early.
+  await admin.query("update draft.drafts set deadline_at=clock_timestamp()-interval '1 second' where id=$1",[d]);
+  await a.query('begin');
+  await a.query('select id from draft.drafts where id=$1 for update',[d]);
+  assert.equal((await b.query('select draft.expire_due_picks() n')).rows[0].n,0);
+  await a.query('rollback');
+  await a.query('begin');
+  assert.equal((await a.query('select draft.expire_due_picks() n')).rows[0].n,1);
+  assert.equal((await b.query('select draft.expire_due_picks() n')).rows[0].n,0);
+  await a.query('commit');
+  assert.equal((await b.query('select draft.expire_due_picks() n')).rows[0].n,0);
+  assert.equal((await admin.query("select count(*)::int n from draft.draft_events where draft_id=$1 and event_type='timer_expire'",[d])).rows[0].n,1);
+  console.log('PASS two independent timer workers: locked draft skipped, expiry committed once, retry harmless');
   console.log('Tests leave data in the disposable local database for inspection. No automatic deletion.');
 }finally{
   for(const c of clients){try{await c.query('rollback');}catch{}try{await c.end();}catch{}}

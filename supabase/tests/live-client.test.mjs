@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {watchDraft} from './live-draft-client.mjs';
+let listener,status,reads=0,removed=0,revision=0;const received=[];
+const channel={on(type,filter,fn){assert.equal(type,'postgres_changes');assert.equal(filter.table,'live_updates');listener=fn;return this;},subscribe(fn){status=fn;return this;}};
+const client={channel:()=>channel,rpc:async()=>{reads++;return {data:{revision}};},removeChannel:async()=>{removed++;}};
+const watcher=watchDraft(client,'fixture',{onState:s=>received.push(s.revision)});
+const flush=()=>new Promise(r=>setTimeout(r,0));
+await flush();revision=1;listener();await flush();assert.equal(received.at(-1),1);
+revision=5;status('SUBSCRIBED');await flush();assert.equal(received.at(-1),5);
+await watcher.close();const prior=reads;listener();await flush();assert.equal(reads,prior);assert.equal(removed,1);
+console.log('PASS live client initial read, revision refresh, reconnect recovery and cleanup');

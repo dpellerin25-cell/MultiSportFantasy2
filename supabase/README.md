@@ -1,5 +1,9 @@
 # Draft database foundation
 
+Real-time revision signals and the database timer are implemented locally; see
+[LIVE_TIMER.md](LIVE_TIMER.md) for the new migration, test-only scheduler setup,
+two-client hosted validation, and outstanding concurrency validation.
+
 For the authenticated HTTP endpoints and verified test-account linking workflow,
 see [AUTHENTICATED_API.md](AUTHENTICATED_API.md). The new API migration has not
 been applied to hosted Supabase by the implementation task.
