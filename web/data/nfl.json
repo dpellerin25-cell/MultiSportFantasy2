@@ -2,7 +2,7 @@
   "sport": "NFL",
   "league_id": "yg0olhfrmtj45dd6",
   "league_name": "2026 Test_NFL",
-  "updated_at": "2026-09-24T09:02:29.384405+00:00",
+  "updated_at": "2026-09-25T03:41:51.563899+00:00",
   "team_count": 9,
   "teams": {
     "fhsj2l6xmtufxavs": {
@@ -63,30 +63,18 @@
   "standings": [
     {
       "rank": "1",
-      "team": "Doug",
-      "team_id": "61pwhedumtj45e7v",
-      "fantasyPoints": "82.3",
+      "team": "Brendan",
+      "team_id": "ctwavmkjmtufxavs",
+      "fantasyPoints": "0",
       "pointsBased": "0",
-      "FPtsPerGame": "41.15",
-      "sc": "2",
+      "FPtsPerGame": "0",
+      "sc": "0",
       "groupname": "0",
-      "wwOrder": "7",
+      "wwOrder": "2",
       "pointsBehindLeader": "0"
     },
     {
-      "rank": "2",
-      "team": "Brendan",
-      "team_id": "ctwavmkjmtufxavs",
-      "fantasyPoints": "63",
-      "pointsBased": "0",
-      "FPtsPerGame": "31.5",
-      "sc": "2",
-      "groupname": "0",
-      "wwOrder": "2",
-      "pointsBehindLeader": "19.3"
-    },
-    {
-      "rank": "3",
+      "rank": "1",
       "team": "Chris",
       "team_id": "wgssrap3mtufxavs",
       "fantasyPoints": "0",
@@ -95,10 +83,22 @@
       "sc": "0",
       "groupname": "0",
       "wwOrder": "1",
-      "pointsBehindLeader": "82.3"
+      "pointsBehindLeader": "0"
     },
     {
-      "rank": "3",
+      "rank": "1",
+      "team": "Doug",
+      "team_id": "61pwhedumtj45e7v",
+      "fantasyPoints": "0",
+      "pointsBased": "0",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "groupname": "0",
+      "wwOrder": "7",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
       "team": "Hatch",
       "team_id": "deuypysomtufxavs",
       "fantasyPoints": "0",
@@ -107,10 +107,10 @@
       "sc": "0",
       "groupname": "0",
       "wwOrder": "5",
-      "pointsBehindLeader": "82.3"
+      "pointsBehindLeader": "0"
     },
     {
-      "rank": "3",
+      "rank": "1",
       "team": "Jack",
       "team_id": "fhsj2l6xmtufxavs",
       "fantasyPoints": "0",
@@ -119,10 +119,10 @@
       "sc": "0",
       "groupname": "0",
       "wwOrder": "6",
-      "pointsBehindLeader": "82.3"
+      "pointsBehindLeader": "0"
     },
     {
-      "rank": "3",
+      "rank": "1",
       "team": "Jacob",
       "team_id": "97xlrb7dmtufxavs",
       "fantasyPoints": "0",
@@ -131,10 +131,10 @@
       "sc": "0",
       "groupname": "0",
       "wwOrder": "3",
-      "pointsBehindLeader": "82.3"
+      "pointsBehindLeader": "0"
     },
     {
-      "rank": "3",
+      "rank": "1",
       "team": "Nik",
       "team_id": "g8pbre1zmtufxavs",
       "fantasyPoints": "0",
@@ -143,10 +143,10 @@
       "sc": "0",
       "groupname": "0",
       "wwOrder": "4",
-      "pointsBehindLeader": "82.3"
+      "pointsBehindLeader": "0"
     },
     {
-      "rank": "3",
+      "rank": "1",
       "team": "Ryan",
       "team_id": "rjrxjrgomtufxavs",
       "fantasyPoints": "0",
@@ -155,10 +155,10 @@
       "sc": "0",
       "groupname": "0",
       "wwOrder": "9",
-      "pointsBehindLeader": "82.3"
+      "pointsBehindLeader": "0"
     },
     {
-      "rank": "3",
+      "rank": "1",
       "team": "Tucker",
       "team_id": "uf9y3x2kmtufxavs",
       "fantasyPoints": "0",
@@ -167,7 +167,7 @@
       "sc": "0",
       "groupname": "0",
       "wwOrder": "8",
-      "pointsBehindLeader": "82.3"
+      "pointsBehindLeader": "0"
     }
   ]
 }

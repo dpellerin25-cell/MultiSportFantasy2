@@ -1,9 +1,9 @@
 {
   "sport": "NFL",
   "league_id": "yg0olhfrmtj45dd6",
-  "updated_at": "2026-09-24T09:02:30.452891+00:00",
+  "updated_at": "2026-09-25T03:41:52.567711+00:00",
   "team_count": 9,
-  "total_players": 2,
+  "total_players": 0,
   "rosters": [
     {
       "owner": "Jack",
@@ -14,19 +14,8 @@
     {
       "owner": "Brendan",
       "team_id": "ctwavmkjmtufxavs",
-      "player_count": 1,
-      "players": [
-        {
-          "player_id": "06amz",
-          "name": "Bryce Young",
-          "position": "QB",
-          "pro_team": "CAR",
-          "pro_team_name": "Carolina Panthers",
-          "status_id": "1",
-          "roster_position_id": "100",
-          "headshot_url": "https://fantraximg.com/si/headshots/NFL/hs06amz_96_5.png"
-        }
-      ]
+      "player_count": 0,
+      "players": []
     },
     {
       "owner": "Ryan",
@@ -55,19 +44,8 @@
     {
       "owner": "Doug",
       "team_id": "61pwhedumtj45e7v",
-      "player_count": 1,
-      "players": [
-        {
-          "player_id": "04mnz",
-          "name": "Josh Allen",
-          "position": "QB",
-          "pro_team": "BUF",
-          "pro_team_name": "Buffalo Bills",
-          "status_id": "1",
-          "roster_position_id": "100",
-          "headshot_url": "https://fantraximg.com/si/headshots/NFL/hs04mnz_96_9.png"
-        }
-      ]
+      "player_count": 0,
+      "players": []
     },
     {
       "owner": "Nik",

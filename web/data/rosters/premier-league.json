@@ -1,9 +1,9 @@
 {
   "sport": "Premier League",
   "league_id": "j08ymyupmtj415q3",
-  "updated_at": "2026-09-24T09:02:34.672266+00:00",
+  "updated_at": "2026-09-25T03:41:57.330630+00:00",
   "team_count": 9,
-  "total_players": 1,
+  "total_players": 0,
   "rosters": [
     {
       "owner": "Jack",
@@ -14,19 +14,8 @@
     {
       "owner": "Chris",
       "team_id": "dxxlben8mtug18ye",
-      "player_count": 1,
-      "players": [
-        {
-          "player_id": "061vq",
-          "name": "Erling Haaland",
-          "position": "F",
-          "pro_team": "MCI",
-          "pro_team_name": "Manchester City",
-          "status_id": "1",
-          "roster_position_id": "701",
-          "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Manchester_City.png"
-        }
-      ]
+      "player_count": 0,
+      "players": []
     },
     {
       "owner": "Doug",
