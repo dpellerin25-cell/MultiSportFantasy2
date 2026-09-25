@@ -1,4 +1,10 @@
-# Local draft database foundation — NOT deployed
+# Draft database foundation
+
+The three migrations have been applied by the league administrator to the isolated
+`MultiSportFantasy-Draft-Test` project, not production. For the next validation
+step see [HOSTED_VALIDATION.md](HOSTED_VALIDATION.md). The hosted runner is opt-in;
+ordinary tests still use only an in-memory database. The original foundation
+notes below describe the initial local-only stage.
 
 **Update:** migration `202609240003_draft_commands.sql` now adds authorized
 transaction commands and embedded behavior tests. See [COMMANDS.md](COMMANDS.md)
