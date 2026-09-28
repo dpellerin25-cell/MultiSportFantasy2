@@ -9,6 +9,7 @@ const links = [
   { href: "/rosters", label: "Rosters" },
   { href: "/scoring", label: "Scoring" },
   { href: "/trophy-case", label: "Trophy Case" },
+  { href: "/draft", label: "Draft" },
 ];
 
 export default function MainNavigation({ standingsHref = "/" }: { standingsHref?: string }) {
