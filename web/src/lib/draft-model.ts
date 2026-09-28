@@ -7,6 +7,12 @@ export type Player = {
   availability_status: string;
 };
 export type Pick = {
+  selection_id: string | null;
+  skipped_at: string | null;
+  sport: string | null;
+  position: string | null;
+  professional_team: string | null;
+  selected_at: string | null;
   pick_id: string;
   round: number;
   pick_number: number;
@@ -15,6 +21,7 @@ export type Pick = {
   player_name: string | null;
 };
 export type DraftState = {
+  rules: { sport: string; minimum: number; maximum: number | null }[];
   draft_id: string;
   name: string;
   status: string;
@@ -35,6 +42,37 @@ export type DraftState = {
   }[];
   picks: Pick[];
 };
+export type CommissionerAction =
+  | "start"
+  | "pause"
+  | "resume"
+  | "set_timer"
+  | "set_order"
+  | "assign"
+  | "undo";
+export function commissionerCommand(
+  state: DraftState,
+  action: CommissionerAction,
+  args: Record<string, unknown>,
+  requestId: string,
+) {
+  if (!state.viewer_is_commissioner)
+    throw new Error("Commissioner access required");
+  return {
+    target: state.draft_id,
+    request_id: requestId,
+    expected_revision: state.revision,
+    action,
+    args,
+  };
+}
+export function rosterProgress(state: DraftState, owner: string) {
+  const picks = state.picks.filter((p) => p.owner_id === owner && p.player_id);
+  return state.rules.map((rule) => ({
+    ...rule,
+    count: picks.filter((p) => p.sport === rule.sport).length,
+  }));
+}
 export type PickCommand = {
   target: string;
   request_id: string;

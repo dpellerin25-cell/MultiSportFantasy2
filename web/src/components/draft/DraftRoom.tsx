@@ -15,6 +15,9 @@ import {
   type PickCommand,
 } from "@/lib/draft-model";
 
+import DraftViews from "./DraftViews";
+import CommissionerControls from "./CommissionerControls";
+
 const config = draftConfig(
   process.env.NEXT_PUBLIC_DRAFT_SUPABASE_URL,
   process.env.NEXT_PUBLIC_DRAFT_SUPABASE_PUBLISHABLE_KEY,
@@ -604,42 +607,25 @@ function AuthenticatedRoom({
             </section>
             <aside className="space-y-5">
               <section className={panel}>
-                <h2 className="text-xl font-bold">Draft Board</h2>
+                <h2 className="text-xl font-bold">Draft progress</h2>
                 <p className="mt-2 text-sm text-slate-600">
                   {state.picks.filter((p) => p.player_id).length} selections
-                  recorded.
-                </p>
-                <p className="mt-2 text-sm text-slate-500">
-                  The full round-by-round board is coming in Phase 2.
+                  recorded. The board and every owner’s roster below update as
+                  picks are saved.
                 </p>
               </section>
-              <section className={panel}>
-                <h2 className="text-xl font-bold">My Roster</h2>
-                <p className="mt-2 text-sm text-slate-600">
-                  {
-                    state.picks.filter(
-                      (p) =>
-                        p.owner_id === state.viewer_owner_id && p.player_id,
-                    ).length
-                  }{" "}
-                  players drafted.
-                </p>
-                <p className="mt-2 text-sm text-slate-500">
-                  Your roster breakdown and sport minimums are coming in Phase
-                  2.
-                </p>
-              </section>
-              {state.viewer_is_commissioner && (
-                <section className={`${panel} border-blue-300`}>
-                  <h2 className="text-xl font-bold">Commissioner Controls</h2>
-                  <p className="mt-2 text-sm text-slate-600">
-                    Commissioner access verified. Start, pause, timer and
-                    correction controls will be added in Phase 2.
-                  </p>
-                </section>
-              )}
+              <CommissionerControls
+                state={state}
+                client={client}
+                fresh={fresh}
+                onChanged={() => {
+                  setCursor(null);
+                  refresh.current();
+                }}
+              />
             </aside>
           </div>
+          <DraftViews state={state} />
         </>
       )}
       {selected && (

@@ -1,9 +1,80 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createClient } from "@supabase/supabase-js";
-import { draftConfig, mayPick, pickCommand } from "../src/lib/draft-model.ts";
+import {
+  draftConfig,
+  mayPick,
+  pickCommand,
+  commissionerCommand,
+  rosterProgress,
+} from "../src/lib/draft-model.ts";
 const target = "4f7c9484-bc03-46cf-ae5f-8a0781061844";
 const url = "https://tgvuntuhdqucazpoxrrg.supabase.co";
+test("commissioner requests preserve revision and identity remains server-controlled", () => {
+  assert.throws(() =>
+    commissionerCommand(
+      { viewer_is_commissioner: false },
+      "start",
+      {},
+      "request",
+    ),
+  );
+  const original = {
+    draft_id: "draft",
+    revision: 8,
+    viewer_is_commissioner: true,
+  };
+  for (const action of [
+    "start",
+    "pause",
+    "resume",
+    "set_timer",
+    "set_order",
+    "assign",
+    "undo",
+  ]) {
+    const command = commissionerCommand(
+      original,
+      action,
+      { fixture: "value" },
+      "request",
+    );
+    assert.deepEqual(command, {
+      target: "draft",
+      expected_revision: 8,
+      request_id: "request",
+      action,
+      args: { fixture: "value" },
+    });
+    original.revision = 9;
+    assert.equal(command.expected_revision, 8);
+    original.revision = 8;
+  }
+});
+test("roster progress counts only selected players for the receiving owner, without imposing maximums", () => {
+  const result = rosterProgress(
+    {
+      rules: [
+        { sport: "NFL", minimum: 1, maximum: null },
+        { sport: "NBA", minimum: 8, maximum: null },
+      ],
+      picks: [
+        { owner_id: "a", player_id: "one", sport: "NFL" },
+        { owner_id: "a", player_id: "two", sport: "NFL" },
+        { owner_id: "a", player_id: null, sport: "NBA", skipped_at: "fixture" },
+        { owner_id: "b", player_id: "three", sport: "NBA" },
+      ],
+    },
+    "a",
+  );
+  assert.deepEqual(
+    result.map((r) => [r.sport, r.count, r.minimum, r.maximum]),
+    [
+      ["NFL", 2, 1, null],
+      ["NBA", 0, 8, null],
+    ],
+  );
+});
 const state = {
   draft_id: target,
   status: "running",
