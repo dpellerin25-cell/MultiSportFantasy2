@@ -1,4 +1,60 @@
 import test from "node:test";
+import {
+  proposedLineup,
+  STARTING_SLOTS,
+  playerPositions,
+} from "../src/lib/draft-lineups.ts";
+test("starting lineup counts and flexible eligibility preserve unique assignments", () => {
+  assert.deepEqual(
+    Object.fromEntries(
+      Object.entries(STARTING_SLOTS).map(([s, v]) => [s, v.length]),
+    ),
+    { NFL: 9, NBA: 8, MLB: 14, EPL: 11, PGA: 6 },
+  );
+  const player = (id, sport, position, pick_number) => ({
+    player_id: id,
+    pick_id: id,
+    player_name: id,
+    sport,
+    position,
+    pick_number,
+  });
+  const nba = proposedLineup(
+    [
+      player("multi", "NBA", "G/F", 1),
+      player("guard", "NBA", "G", 2),
+      player("guard2", "NBA", "PG", 3),
+    ],
+    "NBA",
+  );
+  assert.equal(nba.slots.filter((s) => s.player).length, 3);
+  assert.equal(
+    new Set(nba.slots.filter((s) => s.player).map((s) => s.player.player_id))
+      .size,
+    3,
+  );
+  const mlb = proposedLineup(
+    [player("catcher", "MLB", "C", 1), player("pitcher", "MLB", "SP/RP", 2)],
+    "MLB",
+  );
+  assert.equal(
+    mlb.slots.find((s) => s.player?.player_id === "catcher").label,
+    "IF",
+  );
+  assert.equal(
+    mlb.slots.find((s) => s.player?.player_id === "pitcher").label,
+    "P",
+  );
+  const pga = proposedLineup(
+    Array.from({ length: 7 }, (_, i) => player(String(i), "PGA", null, i)),
+    "PGA",
+  );
+  assert.equal(pga.slots.filter((s) => s.player).length, 6);
+  assert.equal(pga.bench.length, 1);
+  assert.deepEqual(playerPositions(" SP / RP "), ["SP", "RP"]);
+  const unknown = proposedLineup([player("unknown", "NFL", null, 1)], "NFL");
+  assert.equal(unknown.bench.length, 1);
+});
 import assert from "node:assert/strict";
 import { createClient } from "@supabase/supabase-js";
 import {
