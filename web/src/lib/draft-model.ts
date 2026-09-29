@@ -1,4 +1,5 @@
 export type Player = {
+  source_rank?: number | null;
   player_id: string;
   player_name: string;
   sport: string;
