@@ -1,25 +1,49 @@
 "use client";
 import { useState } from "react";
 import { rosterProgress, type DraftState } from "@/lib/draft-model";
-const box = "rounded-2xl border border-blue-100 bg-white p-5 shadow-sm";
+import { proposedLineup, STARTING_SLOTS } from "@/lib/draft-lineups";
+const box =
+  "min-w-0 rounded-2xl border border-blue-100 bg-white p-4 shadow-sm xl:max-h-[65vh] xl:overflow-y-auto";
 export default function DraftViews({ state }: { state: DraftState }) {
   const [round, setRound] = useState("current"),
+    [position, setPosition] = useState(""),
+    [lineupSport, setLineupSport] = useState("NFL"),
     [chosenOwner, setOwner] = useState("");
+  const positions = [
+    ...new Set(
+      state.picks.flatMap((p) =>
+        (p.position ?? "")
+          .split(/[,/;]/)
+          .map((v) => v.trim())
+          .filter(Boolean),
+      ),
+    ),
+  ].sort();
   const current =
     state.picks.find((p) => p.pick_number === state.current_pick_number)
       ?.round ?? 1;
   const shown = round === "current" ? current : Number(round);
+  const visiblePicks = state.picks.filter(
+    (p) =>
+      (round === "all" || p.round === shown) &&
+      (!position ||
+        (p.position ?? "")
+          .split(/[,/;]/)
+          .map((v) => v.trim())
+          .includes(position)),
+  );
   const owner =
     chosenOwner ||
     state.viewer_owner_id ||
     state.participants[0]?.owner_id ||
     "";
   const roster = state.picks.filter((p) => p.owner_id === owner && p.player_id);
+  const lineup = proposedLineup(roster, lineupSport);
   const ownerName =
     state.participants.find((p) => p.owner_id === owner)?.display_name ??
     "Owner";
   return (
-    <div className="mt-6 grid gap-6 xl:grid-cols-2">
+    <>
       <section className={box} aria-labelledby="board-title">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 id="board-title" className="text-xl font-bold">
@@ -33,6 +57,7 @@ export default function DraftViews({ state }: { state: DraftState }) {
               onChange={(e) => setRound(e.target.value)}
             >
               <option value="current">Current</option>
+              <option value="all">All rounds</option>
               {Array.from({ length: state.rounds }, (_, i) => (
                 <option key={i} value={i + 1}>
                   {i + 1}
@@ -43,53 +68,70 @@ export default function DraftViews({ state }: { state: DraftState }) {
         </div>
         <p className="mt-2 text-sm text-slate-600">
           {state.picks.filter((p) => p.player_id).length} selections recorded ·
-          Round {shown}
+          {round === "all" ? "All rounds" : `Round ${shown}`}
         </p>
+        <label className="mt-3 block text-sm">
+          Position
+          <select
+            className="ml-2 min-h-11 rounded-lg border px-2"
+            value={position}
+            onChange={(e) => setPosition(e.target.value)}
+          >
+            <option value="">All positions</option>
+            {positions.map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
+          </select>
+        </label>
+        {!!state.picks.length && !visiblePicks.length && (
+          <p className="py-4 text-sm text-slate-500">
+            No selections match these filters.
+          </p>
+        )}
         {!state.picks.length ? (
           <p className="py-6 text-slate-500">
             Pick slots appear when the commissioner starts the draft.
           </p>
         ) : (
           <ol className="mt-4 divide-y divide-blue-100">
-            {state.picks
-              .filter((p) => p.round === shown)
-              .map((p) => (
-                <li
-                  key={p.pick_id}
-                  className={`rounded-lg p-3 ${p.pick_number === state.current_pick_number ? "bg-blue-50 ring-1 ring-blue-300" : ""}`}
-                >
-                  <div className="flex justify-between gap-2">
-                    <strong>
-                      #{p.pick_number} ·{" "}
-                      {
-                        state.participants.find(
-                          (o) => o.owner_id === p.owner_id,
-                        )?.display_name
-                      }
-                    </strong>
-                    <span className="text-xs text-slate-500">
-                      {p.pick_number === state.current_pick_number
-                        ? "On the clock"
-                        : ""}
+            {visiblePicks.map((p) => (
+              <li
+                key={p.pick_id}
+                className={`rounded-lg p-3 ${p.pick_number === state.current_pick_number ? "bg-blue-50 ring-1 ring-blue-300" : ""}`}
+              >
+                <div className="flex justify-between gap-2">
+                  <strong>
+                    #{p.pick_number} ·{" "}
+                    {
+                      state.participants.find((o) => o.owner_id === p.owner_id)
+                        ?.display_name
+                    }
+                  </strong>
+                  <span className="text-xs text-slate-500">
+                    {p.pick_number === state.current_pick_number
+                      ? "On the clock"
+                      : ""}
+                  </span>
+                </div>
+                <p className="mt-1 text-sm">
+                  {p.player_name ??
+                    (p.skipped_at
+                      ? "Skipped · awaiting commissioner assignment"
+                      : "Not selected")}
+                  {p.player_id && (
+                    <span className="text-slate-500">
+                      {" "}
+                      ·{" "}
+                      {[p.sport, p.position, p.professional_team]
+                        .filter(Boolean)
+                        .join(" · ")}
                     </span>
-                  </div>
-                  <p className="mt-1 text-sm">
-                    {p.player_name ??
-                      (p.skipped_at
-                        ? "Skipped · awaiting commissioner assignment"
-                        : "Not selected")}
-                    {p.player_id && (
-                      <span className="text-slate-500">
-                        {" "}
-                        ·{" "}
-                        {[p.sport, p.position, p.professional_team]
-                          .filter(Boolean)
-                          .join(" · ")}
-                      </span>
-                    )}
-                  </p>
-                </li>
-              ))}
+                  )}
+                </p>
+              </li>
+            ))}
           </ol>
         )}
       </section>
@@ -117,7 +159,7 @@ export default function DraftViews({ state }: { state: DraftState }) {
           {roster.length} players selected. Viewing another roster does not
           change your signed-in identity.
         </p>
-        <div className="my-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+        <details className="mt-3"><summary className="cursor-pointer py-2 text-sm font-semibold">Sport minimum progress</summary><div className="my-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
           {rosterProgress(state, owner).map((r) => (
             <div
               key={r.sport}
@@ -146,23 +188,81 @@ export default function DraftViews({ state }: { state: DraftState }) {
           Minimums are requirements, not roster limits. No sport maximums are
           configured.
         </p>
-        <ul className="mt-3 divide-y divide-blue-100">
-          {roster.map((p) => (
-            <li className="py-3" key={p.pick_id}>
-              <strong>{p.player_name}</strong>
-              <p className="text-sm text-slate-500">
-                {[p.sport, p.position, p.professional_team]
-                  .filter(Boolean)
-                  .join(" · ")}{" "}
-                · Pick #{p.pick_number}
-              </p>
+        </details>
+        <h3 className="mt-3 font-bold">Proposed starting lineup</h3>
+        <label className="mt-2 block text-sm">
+          Sport
+          <select
+            className="ml-2 min-h-11 rounded-lg border px-2"
+            value={lineupSport}
+            onChange={(e) => setLineupSport(e.target.value)}
+          >
+            {Object.keys(STARTING_SLOTS).map((s) => (
+              <option key={s} value={s}>
+                {s === "EPL" ? "Premier League" : s}
+              </option>
+            ))}
+          </select>
+        </label>
+        <p className="my-2 text-xs text-slate-500">
+          Suggested from draft order and position eligibility, not player
+          rankings. This does not set a Fantrax lineup.
+        </p>
+        <ul className="divide-y divide-blue-100">
+          {lineup.slots.map((slot, i) => (
+            <li key={i} className="flex gap-3 py-2 text-sm">
+              <span className="w-20 shrink-0 font-semibold text-blue-800">
+                {slot.label}
+              </span>
+              <span>
+                {slot.player ? (
+                  <>
+                    {slot.player.player_name}
+                    <span className="block text-xs text-slate-500">
+                      {[slot.player.position, slot.player.professional_team]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-slate-400">Open slot</span>
+                )}
+              </span>
             </li>
           ))}
         </ul>
+        <h4 className="mt-3 text-sm font-semibold">
+          Bench / unassigned ({lineup.bench.length})
+        </h4>
+        <ul className="text-sm">
+          {lineup.bench.map((p) => (
+            <li key={p.pick_id} className="py-1">
+              {p.player_name} · {p.position || "Position not listed"}
+            </li>
+          ))}
+        </ul>
+        <details className="mt-4">
+          <summary className="cursor-pointer py-2 font-semibold">
+            All drafted players ({roster.length})
+          </summary>
+          <ul className="mt-3 divide-y divide-blue-100">
+            {roster.map((p) => (
+              <li className="py-3" key={p.pick_id}>
+                <strong>{p.player_name}</strong>
+                <p className="text-sm text-slate-500">
+                  {[p.sport, p.position, p.professional_team]
+                    .filter(Boolean)
+                    .join(" · ")}{" "}
+                  · Pick #{p.pick_number}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </details>
         {!roster.length && (
           <p className="py-5 text-slate-500">No players drafted yet.</p>
         )}
       </section>
-    </div>
+    </>
   );
 }

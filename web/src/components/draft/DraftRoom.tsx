@@ -445,7 +445,7 @@ function AuthenticatedRoom({
           </div>
           <section
             aria-labelledby="clock-title"
-            className="mb-6 rounded-2xl bg-blue-900 p-5 text-white shadow-sm sm:p-7"
+            className="mb-4 rounded-2xl bg-blue-900 p-4 text-white shadow-sm"
           >
             <div className="flex flex-wrap justify-between gap-4">
               <div>
@@ -474,7 +474,7 @@ function AuthenticatedRoom({
                 </p>
               </div>
             </div>
-            <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 border-t border-blue-700 pt-4 text-sm">
+            <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 border-t border-blue-700 pt-2 text-sm">
               <span>
                 Round <strong>{pick?.round ?? "—"}</strong> / {state.rounds}
               </span>
@@ -500,8 +500,11 @@ function AuthenticatedRoom({
               {notice}
             </p>
           )}
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(240px,1fr)]">
-            <section className={panel} aria-labelledby="players-title">
+          <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_minmax(0,1fr)]">
+            <section
+              className={`${panel} xl:max-h-[65vh] xl:overflow-y-auto`}
+              aria-labelledby="players-title"
+            >
               <h2 id="players-title" className="text-xl font-bold">
                 Available Players
               </h2>
@@ -605,7 +608,8 @@ function AuthenticatedRoom({
                 </button>
               </div>
             </section>
-            <aside className="space-y-5">
+            <DraftViews state={state} />
+            <aside className="space-y-5 xl:col-span-3">
               <section className={panel}>
                 <h2 className="text-xl font-bold">Draft progress</h2>
                 <p className="mt-2 text-sm text-slate-600">
@@ -625,7 +629,6 @@ function AuthenticatedRoom({
               />
             </aside>
           </div>
-          <DraftViews state={state} />
         </>
       )}
       {selected && (

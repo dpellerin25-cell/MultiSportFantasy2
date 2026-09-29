@@ -4,9 +4,9 @@ export const metadata = { title: "Draft Room | Multi-Sport Fantasy League" };
 export default function DraftPage() {
   return (
     <main className="min-h-screen bg-blue-50 px-4 py-6 text-slate-900 sm:p-8">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-[1600px]">
         <MainNavigation />
-        <header className="mb-6">
+        <header className="mb-4">
           <p className="font-semibold text-blue-800">
             Multi-Sport Fantasy League
           </p>
