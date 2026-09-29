@@ -223,6 +223,7 @@ function AuthenticatedRoom({
     [search, setSearch] = useState(""),
     [sport, setSport] = useState("");
   const [players, setPlayers] = useState<Player[]>([]),
+    [rankingSnapshot, setRankingSnapshot] = useState<string | null>(null),
     [cursor, setCursor] = useState<string | null>(null),
     [next, setNext] = useState<string | null>(null),
     [loading, setLoading] = useState(true),
@@ -350,6 +351,7 @@ function AuthenticatedRoom({
             return;
           }
           setPlayers(data.players);
+          setRankingSnapshot(data.ranking_snapshot ?? null);
           setNext(data.next_cursor);
         });
     }, 0);
@@ -512,6 +514,14 @@ function AuthenticatedRoom({
                 Search the saved league pool. Free agents and waiver players are
                 eligible.
               </p>
+              {rankingSnapshot ? (
+                <p className="mt-2 rounded-lg bg-blue-50 p-2 text-xs text-blue-900">
+                  Fixed rankings · {rankingSnapshot}. Ranked players first, unranked players last.
+                  {sport === 'PGA' ? ' PGA uses 2026 earnings.' : sport === 'EPL' ? ' EPL uses 2026/27 FPL ranks.' : !sport ? ' All sports sorts by sport rank, then sport; ranks are not comparable values across sports.' : ' Dynasty rankings.'}
+                </p>
+              ) : !loading && !playerError && (
+                <p className="mt-2 text-xs text-amber-800">Ranked sorting will be available after the ranking snapshot database migration is installed.</p>
+              )}
               <label className="mt-4 block text-sm font-semibold">
                 Player name
                 <input
@@ -562,6 +572,7 @@ function AuthenticatedRoom({
                     >
                       <div className="min-w-0">
                         <p className="font-semibold">{p.player_name}</p>
+                        {rankingSnapshot && <p className="text-xs font-semibold text-blue-800">{p.source_rank == null ? 'Unranked / unmatched' : `${p.sport} rank #${p.source_rank}`}</p>}
                         <p className="mt-1 text-sm text-slate-600">
                           {[p.sport, p.position, p.professional_team]
                             .filter(Boolean)

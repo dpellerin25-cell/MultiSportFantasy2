@@ -1,0 +1,1730 @@
+{
+  "sport": "EPL",
+  "source_url": "https://www.rotowire.com/soccer/article/fantasy-premier-league-fpl-rankings-top-400-for-2026-27-season-124261",
+  "ranking_type": "2026/27 FPL overall",
+  "captured_on": "2026-09-29",
+  "source_updated": "2026-09-02",
+  "count": 430,
+  "players": [
+    {
+      "rank": 1,
+      "name": "Erling Haaland"
+    },
+    {
+      "rank": 2,
+      "name": "Bruno Fernandes"
+    },
+    {
+      "rank": 3,
+      "name": "Morgan Gibbs-White"
+    },
+    {
+      "rank": 4,
+      "name": "Bukayo Saka"
+    },
+    {
+      "rank": 5,
+      "name": "Dominik Szoboszlai"
+    },
+    {
+      "rank": 6,
+      "name": "Gabriel"
+    },
+    {
+      "rank": 7,
+      "name": "Matheus Cunha"
+    },
+    {
+      "rank": 8,
+      "name": "Cole Palmer"
+    },
+    {
+      "rank": 9,
+      "name": "Bryan Mbeumo"
+    },
+    {
+      "rank": 10,
+      "name": "Antoine Semenyo"
+    },
+    {
+      "rank": 11,
+      "name": "Morgan Rogers"
+    },
+    {
+      "rank": 12,
+      "name": "Igor Thiago"
+    },
+    {
+      "rank": 13,
+      "name": "Joao Pedro"
+    },
+    {
+      "rank": 14,
+      "name": "David Raya"
+    },
+    {
+      "rank": 15,
+      "name": "Kiernan Dewsbury-Hall"
+    },
+    {
+      "rank": 16,
+      "name": "Virgil van Dijk"
+    },
+    {
+      "rank": 17,
+      "name": "Adrien Truffert"
+    },
+    {
+      "rank": 18,
+      "name": "Rayan Cherki"
+    },
+    {
+      "rank": 19,
+      "name": "James Tarkowski"
+    },
+    {
+      "rank": 20,
+      "name": "Jeremy Doku"
+    },
+    {
+      "rank": 21,
+      "name": "Florian Wirtz"
+    },
+    {
+      "rank": 22,
+      "name": "Pedro Porro"
+    },
+    {
+      "rank": 23,
+      "name": "Gianluigi Donnarumma"
+    },
+    {
+      "rank": 24,
+      "name": "Nico O'Reilly"
+    },
+    {
+      "rank": 25,
+      "name": "Malick Thiaw"
+    },
+    {
+      "rank": 26,
+      "name": "Declan Rice"
+    },
+    {
+      "rank": 27,
+      "name": "Matheus Nunes"
+    },
+    {
+      "rank": 28,
+      "name": "Rayan"
+    },
+    {
+      "rank": 29,
+      "name": "Marcus Tavernier"
+    },
+    {
+      "rank": 30,
+      "name": "Alexander Isak"
+    },
+    {
+      "rank": 31,
+      "name": "Enzo Le Fee"
+    },
+    {
+      "rank": 32,
+      "name": "Neco Williams"
+    },
+    {
+      "rank": 33,
+      "name": "Dominic Calvert-Lewin"
+    },
+    {
+      "rank": 34,
+      "name": "Chris Richards"
+    },
+    {
+      "rank": 35,
+      "name": "John McGinn"
+    },
+    {
+      "rank": 36,
+      "name": "Vitaliy Mykolenko"
+    },
+    {
+      "rank": 37,
+      "name": "Tyrick Mitchell"
+    },
+    {
+      "rank": 38,
+      "name": "Jordan Pickford"
+    },
+    {
+      "rank": 39,
+      "name": "Bradley Barcola"
+    },
+    {
+      "rank": 40,
+      "name": "Jarrad Branthwaite"
+    },
+    {
+      "rank": 41,
+      "name": "Caoimhin Kelleher"
+    },
+    {
+      "rank": 42,
+      "name": "Jurrien Timber"
+    },
+    {
+      "rank": 43,
+      "name": "Nicolas Jackson"
+    },
+    {
+      "rank": 44,
+      "name": "Alisson"
+    },
+    {
+      "rank": 45,
+      "name": "Robin Roefs"
+    },
+    {
+      "rank": 46,
+      "name": "Marc Guehi"
+    },
+    {
+      "rank": 47,
+      "name": "Diego Gomez"
+    },
+    {
+      "rank": 48,
+      "name": "Zion Suzuki"
+    },
+    {
+      "rank": 49,
+      "name": "Jan Paul van Hecke"
+    },
+    {
+      "rank": 50,
+      "name": "Lukas Hornicek"
+    },
+    {
+      "rank": 51,
+      "name": "Nathan Collins"
+    },
+    {
+      "rank": 52,
+      "name": "Milos Kerkez"
+    },
+    {
+      "rank": 53,
+      "name": "Murillo"
+    },
+    {
+      "rank": 54,
+      "name": "Matz Sels"
+    },
+    {
+      "rank": 55,
+      "name": "James Trafford"
+    },
+    {
+      "rank": 56,
+      "name": "Josko Gvardiol"
+    },
+    {
+      "rank": 57,
+      "name": "Emiliano Martinez"
+    },
+    {
+      "rank": 58,
+      "name": "Phil Foden"
+    },
+    {
+      "rank": 59,
+      "name": "Gonzalo Garcia"
+    },
+    {
+      "rank": 60,
+      "name": "Nikola Milenkovic"
+    },
+    {
+      "rank": 61,
+      "name": "Harvey Barnes"
+    },
+    {
+      "rank": 62,
+      "name": "Ryan Gravenberch"
+    },
+    {
+      "rank": 63,
+      "name": "Riccardo Calafiori"
+    },
+    {
+      "rank": 64,
+      "name": "Elliot Anderson"
+    },
+    {
+      "rank": 65,
+      "name": "Jack Grealish"
+    },
+    {
+      "rank": 66,
+      "name": "Anan Khalaili"
+    },
+    {
+      "rank": 67,
+      "name": "Dean Henderson"
+    },
+    {
+      "rank": 68,
+      "name": "Thierno Barry"
+    },
+    {
+      "rank": 69,
+      "name": "Dango Ouattara"
+    },
+    {
+      "rank": 70,
+      "name": "Bart Verbruggen"
+    },
+    {
+      "rank": 71,
+      "name": "Igor Jesus"
+    },
+    {
+      "rank": 72,
+      "name": "Alexis Mac Allister"
+    },
+    {
+      "rank": 73,
+      "name": "Michael Kayode"
+    },
+    {
+      "rank": 74,
+      "name": "Kai Havertz"
+    },
+    {
+      "rank": 75,
+      "name": "James Garner"
+    },
+    {
+      "rank": 76,
+      "name": "Antonin Kinsky"
+    },
+    {
+      "rank": 77,
+      "name": "Bruno Guimaraes"
+    },
+    {
+      "rank": 78,
+      "name": "Alex Iwobi"
+    },
+    {
+      "rank": 79,
+      "name": "Carl Rushworth"
+    },
+    {
+      "rank": 80,
+      "name": "Enzo Fernandez"
+    },
+    {
+      "rank": 81,
+      "name": "Senne Lammens"
+    },
+    {
+      "rank": 82,
+      "name": "Alex Scott"
+    },
+    {
+      "rank": 83,
+      "name": "Marcos Senesi"
+    },
+    {
+      "rank": 84,
+      "name": "Ethan Ampadu"
+    },
+    {
+      "rank": 85,
+      "name": "Kevin Schade"
+    },
+    {
+      "rank": 86,
+      "name": "Lewis Miley"
+    },
+    {
+      "rank": 87,
+      "name": "Anton Stach"
+    },
+    {
+      "rank": 88,
+      "name": "Bernd Leno"
+    },
+    {
+      "rank": 89,
+      "name": "Granit Xhaka"
+    },
+    {
+      "rank": 90,
+      "name": "Yoane Wissa"
+    },
+    {
+      "rank": 91,
+      "name": "Nordi Mukiele"
+    },
+    {
+      "rank": 92,
+      "name": "Cody Gakpo"
+    },
+    {
+      "rank": 93,
+      "name": "Marcus Rashford"
+    },
+    {
+      "rank": 94,
+      "name": "Pascal Gross"
+    },
+    {
+      "rank": 95,
+      "name": "Emiliano Buendia"
+    },
+    {
+      "rank": 96,
+      "name": "Ferdi Kadioglu"
+    },
+    {
+      "rank": 97,
+      "name": "Jack Hinshelwood"
+    },
+    {
+      "rank": 98,
+      "name": "Maxim De Cuyper"
+    },
+    {
+      "rank": 99,
+      "name": "James Hill"
+    },
+    {
+      "rank": 100,
+      "name": "Mamadou Sangare"
+    },
+    {
+      "rank": 101,
+      "name": "Daniel Ballard"
+    },
+    {
+      "rank": 102,
+      "name": "Martin Odegaard"
+    },
+    {
+      "rank": 103,
+      "name": "Junior Kroupi"
+    },
+    {
+      "rank": 104,
+      "name": "Moises Caicedo"
+    },
+    {
+      "rank": 105,
+      "name": "Diogo Dalot"
+    },
+    {
+      "rank": 106,
+      "name": "Mohamed Belloumi"
+    },
+    {
+      "rank": 107,
+      "name": "Ismaila Sarr"
+    },
+    {
+      "rank": 108,
+      "name": "Omar Marmoush"
+    },
+    {
+      "rank": 109,
+      "name": "Josh King"
+    },
+    {
+      "rank": 110,
+      "name": "Ainsley Maitland-Niles"
+    },
+    {
+      "rank": 111,
+      "name": "Harry Wilson"
+    },
+    {
+      "rank": 112,
+      "name": "Brian Brobbey"
+    },
+    {
+      "rank": 113,
+      "name": "Lewis Hall"
+    },
+    {
+      "rank": 114,
+      "name": "Julio Enciso"
+    },
+    {
+      "rank": 115,
+      "name": "Jaydee Canvot"
+    },
+    {
+      "rank": 116,
+      "name": "Olivier Boscagli"
+    },
+    {
+      "rank": 117,
+      "name": "Christos Tzolis"
+    },
+    {
+      "rank": 118,
+      "name": "Adam Wharton"
+    },
+    {
+      "rank": 119,
+      "name": "Yeremy Pino"
+    },
+    {
+      "rank": 120,
+      "name": "Luka Vuskovic"
+    },
+    {
+      "rank": 121,
+      "name": "Yasin Ayari"
+    },
+    {
+      "rank": 122,
+      "name": "Taylor Harwood-Bellis"
+    },
+    {
+      "rank": 123,
+      "name": "Matty Cash"
+    },
+    {
+      "rank": 124,
+      "name": "Matt Grimes"
+    },
+    {
+      "rank": 125,
+      "name": "Tyrique George"
+    },
+    {
+      "rank": 126,
+      "name": "Ibrahim Sangare"
+    },
+    {
+      "rank": 127,
+      "name": "Jean-Philippe Mateta"
+    },
+    {
+      "rank": 128,
+      "name": "Antonee Robinson"
+    },
+    {
+      "rank": 129,
+      "name": "Milan van Ewijk"
+    },
+    {
+      "rank": 130,
+      "name": "Joe Rodon"
+    },
+    {
+      "rank": 131,
+      "name": "Sandro Tonali"
+    },
+    {
+      "rank": 132,
+      "name": "Boubacar Kamara"
+    },
+    {
+      "rank": 133,
+      "name": "Kjell Scherpen"
+    },
+    {
+      "rank": 134,
+      "name": "Bobby Thomas"
+    },
+    {
+      "rank": 135,
+      "name": "Calvin Bassey"
+    },
+    {
+      "rank": 136,
+      "name": "Lisandro Martinez"
+    },
+    {
+      "rank": 137,
+      "name": "Vitaly Janelt"
+    },
+    {
+      "rank": 138,
+      "name": "Antonio Silva"
+    },
+    {
+      "rank": 139,
+      "name": "Iliman Ndiaye"
+    },
+    {
+      "rank": 140,
+      "name": "Reece James"
+    },
+    {
+      "rank": 141,
+      "name": "Youri Tielemans"
+    },
+    {
+      "rank": 142,
+      "name": "Oliver McBurnie"
+    },
+    {
+      "rank": 143,
+      "name": "Jayden Bogle"
+    },
+    {
+      "rank": 144,
+      "name": "Daniel Munoz"
+    },
+    {
+      "rank": 145,
+      "name": "Maxence Lacroix"
+    },
+    {
+      "rank": 146,
+      "name": "Gustavo Hamer"
+    },
+    {
+      "rank": 147,
+      "name": "Tarik Muharemovic"
+    },
+    {
+      "rank": 148,
+      "name": "Kristoffer Ajer"
+    },
+    {
+      "rank": 149,
+      "name": "Evanilson"
+    },
+    {
+      "rank": 150,
+      "name": "Ian Maatsen"
+    },
+    {
+      "rank": 151,
+      "name": "Johan Manzambi"
+    },
+    {
+      "rank": 152,
+      "name": "Justin Kluivert"
+    },
+    {
+      "rank": 153,
+      "name": "Daichi Kamada"
+    },
+    {
+      "rank": 154,
+      "name": "Ezri Konsa"
+    },
+    {
+      "rank": 155,
+      "name": "Aurele Amenda"
+    },
+    {
+      "rank": 156,
+      "name": "Mathias Jensen"
+    },
+    {
+      "rank": 157,
+      "name": "Viktor Gyokeres"
+    },
+    {
+      "rank": 158,
+      "name": "Savio"
+    },
+    {
+      "rank": 159,
+      "name": "Trai Hume"
+    },
+    {
+      "rank": 160,
+      "name": "Djordje Petrovic"
+    },
+    {
+      "rank": 161,
+      "name": "Eberechi Eze"
+    },
+    {
+      "rank": 162,
+      "name": "Leif Davis"
+    },
+    {
+      "rank": 163,
+      "name": "Pau Torres"
+    },
+    {
+      "rank": 164,
+      "name": "Dan Ndoye"
+    },
+    {
+      "rank": 165,
+      "name": "Will Osula"
+    },
+    {
+      "rank": 166,
+      "name": "Micky van de Ven"
+    },
+    {
+      "rank": 167,
+      "name": "Konstantinos Tzolakis"
+    },
+    {
+      "rank": 168,
+      "name": "James McAtee"
+    },
+    {
+      "rank": 169,
+      "name": "Jack Rudoni"
+    },
+    {
+      "rank": 170,
+      "name": "Sven Botman"
+    },
+    {
+      "rank": 171,
+      "name": "Noah Sadiki"
+    },
+    {
+      "rank": 172,
+      "name": "Dara O'Shea"
+    },
+    {
+      "rank": 173,
+      "name": "Taiwo Awoniyi"
+    },
+    {
+      "rank": 174,
+      "name": "Jeremy Jacquet"
+    },
+    {
+      "rank": 175,
+      "name": "Mikkel Damsgaard"
+    },
+    {
+      "rank": 176,
+      "name": "Jeremie Frimpong"
+    },
+    {
+      "rank": 177,
+      "name": "Ousmane Diomande"
+    },
+    {
+      "rank": 178,
+      "name": "Jay Dasilva"
+    },
+    {
+      "rank": 179,
+      "name": "Abdul Fatawu"
+    },
+    {
+      "rank": 180,
+      "name": "Mateus Fernandes"
+    },
+    {
+      "rank": 181,
+      "name": "Nilson Angulo"
+    },
+    {
+      "rank": 182,
+      "name": "Amad Diallo"
+    },
+    {
+      "rank": 183,
+      "name": "Victor Munoz"
+    },
+    {
+      "rank": 184,
+      "name": "Mats Wieffer"
+    },
+    {
+      "rank": 185,
+      "name": "Mohammed Kudus"
+    },
+    {
+      "rank": 186,
+      "name": "Cesar Palacios"
+    },
+    {
+      "rank": 187,
+      "name": "Benjamin Sesko"
+    },
+    {
+      "rank": 188,
+      "name": "Gabriel Gudmundsson"
+    },
+    {
+      "rank": 189,
+      "name": "Luke Shaw"
+    },
+    {
+      "rank": 190,
+      "name": "Matias Fernandez-Pardo"
+    },
+    {
+      "rank": 191,
+      "name": "Emile Smith Rowe"
+    },
+    {
+      "rank": 192,
+      "name": "Kobbie Mainoo"
+    },
+    {
+      "rank": 193,
+      "name": "Abdukodir Khusanov"
+    },
+    {
+      "rank": 194,
+      "name": "Georginio Rutter"
+    },
+    {
+      "rank": 195,
+      "name": "James Maddison"
+    },
+    {
+      "rank": 196,
+      "name": "Emersonn"
+    },
+    {
+      "rank": 197,
+      "name": "William Saliba"
+    },
+    {
+      "rank": 198,
+      "name": "Sander Berge"
+    },
+    {
+      "rank": 199,
+      "name": "Sepp van den Berg"
+    },
+    {
+      "rank": 200,
+      "name": "Jacob Greaves"
+    },
+    {
+      "rank": 201,
+      "name": "Caleb Yirenkyi"
+    },
+    {
+      "rank": 202,
+      "name": "Hayden Hackney"
+    },
+    {
+      "rank": 203,
+      "name": "Dominic Solanke"
+    },
+    {
+      "rank": 204,
+      "name": "Timothy Castagne"
+    },
+    {
+      "rank": 205,
+      "name": "Levi Colwill"
+    },
+    {
+      "rank": 206,
+      "name": "Daizen Maeda"
+    },
+    {
+      "rank": 207,
+      "name": "Kaoru Mitoma"
+    },
+    {
+      "rank": 208,
+      "name": "Loum Tchaouna"
+    },
+    {
+      "rank": 209,
+      "name": "Marcelino Nunez"
+    },
+    {
+      "rank": 210,
+      "name": "Noah Okafor"
+    },
+    {
+      "rank": 211,
+      "name": "Xaver Schlager"
+    },
+    {
+      "rank": 212,
+      "name": "Marco Palestra"
+    },
+    {
+      "rank": 213,
+      "name": "Yankuba Minteh"
+    },
+    {
+      "rank": 214,
+      "name": "Juanlu"
+    },
+    {
+      "rank": 215,
+      "name": "Liam Delap"
+    },
+    {
+      "rank": 216,
+      "name": "Valentino Livramento"
+    },
+    {
+      "rank": 217,
+      "name": "Destiny Udogie"
+    },
+    {
+      "rank": 218,
+      "name": "Jaidon Anthony"
+    },
+    {
+      "rank": 219,
+      "name": "Ruben Dias"
+    },
+    {
+      "rank": 220,
+      "name": "Anthony Elanga"
+    },
+    {
+      "rank": 221,
+      "name": "Dan Burn"
+    },
+    {
+      "rank": 222,
+      "name": "John Egan"
+    },
+    {
+      "rank": 223,
+      "name": "Habib Diarra"
+    },
+    {
+      "rank": 224,
+      "name": "Jaka Bijol"
+    },
+    {
+      "rank": 225,
+      "name": "Malick Fofana"
+    },
+    {
+      "rank": 226,
+      "name": "Estevao"
+    },
+    {
+      "rank": 227,
+      "name": "Omar Alderete"
+    },
+    {
+      "rank": 228,
+      "name": "Merlin Rohl"
+    },
+    {
+      "rank": 229,
+      "name": "Wesley Fofana"
+    },
+    {
+      "rank": 230,
+      "name": "Nico Gonzalez"
+    },
+    {
+      "rank": 231,
+      "name": "Ola Aina"
+    },
+    {
+      "rank": 232,
+      "name": "James Justin"
+    },
+    {
+      "rank": 233,
+      "name": "Tyler Adams"
+    },
+    {
+      "rank": 234,
+      "name": "Ben White"
+    },
+    {
+      "rank": 235,
+      "name": "Brennan Johnson"
+    },
+    {
+      "rank": 236,
+      "name": "Brenden Aaronson"
+    },
+    {
+      "rank": 237,
+      "name": "Mathys Tel"
+    },
+    {
+      "rank": 238,
+      "name": "Piero Hincapie"
+    },
+    {
+      "rank": 239,
+      "name": "Pedro Neto"
+    },
+    {
+      "rank": 240,
+      "name": "Chris Wood"
+    },
+    {
+      "rank": 241,
+      "name": "El Hadji Malick Diouf"
+    },
+    {
+      "rank": 242,
+      "name": "Jorgen Strand Larsen"
+    },
+    {
+      "rank": 243,
+      "name": "Joachim Andersen"
+    },
+    {
+      "rank": 244,
+      "name": "Jorrel Hato"
+    },
+    {
+      "rank": 245,
+      "name": "Joao Gomes"
+    },
+    {
+      "rank": 246,
+      "name": "Matt Crooks"
+    },
+    {
+      "rank": 247,
+      "name": "Ibrahim Mbaye"
+    },
+    {
+      "rank": 248,
+      "name": "Ryan Giles"
+    },
+    {
+      "rank": 249,
+      "name": "Joe Gelhardt"
+    },
+    {
+      "rank": 250,
+      "name": "Oscar Bobb"
+    },
+    {
+      "rank": 251,
+      "name": "Conor Bradley"
+    },
+    {
+      "rank": 252,
+      "name": "Ephron Mason-Clark"
+    },
+    {
+      "rank": 253,
+      "name": "Harry Maguire"
+    },
+    {
+      "rank": 254,
+      "name": "Ryan Christie"
+    },
+    {
+      "rank": 255,
+      "name": "Takehiro Tomiyasu"
+    },
+    {
+      "rank": 256,
+      "name": "Brandon Thomas-Asante"
+    },
+    {
+      "rank": 257,
+      "name": "Charlie Hughes"
+    },
+    {
+      "rank": 258,
+      "name": "Lewis Dunk"
+    },
+    {
+      "rank": 259,
+      "name": "Jake O'Brien"
+    },
+    {
+      "rank": 260,
+      "name": "Issa Diop"
+    },
+    {
+      "rank": 261,
+      "name": "Mikel Merino"
+    },
+    {
+      "rank": 262,
+      "name": "Danny Welbeck"
+    },
+    {
+      "rank": 263,
+      "name": "David Affengruber"
+    },
+    {
+      "rank": 264,
+      "name": "Kevin"
+    },
+    {
+      "rank": 265,
+      "name": "Sasa Lukic"
+    },
+    {
+      "rank": 266,
+      "name": "Ryan Sessegnon"
+    },
+    {
+      "rank": 267,
+      "name": "Promise David"
+    },
+    {
+      "rank": 268,
+      "name": "Axel Disasi"
+    },
+    {
+      "rank": 269,
+      "name": "Regan Slater"
+    },
+    {
+      "rank": 270,
+      "name": "Mohamed-Ali Cho"
+    },
+    {
+      "rank": 271,
+      "name": "Leon Goretzka"
+    },
+    {
+      "rank": 272,
+      "name": "Jair Cunha"
+    },
+    {
+      "rank": 273,
+      "name": "Frank Onyeka"
+    },
+    {
+      "rank": 274,
+      "name": "Zian Flemming"
+    },
+    {
+      "rank": 275,
+      "name": "Matteo Ruggeri"
+    },
+    {
+      "rank": 276,
+      "name": "Amar Dedic"
+    },
+    {
+      "rank": 277,
+      "name": "Ethan Pinnock"
+    },
+    {
+      "rank": 278,
+      "name": "Harrison Armstrong"
+    },
+    {
+      "rank": 279,
+      "name": "Nobel Mendy"
+    },
+    {
+      "rank": 280,
+      "name": "Patrick Dorgu"
+    },
+    {
+      "rank": 281,
+      "name": "Andrew Robertson"
+    },
+    {
+      "rank": 282,
+      "name": "Shea Charles"
+    },
+    {
+      "rank": 283,
+      "name": "Kenny Tete"
+    },
+    {
+      "rank": 284,
+      "name": "Ayyoub Bouaddi"
+    },
+    {
+      "rank": 285,
+      "name": "Malo Gusto"
+    },
+    {
+      "rank": 286,
+      "name": "Elliot Stroud"
+    },
+    {
+      "rank": 287,
+      "name": "Tyler Dibling"
+    },
+    {
+      "rank": 288,
+      "name": "Keane Lewis-Potter"
+    },
+    {
+      "rank": 289,
+      "name": "Rodrigo Muniz"
+    },
+    {
+      "rank": 290,
+      "name": "Ronald Araujo"
+    },
+    {
+      "rank": 291,
+      "name": "Rodrigo Bentancur"
+    },
+    {
+      "rank": 292,
+      "name": "Alejandro Garnacho"
+    },
+    {
+      "rank": 293,
+      "name": "Romeo Lavia"
+    },
+    {
+      "rank": 294,
+      "name": "Carlos Baleba"
+    },
+    {
+      "rank": 295,
+      "name": "Reinildo"
+    },
+    {
+      "rank": 296,
+      "name": "Noni Madueke"
+    },
+    {
+      "rank": 297,
+      "name": "Oscar Mingueza"
+    },
+    {
+      "rank": 298,
+      "name": "Brian Madjo"
+    },
+    {
+      "rank": 299,
+      "name": "Ayden Heaven"
+    },
+    {
+      "rank": 300,
+      "name": "Thomas Meunier"
+    },
+    {
+      "rank": 301,
+      "name": "Tatsuhiro Sakamoto"
+    },
+    {
+      "rank": 302,
+      "name": "Jens Hjerto-Dahl"
+    },
+    {
+      "rank": 303,
+      "name": "Joelinton"
+    },
+    {
+      "rank": 304,
+      "name": "Valentin Barco"
+    },
+    {
+      "rank": 305,
+      "name": "Cristhian Mosquera"
+    },
+    {
+      "rank": 306,
+      "name": "Dwight McNeil"
+    },
+    {
+      "rank": 307,
+      "name": "Rio Ngumoha"
+    },
+    {
+      "rank": 308,
+      "name": "Florentino Luis"
+    },
+    {
+      "rank": 309,
+      "name": "Bazoumana Toure"
+    },
+    {
+      "rank": 310,
+      "name": "Jaouen Hadjam"
+    },
+    {
+      "rank": 311,
+      "name": "Pep Chavarria"
+    },
+    {
+      "rank": 312,
+      "name": "Azor Matusiwa"
+    },
+    {
+      "rank": 313,
+      "name": "Sean Steur"
+    },
+    {
+      "rank": 314,
+      "name": "Lucas Gourna-Douath"
+    },
+    {
+      "rank": 315,
+      "name": "Exequiel Palacios"
+    },
+    {
+      "rank": 316,
+      "name": "Semi Ajayi"
+    },
+    {
+      "rank": 317,
+      "name": "Alvaro Rodriguez"
+    },
+    {
+      "rank": 318,
+      "name": "Dayann Methalie"
+    },
+    {
+      "rank": 319,
+      "name": "Bafode Diakite"
+    },
+    {
+      "rank": 320,
+      "name": "Josh Acheampong"
+    },
+    {
+      "rank": 321,
+      "name": "Tim Iroegbunam"
+    },
+    {
+      "rank": 322,
+      "name": "Pascal Struijk"
+    },
+    {
+      "rank": 323,
+      "name": "Nico Elvedi"
+    },
+    {
+      "rank": 324,
+      "name": "Charalampos Kostoulas"
+    },
+    {
+      "rank": 325,
+      "name": "Wilson Isidor"
+    },
+    {
+      "rank": 326,
+      "name": "Callum Hudson-Odoi"
+    },
+    {
+      "rank": 327,
+      "name": "Yehor Yarmolyuk"
+    },
+    {
+      "rank": 328,
+      "name": "Myles Lewis-Skelly"
+    },
+    {
+      "rank": 329,
+      "name": "Ross Barkley"
+    },
+    {
+      "rank": 330,
+      "name": "Amine Adli"
+    },
+    {
+      "rank": 331,
+      "name": "Dejan Kulusevski"
+    },
+    {
+      "rank": 332,
+      "name": "Aaron Wan-Bissaka"
+    },
+    {
+      "rank": 333,
+      "name": "Leny Yoro"
+    },
+    {
+      "rank": 334,
+      "name": "Christian Norgaard"
+    },
+    {
+      "rank": 335,
+      "name": "Lewie Coyle"
+    },
+    {
+      "rank": 336,
+      "name": "Evann Guessand"
+    },
+    {
+      "rank": 337,
+      "name": "Sidiki Cherif"
+    },
+    {
+      "rank": 338,
+      "name": "Chemsdine Talbi"
+    },
+    {
+      "rank": 339,
+      "name": "Lukas Nmecha"
+    },
+    {
+      "rank": 340,
+      "name": "Hugo Larsson"
+    },
+    {
+      "rank": 341,
+      "name": "Ao Tanaka"
+    },
+    {
+      "rank": 342,
+      "name": "Lewis Cook"
+    },
+    {
+      "rank": 343,
+      "name": "Jack Clarke"
+    },
+    {
+      "rank": 344,
+      "name": "Honest Ahanor"
+    },
+    {
+      "rank": 345,
+      "name": "Adam Smith"
+    },
+    {
+      "rank": 346,
+      "name": "Eddie Nketiah"
+    },
+    {
+      "rank": 347,
+      "name": "Archie Gray"
+    },
+    {
+      "rank": 348,
+      "name": "Jean-Matteo Bahoya"
+    },
+    {
+      "rank": 349,
+      "name": "Haji Wright"
+    },
+    {
+      "rank": 350,
+      "name": "Melvin Bard"
+    },
+    {
+      "rank": 351,
+      "name": "Abdoul Ouattara"
+    },
+    {
+      "rank": 352,
+      "name": "Dario Osorio"
+    },
+    {
+      "rank": 353,
+      "name": "Mateo Kovacic"
+    },
+    {
+      "rank": 354,
+      "name": "Quinten Timber"
+    },
+    {
+      "rank": 355,
+      "name": "Callum Wilson"
+    },
+    {
+      "rank": 356,
+      "name": "Noussair Mazraoui"
+    },
+    {
+      "rank": 357,
+      "name": "Jacob Ramsey"
+    },
+    {
+      "rank": 358,
+      "name": "Joe Willock"
+    },
+    {
+      "rank": 359,
+      "name": "Chema"
+    },
+    {
+      "rank": 360,
+      "name": "Hidemasa Morita"
+    },
+    {
+      "rank": 361,
+      "name": "Fabian Schar"
+    },
+    {
+      "rank": 362,
+      "name": "Nicolas Dominguez"
+    },
+    {
+      "rank": 363,
+      "name": "Alysson"
+    },
+    {
+      "rank": 364,
+      "name": "Victor Lindelof"
+    },
+    {
+      "rank": 365,
+      "name": "Chris Rigg"
+    },
+    {
+      "rank": 366,
+      "name": "Kasey McAteer"
+    },
+    {
+      "rank": 367,
+      "name": "Michele Di Gregorio"
+    },
+    {
+      "rank": 368,
+      "name": "David Brooks"
+    },
+    {
+      "rank": 369,
+      "name": "Lamare Bogarde"
+    },
+    {
+      "rank": 370,
+      "name": "Jaden Philogene"
+    },
+    {
+      "rank": 371,
+      "name": "Veljko Milosavljevic"
+    },
+    {
+      "rank": 372,
+      "name": "Kevin Danso"
+    },
+    {
+      "rank": 373,
+      "name": "Jacob Murphy"
+    },
+    {
+      "rank": 374,
+      "name": "Manuel Angel"
+    },
+    {
+      "rank": 375,
+      "name": "Andrey Santos"
+    },
+    {
+      "rank": 376,
+      "name": "Hugo Ekitike"
+    },
+    {
+      "rank": 377,
+      "name": "Sorba Thomas"
+    },
+    {
+      "rank": 378,
+      "name": "Kostas Tsimikas"
+    },
+    {
+      "rank": 379,
+      "name": "Victor Torp"
+    },
+    {
+      "rank": 380,
+      "name": "Christos Mouzakitis"
+    },
+    {
+      "rank": 381,
+      "name": "Ryan Yates"
+    },
+    {
+      "rank": 382,
+      "name": "Mason Mount"
+    },
+    {
+      "rank": 383,
+      "name": "Tyrone Mings"
+    },
+    {
+      "rank": 384,
+      "name": "George Hemmings"
+    },
+    {
+      "rank": 385,
+      "name": "Giovanni Leoni"
+    },
+    {
+      "rank": 386,
+      "name": "Aladji Bamba"
+    },
+    {
+      "rank": 387,
+      "name": "Martin Zubimendi"
+    },
+    {
+      "rank": 388,
+      "name": "Stefanos Tzimas"
+    },
+    {
+      "rank": 389,
+      "name": "Darnell Furlong"
+    },
+    {
+      "rank": 390,
+      "name": "Matthijs De Ligt"
+    },
+    {
+      "rank": 391,
+      "name": "Conor Gallagher"
+    },
+    {
+      "rank": 392,
+      "name": "Matt Targett"
+    },
+    {
+      "rank": 393,
+      "name": "Richarlison"
+    },
+    {
+      "rank": 394,
+      "name": "Aaron Hickey"
+    },
+    {
+      "rank": 395,
+      "name": "Brooke Norton-Cuffy"
+    },
+    {
+      "rank": 396,
+      "name": "Gabriel Martinelli"
+    },
+    {
+      "rank": 397,
+      "name": "Lucas Herrington"
+    },
+    {
+      "rank": 398,
+      "name": "Sindre Egeli"
+    },
+    {
+      "rank": 399,
+      "name": "Sean Longstaff"
+    },
+    {
+      "rank": 400,
+      "name": "Jorge Cuenca"
+    },
+    {
+      "rank": 401,
+      "name": "Michael Keane"
+    },
+    {
+      "rank": 402,
+      "name": "Emmanuel Emegha"
+    },
+    {
+      "rank": 403,
+      "name": "Ben Gannon Doak"
+    },
+    {
+      "rank": 404,
+      "name": "Femi Azeez"
+    },
+    {
+      "rank": 405,
+      "name": "Rayan Ait-Nouri"
+    },
+    {
+      "rank": 406,
+      "name": "Carlos Alcaraz"
+    },
+    {
+      "rank": 407,
+      "name": "Mykhailo Mudryk"
+    },
+    {
+      "rank": 408,
+      "name": "Geovany Quenda"
+    },
+    {
+      "rank": 409,
+      "name": "Rico Lewis"
+    },
+    {
+      "rank": 410,
+      "name": "Cedric Kipre"
+    },
+    {
+      "rank": 411,
+      "name": "Ibrahim Osman"
+    },
+    {
+      "rank": 412,
+      "name": "Jamie Gittens"
+    },
+    {
+      "rank": 413,
+      "name": "Xavi Simons"
+    },
+    {
+      "rank": 414,
+      "name": "Ben Chilwell"
+    },
+    {
+      "rank": 415,
+      "name": "Lucas Bergvall"
+    },
+    {
+      "rank": 416,
+      "name": "Josh Eccles"
+    },
+    {
+      "rank": 417,
+      "name": "Antoni Milambo"
+    },
+    {
+      "rank": 418,
+      "name": "Joe Gomez"
+    },
+    {
+      "rank": 419,
+      "name": "Ilia Gruev"
+    },
+    {
+      "rank": 420,
+      "name": "Jocelin Ta Bi"
+    },
+    {
+      "rank": 421,
+      "name": "Wataru Endo"
+    },
+    {
+      "rank": 422,
+      "name": "Luca Netz"
+    },
+    {
+      "rank": 423,
+      "name": "Tosin Adarabioyo"
+    },
+    {
+      "rank": 424,
+      "name": "Alex Toth"
+    },
+    {
+      "rank": 425,
+      "name": "Jefferson Lerma"
+    },
+    {
+      "rank": 426,
+      "name": "Luke Woolfenden"
+    },
+    {
+      "rank": 427,
+      "name": "Daniel James"
+    },
+    {
+      "rank": 428,
+      "name": "Jake Bidwell"
+    },
+    {
+      "rank": 429,
+      "name": "Will Hughes"
+    },
+    {
+      "rank": 430,
+      "name": "Joel Latibeaudiere"
+    }
+  ]
+}
