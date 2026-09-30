@@ -44,6 +44,22 @@ try {
   assert.equal((await page('NBA')).players[0].source_rank,null);
   assert.equal((await page('NFL',null,30,'Mahomes')).players[0].source_rank,18);
   console.log('PASS complete snapshots, normalized identity, sport isolation, ambiguity rejection, global ranking and pagination');
+  await q("update draft.draft_pool_players set position=case when sport='NBA' then 'G/F' when name in ('Josh Allen','Patrick Mahomes') then 'QB' else 'WR' end where draft_id=$1",[target]);
+  async function filtered(sport,position,cursor=null,size=1) {
+    return (await q("select public.draft_available_players($1,$2,'',$3,$4,$5) p",[target,sport,cursor,size,position]))[0].p;
+  }
+  const qb1=await filtered('NFL','QB');
+  assert.equal(qb1.players[0].player_name,'Josh Allen');
+  assert.deepEqual(qb1.available_positions,['QB','WR']);
+  const qb2=await filtered('NFL','QB',qb1.next_cursor);
+  assert.equal(qb2.players[0].player_name,'Patrick Mahomes');
+  assert.equal(qb2.next_cursor,null);
+  assert.equal((await filtered('NBA','F')).players.length,1);
+  assert.equal((await filtered('NBA','G')).players.length,1);
+  assert.equal((await filtered('NBA','PG')).players.length,0);
+  assert.equal((await filtered('PGA',null)).players.length,1);
+  await assert.rejects(()=>filtered('NFL','x'.repeat(21)),/Invalid position filter/);
+  console.log('PASS full-pool position options, exact multi-position matching, filtered ranked pagination and invalid input');
   const first=await page('NFL',null,1);const selected=first.players[0];
   await q("update draft.drafts set status='running' where id=$1",[target]);
   const pick=(await q('select id,current_owner_id from draft.draft_picks where draft_id=$1 order by overall_pick_number limit 1',[target]))[0];
@@ -53,12 +69,15 @@ try {
   await assert.rejects(()=>page(null,randomUUID()),/Invalid player cursor/);
   await assert.rejects(()=>page(null,null,101),/Invalid player search/);
   await q('set role authenticated');
+  assert.equal((await filtered('NFL','QB')).players[0].player_name,'Patrick Mahomes');
   assert.equal((await page('NFL')).players[0].source_rank,2);
   await assert.rejects(()=>q('select * from draft.player_ranking_snapshot'),/permission denied/);
   await assert.rejects(()=>q("delete from draft.player_ranking_snapshot"),/permission denied/);
   await q('reset role');
   await q("select set_config('request.jwt.claim.sub',$1,false)",[outsider]);
   await assert.rejects(()=>page(),/access denied/);
+  await assert.rejects(()=>filtered('NFL','QB'),/access denied/);
   await q('set role anon');await assert.rejects(()=>page(),/permission denied/);
+  await assert.rejects(()=>filtered('NFL','QB'),/permission denied/);
   console.log('PASS drafted cursor survives, selected players excluded, bounded input, members only and no direct ranking writes');
 } finally {await db.close();}

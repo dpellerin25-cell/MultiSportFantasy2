@@ -223,6 +223,8 @@ function AuthenticatedRoom({
     [search, setSearch] = useState(""),
     [sport, setSport] = useState("");
   const [players, setPlayers] = useState<Player[]>([]),
+    [position, setPosition] = useState(""),
+    [positions, setPositions] = useState<string[]>([]),
     [rankingSnapshot, setRankingSnapshot] = useState<string | null>(null),
     [cursor, setCursor] = useState<string | null>(null),
     [next, setNext] = useState<string | null>(null),
@@ -337,6 +339,7 @@ function AuthenticatedRoom({
           search_text: search,
           after_player: cursor,
           page_size: 30,
+          position_filter: position || null,
         })
         .then(({ data, error }) => {
           if (!alive) return;
@@ -351,6 +354,7 @@ function AuthenticatedRoom({
             return;
           }
           setPlayers(data.players);
+          setPositions(data.available_positions ?? []);
           setRankingSnapshot(data.ranking_snapshot ?? null);
           setNext(data.next_cursor);
         });
@@ -359,7 +363,7 @@ function AuthenticatedRoom({
       alive = false;
       clearTimeout(start);
     };
-  }, [client, target, sport, search, cursor, revision]);
+  }, [client, target, sport, search, cursor, revision, position]);
   const pick = state ? currentPick(state) : undefined,
     owner = state?.participants.find((p) => p.owner_id === pick?.owner_id),
     viewer = state?.participants.find(
@@ -502,133 +506,173 @@ function AuthenticatedRoom({
               {notice}
             </p>
           )}
-          <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_minmax(0,1fr)]">
-            <section
-              className={`${panel} xl:max-h-[65vh] xl:overflow-y-auto`}
-              aria-labelledby="players-title"
-            >
-              <h2 id="players-title" className="text-xl font-bold">
-                Available Players
-              </h2>
-              <p className="mt-1 text-sm text-slate-500">
-                Search the saved league pool. Free agents and waiver players are
-                eligible.
-              </p>
-              {rankingSnapshot ? (
-                <p className="mt-2 rounded-lg bg-blue-50 p-2 text-xs text-blue-900">
-                  Fixed rankings · {rankingSnapshot}. Ranked players first, unranked players last.
-                  {sport === 'PGA' ? ' PGA uses 2026 earnings.' : sport === 'EPL' ? ' EPL uses 2026/27 FPL ranks.' : !sport ? ' All sports sorts by sport rank, then sport; ranks are not comparable values across sports.' : ' Dynasty rankings.'}
-                </p>
-              ) : !loading && !playerError && (
-                <p className="mt-2 text-xs text-amber-800">Ranked sorting will be available after the ranking snapshot database migration is installed.</p>
-              )}
-              <label className="mt-4 block text-sm font-semibold">
-                Player name
-                <input
-                  className={`${field} mt-1`}
-                  placeholder="Search players…"
-                  maxLength={100}
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                />
-              </label>
-              <div
-                aria-label="Filter by sport"
-                className="my-4 flex flex-wrap gap-2"
-              >
-                {["", "NFL", "MLB", "NBA", "EPL", "PGA"].map((s) => (
-                  <button
-                    key={s}
-                    aria-pressed={sport === s}
-                    onClick={() => {
-                      setSport(s);
-                      setCursor(null);
-                    }}
-                    className={`min-h-10 rounded-lg px-3 text-sm font-semibold ${sport === s ? "bg-blue-800 text-white" : "bg-blue-50 text-blue-800"}`}
+          <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)_minmax(0,1fr)]">
+            <DraftViews
+              state={state}
+              availablePlayers={
+                <section
+                  className={`${panel} xl:max-h-[65vh] xl:overflow-y-auto`}
+                  aria-labelledby="players-title"
+                >
+                  <h2 id="players-title" className="text-xl font-bold">
+                    Available Players
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Search the saved league pool. Free agents and waiver players
+                    are eligible.
+                  </p>
+                  {rankingSnapshot ? (
+                    <p className="mt-2 rounded-lg bg-blue-50 p-2 text-xs text-blue-900">
+                      Fixed rankings · {rankingSnapshot}. Ranked players first,
+                      unranked players last.
+                      {sport === "PGA"
+                        ? " PGA uses 2026 earnings."
+                        : sport === "EPL"
+                          ? " EPL uses 2026/27 FPL ranks."
+                          : !sport
+                            ? " All sports sorts by sport rank, then sport; ranks are not comparable values across sports."
+                            : " Dynasty rankings."}
+                    </p>
+                  ) : (
+                    !loading &&
+                    !playerError && (
+                      <p className="mt-2 text-xs text-amber-800">
+                        Ranked sorting will be available after the ranking
+                        snapshot database migration is installed.
+                      </p>
+                    )
+                  )}
+                  <label className="mt-4 block text-sm font-semibold">
+                    Player name
+                    <input
+                      className={`${field} mt-1`}
+                      placeholder="Search players…"
+                      maxLength={100}
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                  </label>
+                  <div
+                    aria-label="Filter by sport"
+                    className="my-4 flex flex-wrap gap-2"
                   >
-                    {s || "All"}
-                  </button>
-                ))}
-              </div>
-              {playerError && (
-                <p role="alert" className="text-red-700">
-                  {playerError}
-                </p>
-              )}
-              {loading ? (
-                <p role="status" className="py-8 text-slate-500">
-                  Loading players…
-                </p>
-              ) : players.length === 0 ? (
-                <p className="py-8 text-slate-500">
-                  No available players match your search.
-                </p>
-              ) : (
-                <ul className="divide-y divide-blue-100">
-                  {players.map((p) => (
-                    <li
-                      key={p.player_id}
-                      className="flex items-center justify-between gap-3 py-3"
-                    >
-                      <div className="min-w-0">
-                        <p className="font-semibold">{p.player_name}</p>
-                        {rankingSnapshot && <p className="text-xs font-semibold text-blue-800">{p.source_rank == null ? 'Unranked / unmatched' : `${p.sport} rank #${p.source_rank}`}</p>}
-                        <p className="mt-1 text-sm text-slate-600">
-                          {[p.sport, p.position, p.professional_team]
-                            .filter(Boolean)
-                            .join(" · ")}{" "}
-                          <span className="text-slate-400">
-                            ·{" "}
-                            {p.availability_status === "waivers"
-                              ? "Waivers"
-                              : "Free agent"}
-                          </span>
-                        </p>
-                      </div>
+                    {["", "NFL", "MLB", "NBA", "EPL", "PGA"].map((s) => (
                       <button
-                        className={button}
-                        disabled={!allowed || busy || !!pending}
+                        key={s}
+                        aria-pressed={sport === s}
                         onClick={() => {
-                          setSelected(p);
-                          setPlanned(
-                            pickCommand(state, p, crypto.randomUUID()),
-                          );
-                          setNotice("");
+                          setSport(s);
+                          setPosition("");
+                          setPositions([]);
+                          setCursor(null);
                         }}
+                        className={`min-h-10 rounded-lg px-3 text-sm font-semibold ${sport === s ? "bg-blue-800 text-white" : "bg-blue-50 text-blue-800"}`}
                       >
-                        Select<span className="sr-only"> {p.player_name}</span>
+                        {s || "All"}
                       </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-              <div className="mt-4 flex justify-between gap-3">
-                <button
-                  disabled={!cursor || loading}
-                  className="min-h-11 px-2 text-sm font-semibold text-blue-800 disabled:opacity-40"
-                  onClick={() => setCursor(null)}
-                >
-                  Back to first page
-                </button>
-                <button
-                  disabled={!next || loading}
-                  className="min-h-11 px-2 text-sm font-semibold text-blue-800 disabled:opacity-40"
-                  onClick={() => setCursor(next)}
-                >
-                  Next players →
-                </button>
-              </div>
-            </section>
-            <DraftViews state={state} />
+                    ))}
+                  </div>
+                  <label className="mb-3 block text-sm font-semibold">
+                    Position
+                    <select
+                      className={`${field} mt-1`}
+                      value={position}
+                      onChange={(e) => {
+                        setPosition(e.target.value);
+                        setCursor(null);
+                      }}
+                    >
+                      <option value="">All positions</option>
+                      {position && !positions.includes(position) && (
+                        <option value={position}>{position}</option>
+                      )}
+                      {positions.map((p) => (
+                        <option key={p} value={p}>
+                          {p}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  {playerError && (
+                    <p role="alert" className="text-red-700">
+                      {playerError}
+                    </p>
+                  )}
+                  {loading ? (
+                    <p role="status" className="py-8 text-slate-500">
+                      Loading players…
+                    </p>
+                  ) : players.length === 0 ? (
+                    <p className="py-8 text-slate-500">
+                      No available players match your search.
+                    </p>
+                  ) : (
+                    <ul className="divide-y divide-blue-100">
+                      {players.map((p) => (
+                        <li
+                          key={p.player_id}
+                          className="flex items-center justify-between gap-3 py-3"
+                        >
+                          <div className="min-w-0">
+                            <p className="font-semibold">{p.player_name}</p>
+                            {rankingSnapshot && (
+                              <p className="text-xs font-semibold text-blue-800">
+                                {p.source_rank == null
+                                  ? "Unranked / unmatched"
+                                  : `${p.sport} rank #${p.source_rank}`}
+                              </p>
+                            )}
+                            <p className="mt-1 text-sm text-slate-600">
+                              {[p.sport, p.position, p.professional_team]
+                                .filter(Boolean)
+                                .join(" · ")}{" "}
+                              <span className="text-slate-400">
+                                ·{" "}
+                                {p.availability_status === "waivers"
+                                  ? "Waivers"
+                                  : "Free agent"}
+                              </span>
+                            </p>
+                          </div>
+                          <button
+                            className={button}
+                            disabled={!allowed || busy || !!pending}
+                            onClick={() => {
+                              setSelected(p);
+                              setPlanned(
+                                pickCommand(state, p, crypto.randomUUID()),
+                              );
+                              setNotice("");
+                            }}
+                          >
+                            Select
+                            <span className="sr-only"> {p.player_name}</span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <div className="mt-4 flex justify-between gap-3">
+                    <button
+                      disabled={!cursor || loading}
+                      className="min-h-11 px-2 text-sm font-semibold text-blue-800 disabled:opacity-40"
+                      onClick={() => setCursor(null)}
+                    >
+                      Back to first page
+                    </button>
+                    <button
+                      disabled={!next || loading}
+                      className="min-h-11 px-2 text-sm font-semibold text-blue-800 disabled:opacity-40"
+                      onClick={() => setCursor(next)}
+                    >
+                      Next players →
+                    </button>
+                  </div>
+                </section>
+              }
+            />
+
             <aside className="space-y-5 xl:col-span-3">
-              <section className={panel}>
-                <h2 className="text-xl font-bold">Draft progress</h2>
-                <p className="mt-2 text-sm text-slate-600">
-                  {state.picks.filter((p) => p.player_id).length} selections
-                  recorded. The board and every owner’s roster below update as
-                  picks are saved.
-                </p>
-              </section>
               <CommissionerControls
                 state={state}
                 client={client}

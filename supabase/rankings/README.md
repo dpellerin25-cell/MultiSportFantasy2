@@ -30,7 +30,7 @@ npx supabase link --project-ref tgvuntuhdqucazpoxrrg
 npx supabase db push --linked --dry-run
 ```
 
-The expected pending migration is `202609290001_player_ranking_snapshot.sql`. Review any other pending migrations before proceeding. Then apply to the linked **test** project:
+The ranking migration is `202609290001_player_ranking_snapshot.sql`. The Available Players position filter additionally requires `202609290002_available_position_filter.sql`. Already-applied migrations will not be listed. Review any other pending migrations before proceeding. Then apply to the linked **test** project:
 
 ```bash
 npx supabase db push --linked
@@ -39,6 +39,8 @@ npx supabase db push --linked
 Restart the website with the updated local files, and reload `/draft` from the first player page. The panel should show `Fixed rankings · 2026-09-29`. Without the migration, it explicitly says ranked sorting is not installed; it does not mislabel the old ordering as ranked.
 
 No Fantrax cookie, fresh pool import, or new environment variable is required. Existing drafts/picks are preserved. These instructions do not deploy to production.
+
+The position filter runs before pagination, using exact position tokens split on commas, slashes, semicolons or whitespace. For example, F matches G/F but PG does not match G/F. Options come from the full eligible, undrafted pool for the selected sport, not just the current page. Changing sports clears the position selection. The existing five-argument RPC is preserved for older clients; the new six-argument call adds `position_filter` and returns `available_positions`.
 
 ## Offline verification
 
