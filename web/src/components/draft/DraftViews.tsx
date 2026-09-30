@@ -3,7 +3,7 @@ import { useState } from "react";
 import { rosterProgress, type DraftState } from "@/lib/draft-model";
 import { proposedLineup, STARTING_SLOTS } from "@/lib/draft-lineups";
 const box =
-  "min-w-0 rounded-2xl border border-blue-100 bg-white p-4 shadow-sm xl:h-[max(68rem,90vh)] xl:overflow-y-auto";
+  "min-w-0 rounded-2xl border border-blue-100 bg-white p-4 shadow-sm";
 export default function DraftViews({
   state,
   availablePlayers,
@@ -33,7 +33,7 @@ export default function DraftViews({
     "Owner";
   return (
     <>
-      <section className={box} aria-labelledby="board-title">
+      <section className={`${box} ${round === "all" ? "xl:max-h-[80vh] xl:overflow-y-auto" : ""}`} aria-labelledby="board-title">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 id="board-title" className="text-xl font-bold">
             Draft Board
@@ -109,8 +109,9 @@ export default function DraftViews({
           </ol>
         )}
       </section>
-      {availablePlayers}
-      <section className={box} aria-labelledby="roster-title">
+      <div className="min-w-0 xl:relative">{availablePlayers}</div>
+      <div className="min-w-0 xl:relative">
+      <section className={`${box} xl:absolute xl:inset-0 xl:overflow-y-auto`} aria-labelledby="roster-title">
         <h2 id="roster-title" className="text-xl font-bold">
           {owner === state.viewer_owner_id
             ? "My Roster"
@@ -242,6 +243,7 @@ export default function DraftViews({
           <p className="py-5 text-slate-500">No players drafted yet.</p>
         )}
       </section>
+      </div>
     </>
   );
 }

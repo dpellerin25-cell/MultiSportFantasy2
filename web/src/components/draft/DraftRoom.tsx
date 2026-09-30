@@ -506,12 +506,12 @@ function AuthenticatedRoom({
               {notice}
             </p>
           )}
-          <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)_minmax(0,1fr)]">
+          <div className="grid items-stretch gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)_minmax(0,1fr)]">
             <DraftViews
               state={state}
               availablePlayers={
                 <section
-                  className={`${panel} xl:h-[max(68rem,90vh)] xl:overflow-y-auto`}
+                  className={`${panel} xl:absolute xl:inset-0 xl:overflow-y-auto`}
                   aria-labelledby="players-title"
                 >
                   <h2 id="players-title" className="text-xl font-bold">
