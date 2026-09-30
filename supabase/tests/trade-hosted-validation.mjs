@@ -1,24 +1,29 @@
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 
+// Only fixed, credential-free setup messages may be printed by the hosted CLI.
+export class TradeSetupError extends Error {}
+function requireSetup(ok,message){if(!ok)throw new TradeSetupError(message);}
+
 // Caller MUST wrap this in a transaction and ROLLBACK even on success.
 // Existing linked accounts only. No new accounts or role grants.
 export async function validateHostedTrades(db,doug,chris,report=console.log){
   const q=async(sql,args=[])=>(await db.query(sql,args)).rows;
   const value=async(sql,args=[])=>Object.values((await q(sql,args))[0])[0];
   const owners=Object.fromEntries((await q('select slug,id from draft.owners where active')).map(o=>[o.slug,o.id]));
-  assert.equal(Object.keys(owners).length,9,'Expected nine active owners');
-  assert.notEqual(doug,chris);
+  requireSetup(Object.keys(owners).length===9,'Expected nine active owners in the test project.');
+  requireSetup(doug!==chris,'Doug and Chris settings signed into the same account. Use two different test accounts.');
   for(const [user,slug] of [[doug,'doug'],[chris,'chris']])
-    assert.equal(await value('select owner_id from draft.owner_accounts where auth_user_id=$1',[user]),owners[slug]);
-  assert.equal(await value("select exists(select 1 from draft.league_roles where auth_user_id=$1 and role='commissioner')",[doug]),true);
-  assert.equal(await value("select exists(select 1 from draft.league_roles where auth_user_id=$1 and role='commissioner')",[chris]),false);
+    requireSetup((await q('select owner_id from draft.owner_accounts where auth_user_id=$1',[user]))[0]?.owner_id===owners[slug],
+      slug==='doug'?'Doug test credentials are not linked to the Doug owner.':'OWNER test credentials are not linked to the Chris owner.');
+  requireSetup(await value("select exists(select 1 from draft.league_roles where auth_user_id=$1 and role='commissioner')",[doug]),'Doug test account needs its existing commissioner role.');
+  requireSetup(!await value("select exists(select 1 from draft.league_roles where auth_user_id=$1 and role='commissioner')",[chris]),'Chris test account has a commissioner role; this test requires a non-commissioner Chris account.');
   const third=(await q('select m.auth_user_id,m.owner_id from draft.owner_accounts m join draft.owners o on o.id=m.owner_id where o.active and m.auth_user_id<>all($1::uuid[]) limit 1',[[doug,chris]]))[0];
-  assert.ok(third,'Link a third active owner account first (no third password required for SQL privacy checks)');
+  requireSetup(third,'No third linked active owner was found. Link one additional test account to an owner other than Doug or Chris. No third password is needed for this test.');
   await q('select pg_advisory_xact_lock(731943,1)');
   // Never operate alongside real or earlier committed trade fixtures.
   for(const table of ['trades','picks','ledger_import','players','roster_snapshots','notifications','requests'])
-    assert.equal(await value(`select count(*)::int from trading.${table}`),0,'Trade schema must be unused for this rollback-only validation');
+    requireSetup(await value(`select count(*)::int from trading.${table}`)===0,`Trade schema must be unused: trading.${table} already contains rows. Do not delete existing data to run this test.`);
   await q(`select trading.import_pick_ledger('{"version":1,"trades":[]}')`);
   async function as(user,role,fn){
     await q('savepoint trade_permission');
