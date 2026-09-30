@@ -511,7 +511,7 @@ function AuthenticatedRoom({
               state={state}
               availablePlayers={
                 <section
-                  className={`${panel} xl:max-h-[65vh] xl:overflow-y-auto`}
+                  className={`${panel} xl:h-[max(68rem,90vh)] xl:overflow-y-auto`}
                   aria-labelledby="players-title"
                 >
                   <h2 id="players-title" className="text-xl font-bold">
