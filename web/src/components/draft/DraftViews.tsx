@@ -4,33 +4,22 @@ import { rosterProgress, type DraftState } from "@/lib/draft-model";
 import { proposedLineup, STARTING_SLOTS } from "@/lib/draft-lineups";
 const box =
   "min-w-0 rounded-2xl border border-blue-100 bg-white p-4 shadow-sm xl:max-h-[65vh] xl:overflow-y-auto";
-export default function DraftViews({ state }: { state: DraftState }) {
+export default function DraftViews({
+  state,
+  availablePlayers,
+}: {
+  state: DraftState;
+  availablePlayers: React.ReactNode;
+}) {
   const [round, setRound] = useState("current"),
-    [position, setPosition] = useState(""),
     [lineupSport, setLineupSport] = useState("NFL"),
     [chosenOwner, setOwner] = useState("");
-  const positions = [
-    ...new Set(
-      state.picks.flatMap((p) =>
-        (p.position ?? "")
-          .split(/[,/;]/)
-          .map((v) => v.trim())
-          .filter(Boolean),
-      ),
-    ),
-  ].sort();
   const current =
     state.picks.find((p) => p.pick_number === state.current_pick_number)
       ?.round ?? 1;
   const shown = round === "current" ? current : Number(round);
   const visiblePicks = state.picks.filter(
-    (p) =>
-      (round === "all" || p.round === shown) &&
-      (!position ||
-        (p.position ?? "")
-          .split(/[,/;]/)
-          .map((v) => v.trim())
-          .includes(position)),
+    (p) => round === "all" || p.round === shown,
   );
   const owner =
     chosenOwner ||
@@ -70,21 +59,6 @@ export default function DraftViews({ state }: { state: DraftState }) {
           {state.picks.filter((p) => p.player_id).length} selections recorded ·
           {round === "all" ? "All rounds" : `Round ${shown}`}
         </p>
-        <label className="mt-3 block text-sm">
-          Position
-          <select
-            className="ml-2 min-h-11 rounded-lg border px-2"
-            value={position}
-            onChange={(e) => setPosition(e.target.value)}
-          >
-            <option value="">All positions</option>
-            {positions.map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
-        </label>
         {!!state.picks.length && !visiblePicks.length && (
           <p className="py-4 text-sm text-slate-500">
             No selections match these filters.
@@ -135,6 +109,7 @@ export default function DraftViews({ state }: { state: DraftState }) {
           </ol>
         )}
       </section>
+      {availablePlayers}
       <section className={box} aria-labelledby="roster-title">
         <h2 id="roster-title" className="text-xl font-bold">
           {owner === state.viewer_owner_id
@@ -159,35 +134,39 @@ export default function DraftViews({ state }: { state: DraftState }) {
           {roster.length} players selected. Viewing another roster does not
           change your signed-in identity.
         </p>
-        <details className="mt-3"><summary className="cursor-pointer py-2 text-sm font-semibold">Sport minimum progress</summary><div className="my-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {rosterProgress(state, owner).map((r) => (
-            <div
-              key={r.sport}
-              className={`rounded-lg p-3 ${r.count >= r.minimum ? "bg-emerald-50" : "bg-blue-50"}`}
-            >
-              <p className="text-sm font-semibold">{r.sport}</p>
-              <p className="text-lg font-bold">
-                {r.count}{" "}
-                <span className="text-xs font-normal text-slate-600">
-                  / {r.minimum} minimum
-                </span>
-              </p>
-              <progress
-                className="h-2 w-full accent-blue-800"
-                aria-label={`${r.sport} minimum progress`}
-                max={Math.max(r.minimum, 1)}
-                value={Math.min(r.count, r.minimum)}
-              />
-              <p className="text-xs text-slate-500">
-                {Math.max(0, r.minimum - r.count)} still needed
-              </p>
-            </div>
-          ))}
-        </div>
-        <p className="text-xs text-slate-500">
-          Minimums are requirements, not roster limits. No sport maximums are
-          configured.
-        </p>
+        <details className="mt-3">
+          <summary className="cursor-pointer py-2 text-sm font-semibold">
+            Sport minimum progress
+          </summary>
+          <div className="my-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+            {rosterProgress(state, owner).map((r) => (
+              <div
+                key={r.sport}
+                className={`rounded-lg p-3 ${r.count >= r.minimum ? "bg-emerald-50" : "bg-blue-50"}`}
+              >
+                <p className="text-sm font-semibold">{r.sport}</p>
+                <p className="text-lg font-bold">
+                  {r.count}{" "}
+                  <span className="text-xs font-normal text-slate-600">
+                    / {r.minimum} minimum
+                  </span>
+                </p>
+                <progress
+                  className="h-2 w-full accent-blue-800"
+                  aria-label={`${r.sport} minimum progress`}
+                  max={Math.max(r.minimum, 1)}
+                  value={Math.min(r.count, r.minimum)}
+                />
+                <p className="text-xs text-slate-500">
+                  {Math.max(0, r.minimum - r.count)} still needed
+                </p>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-slate-500">
+            Minimums are requirements, not roster limits. No sport maximums are
+            configured.
+          </p>
         </details>
         <h3 className="mt-3 font-bold">Proposed starting lineup</h3>
         <label className="mt-2 block text-sm">
