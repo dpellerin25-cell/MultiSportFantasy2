@@ -214,3 +214,76 @@ sequentially under PGlite. This catches SQL and scenario mistakes locally but is
 explicitly **not** a substitute for the independent-session PostgreSQL runner.
 `trade-runner-guards.test.mjs` checks rejected connection settings without
 connecting to any database. Both are included in the normal offline suite.
+
+## First hosted trade validation (rollback only)
+
+`tests/trade-hosted.test.mjs` is restricted to `MultiSportFantasy-Draft-Test`
+(`tgvuntuhdqucazpoxrrg`) through the existing test-project URL guard and full TLS
+verification. It signs into the existing confirmed Doug and Chris accounts,
+checks their actual owner links and roles, and exercises trade commands as the
+`authenticated` database role. A third active owner must already have an account
+link for league-member privacy tests; its password is not required, because
+these checks use SQL role claims inside the transaction. Doug must be commissioner
+and Chris must not be commissioner. No account links or roles are changed.
+
+The trade schema must be unused: the runner refuses existing picks, imports,
+rosters, trades, or notification/request rows. It imports an empty *fixture*
+ledger inside its rollback transaction, not as a live cutover. It checks private
+proposals, unauthorized acceptance, immediate pick movement, idempotent retry,
+notification deduplication, public accepted history/private messages, audited
+commissioner reversal, counters/declines, commissioner privacy, and blocked raw
+table/helper/anonymous/outsider access. All fixture writes roll back even on
+failure. No email worker is invoked. Identity sequences can advance despite a
+rollback; Auth sign-in sessions can remain until expiry.
+
+This test validates real Auth sign-in plus SQL role authorization. It **does not
+validate HTTP trade RPC mutation/visibility or email delivery**. Those require a
+separate test phase with committed, explicitly managed fixtures; rollback-only
+fixtures cannot be read by separate HTTP database transactions. Do not treat
+this first hosted pass as approval to release the roster-page feature.
+
+After copying the new files to Codespaces (or pushing/pulling them yourself), run:
+
+```sh
+cd /workspaces/MultiSportFantasy2/supabase/tests
+npx --yes pnpm@11.25.0 test
+cd ../..
+npx supabase link --project-ref tgvuntuhdqucazpoxrrg
+npx supabase db push --linked --dry-run
+```
+
+The expected pending migration is only `202609300001_trades.sql`. If other files
+appear, review them first. Apply **only to the linked test project**, then test:
+
+```sh
+npx supabase db push --linked
+cd supabase/tests
+export DRAFT_TEST_CONFIRM=tgvuntuhdqucazpoxrrg
+NODE_EXTRA_CA_CERTS="$HOME/.config/multisport-draft/supabase-ca.crt" node trade-hosted.test.mjs
+```
+
+Reuse the existing `DRAFT_TEST_DATABASE_URL`, `DRAFT_TEST_PUBLISHABLE_KEY`,
+`DRAFT_TEST_DOUG_EMAIL`, `DRAFT_TEST_DOUG_PASSWORD`, `DRAFT_TEST_OWNER_EMAIL` and
+`DRAFT_TEST_OWNER_PASSWORD` environment settings. `OWNER` is the Chris test
+account. The database URL is the test project's direct/session-pooler URI, port
+5432, database `postgres`, no query string, and a URI-encoded database password.
+The runner lists **missing variable names only** and never prints credentials,
+tokens, server response bodies or connection strings. The CA path above is the
+existing persistent certificate location used for previous tests; do not disable
+certificate verification if it is missing.
+
+If settings have disappeared after a terminal restart, this Bash loop prompts
+for each value without echoing it or putting it in shell command history:
+
+```sh
+for setting in DRAFT_TEST_DATABASE_URL DRAFT_TEST_PUBLISHABLE_KEY DRAFT_TEST_DOUG_EMAIL DRAFT_TEST_DOUG_PASSWORD DRAFT_TEST_OWNER_EMAIL DRAFT_TEST_OWNER_PASSWORD; do
+  read -r -s -p "$setting: " "$setting"
+  printf '\n'
+  export "$setting"
+done
+```
+
+Expected final line: `PASS hosted trade validation: all test rows rolled back; no
+picks or notifications committed.` Share test output, not credentials. The
+matching `trade-hosted-offline.test.mjs` executes the shared scenario in PGlite
+and verifies rollback and refusal to touch a populated trade schema.
