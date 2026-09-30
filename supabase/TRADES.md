@@ -163,3 +163,54 @@ sharing a pick/player, acceptance vs counter/expiry/import/correction), apply to
 the disposable Supabase test project, verify real JWT permissions and email
 worker behavior, and then build the roster UI. Preserve rollback/cutover backups.
 Nothing in this work applies a migration or changes production.
+
+## Running the new concurrency suite in Codespaces
+
+The real runner uses three PostgreSQL connections: two competing transactions
+and an observer. Each scenario holds the first transaction open, starts the
+second operation, and verifies with `pg_blocking_pids` that the second backend
+is blocked by the first before allowing it to commit. It tests both orderings
+where relevant. Timeouts make lock failures bounded rather than hanging.
+
+The 17 scenarios cover duplicate acceptance, concurrent identical retry,
+competing pick/player offers, accept/counter, accept/withdraw, expiry (including
+expiry while waiting for the lock), roster refresh/acceptance, onward
+acceptance/correction, and Fantrax confirmation/correction. They assert final
+ownership, lifecycle state, audit/transfer counts, reservations and notification
+queue counts. Actual email delivery is not part of these tests.
+
+First copy these updated local files into the same paths in Codespaces (or push
+them yourself when ready and pull there). No push is performed automatically.
+Then run:
+
+```sh
+cd /workspaces/MultiSportFantasy2/supabase/tests
+npx --yes pnpm@11.25.0 install --frozen-lockfile --ignore-scripts
+npx --yes pnpm@11.25.0 test
+node run-trade-concurrency.mjs
+```
+
+Docker must already be running. The helper starts a fresh `postgres:17-alpine`
+container with a random name/password, an automatically assigned loopback-only
+port, no host mounts, and an empty `multisport_trade_test` database. It runs all
+migrations **only inside that disposable database** and creates fake Auth users.
+No Supabase settings, certificates, Fantrax cookies or account passwords are
+needed. Every run creates a new container; it does not overwrite old test data.
+
+Expect `17 trade concurrency scenarios passed` at the end. Share the output
+before proceeding to hosted validation. On either success or failure the helper
+prints inspection and optional removal commands for that specific container.
+Fixtures and its anonymous volume remain until you explicitly remove them.
+
+For an already-created empty disposable local PostgreSQL database, set
+`LOCAL_TRADE_TEST_DB_URL` and run `node trade-concurrency.test.mjs` directly. The
+runner refuses remote hosts, URL overrides, databases not named `*_trade_test`,
+and databases containing tables or draft/auth/trading schemas. Use a new database
+for each run. It requires an administrator solely to provision the local test
+schema; owner commands execute as `authenticated` with mocked Auth claims.
+
+`trade-race-offline.test.mjs` executes the same fixture/assertion scenarios
+sequentially under PGlite. This catches SQL and scenario mistakes locally but is
+explicitly **not** a substitute for the independent-session PostgreSQL runner.
+`trade-runner-guards.test.mjs` checks rejected connection settings without
+connecting to any database. Both are included in the normal offline suite.
