@@ -22,5 +22,10 @@ try{
   await db.exec('begin');
   await db.query(`select trading.import_pick_ledger('{"version":1,"trades":[]}')`);
   await assert.rejects(()=>validateHostedTrades(db,users.doug,users.chris,()=>{}),/unused/);await db.exec('rollback');
+  await db.exec('begin');
+  await db.query('delete from draft.owner_accounts where auth_user_id=$1',[users.jack]);
+  await assert.rejects(()=>validateHostedTrades(db,users.doug,users.chris,()=>{}),/No third linked active owner/);await db.exec('rollback');
+  await assert.rejects(()=>validateHostedTrades(db,users.doug,users.doug,()=>{}),/same account/);
+  await assert.rejects(()=>validateHostedTrades(db,users.doug,randomUUID(),()=>{}),/not linked to the Chris owner/);
   console.log('PASS hosted trade scenario offline: permissions, lifecycle, privacy, unused-schema guard and full fixture rollback (not a hosted run)');
 }catch(e){console.error(e.stack);process.exitCode=1;}finally{await db.close();}
