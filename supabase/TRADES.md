@@ -287,3 +287,86 @@ Expected final line: `PASS hosted trade validation: all test rows rolled back; n
 picks or notifications committed.` Share test output, not credentials. The
 matching `trade-hosted-offline.test.mjs` executes the shared scenario in PGlite
 and verifies rollback and refusal to touch a populated trade schema.
+
+## HTTP trade validation — commits diagnostic records
+
+`tests/trade-http.test.mjs` uses real JWT-authenticated HTTP requests to
+`trade_list` and `trade_command` for Doug, Chris, and the third linked owner.
+It checks anonymous/forged token denial, raw table denial, private offers,
+unrelated-owner rejection, acceptance/retry, league visibility, private message
+protection, commissioner reversal, counter/decline/withdrawal, and Doug's exclusion
+from other owners' private negotiations. Direct SQL only prepares/verifies
+fixtures and performs recovery cleanup. This is a **picks-only** HTTP diagnostic;
+player transfers, Fantrax reconciliation, and email delivery remain separate
+integration checks.
+
+Unlike the earlier hosted SQL test, this test commits data. Run only in the
+existing **test project**, before importing real trade rosters/picks and before
+enabling any email worker. Do not use the trade UI or run other trade tests while
+this diagnostic runs. A separate runner lock prevents two copies of this runner
+from operating concurrently.
+
+First use requires an unused trade schema. It seeds the 180 calendar-year rookie
+picks and commits a clearly marked diagnostic ledger. Subsequent runs accept
+only that ledger, fully cleaned-up diagnostic history, restored original pick
+ownership, and no player roster imports. It refuses a real legacy ledger or
+unresolved earlier run. This diagnostic ledger is **not** a production cutover;
+do not use this test project's trade ledger as your live authoritative ledger.
+
+Cleanup automatically withdraws open fixture offers, reverses any accepted
+fixture picks, and sets this run's pending/failed notifications to `failed` with
+`next_attempt_at = infinity`, suppressing them for a future worker that respects
+the retry schedule. No email worker may be running during this test. Immutable
+offers, audit events, requests, pick history, diagnostic ledger and seeded picks
+remain for inspection. Constraints/triggers are never bypassed. Accordingly,
+the earlier unused-schema rollback-only test will refuse to run afterward.
+
+Copy these files to Codespaces in their matching paths (or push/pull yourself):
+
+- `supabase/tests/trade-http.test.mjs`
+- `supabase/tests/trade-http-support.mjs`
+- `supabase/tests/trade-http-offline.test.mjs`
+- `supabase/tests/package.json`
+- `supabase/TRADES.md`
+
+No new migration or dependency is required. Retain your existing `DRAFT_TEST_*`
+credentials and add the third account's email/password. This must be the linked
+ordinary test owner used for the preceding privacy check (e.g. Jack), not Doug
+or Chris. In Codespaces:
+
+```sh
+cd /workspaces/MultiSportFantasy2/supabase/tests
+npx --yes pnpm@11.25.0 test
+read -r -s -p "Third linked owner's email: " DRAFT_TEST_THIRD_EMAIL
+printf '\n'
+export DRAFT_TEST_THIRD_EMAIL
+read -r -s -p "Third linked owner's password: " DRAFT_TEST_THIRD_PASSWORD
+printf '\n'
+export DRAFT_TEST_THIRD_PASSWORD
+export DRAFT_TEST_CONFIRM=tgvuntuhdqucazpoxrrg
+export TRADE_HTTP_TEST_CONFIRM=COMMIT_TEST_FIXTURES
+NODE_EXTRA_CA_CERTS="$HOME/.config/multisport-draft/supabase-ca.crt" node trade-http.test.mjs
+```
+
+The extra confirmation explicitly acknowledges persistent test fixtures. The
+runner still guards the database URI and HTTP endpoint to the test project,
+uses verified TLS, and does not print tokens or passwords. Expected final PASS:
+
+```text
+PASS hosted HTTP trade validation. Email delivery and player/Fantrax transfers were not tested.
+```
+
+Save the printed run ID. A failed, interrupted, or disconnected run can leave
+records needing attention. With the same environment settings, use the printed
+recovery command, prefixed with the CA setting:
+
+```sh
+NODE_EXTRA_CA_CERTS="$HOME/.config/multisport-draft/supabase-ca.crt" node trade-http.test.mjs --cleanup RUN_ID_FROM_OUTPUT
+```
+
+Recovery is idempotent and restricted to that run's tagged records. It will not
+overwrite picks moved onward or reverse unexpected player trades. If recovery
+fails, share the output rather than deleting data or weakening constraints.
+Auth sessions may remain until expiry. The matching offline suite exercises
+the same scenario with mocked HTTP transport backed by actual migrated SQL,
+including cleanup after interrupted acceptance; it is not a hosted HTTP pass.
