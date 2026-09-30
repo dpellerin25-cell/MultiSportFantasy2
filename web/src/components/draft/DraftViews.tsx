@@ -3,7 +3,7 @@ import { useState } from "react";
 import { rosterProgress, type DraftState } from "@/lib/draft-model";
 import { proposedLineup, STARTING_SLOTS } from "@/lib/draft-lineups";
 const box =
-  "min-w-0 rounded-2xl border border-blue-100 bg-white p-4 shadow-sm xl:max-h-[65vh] xl:overflow-y-auto";
+  "min-w-0 rounded-2xl border border-blue-100 bg-white p-4 shadow-sm xl:h-[max(68rem,90vh)] xl:overflow-y-auto";
 export default function DraftViews({
   state,
   availablePlayers,
