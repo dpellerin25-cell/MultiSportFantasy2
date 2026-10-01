@@ -370,3 +370,78 @@ fails, share the output rather than deleting data or weakening constraints.
 Auth sessions may remain until expiry. The matching offline suite exercises
 the same scenario with mocked HTTP transport backed by actual migrated SQL,
 including cleanup after interrupted acceptance; it is not a hosted HTTP pass.
+
+## Roster-page proposal interface
+
+The roster page now shares the draft-room owner sign-in. Signed-in owners see
+Propose Trade beside every other owner. The composer shows both rosters side by
+side (stacked on phones); Trade/Remove buttons build the offer. View Trade Offer
+opens a confirmation dialog; Cancel Trade Offer discards the unsent selection.
+Send Trade Offer calls the existing authenticated `trade_command`. During an
+uncertain network result the payload/request ID stays fixed and cancel is
+disabled until a retry resolves the outcome, avoiding a misleading cancellation
+of an offer that may already have been saved. Offers can be viewed by their
+parties in Your offers. Acceptance/decline/counter UI and email delivery are not
+part of this proposal-screen change.
+
+The connection remains restricted to the existing **test** Supabase URL and
+publishable key, using `NEXT_PUBLIC_DRAFT_SUPABASE_URL` and
+`NEXT_PUBLIC_DRAFT_SUPABASE_PUBLISHABLE_KEY`. No service key is used in the browser.
+For local preview, these values must be set in `web/.env.local`; restart the
+Next.js server after changing them. Use
+`https://tgvuntuhdqucazpoxrrg.supabase.co` for the URL and the test project's
+`sb_publishable_...` key. Never put a database password or secret/service-role
+key in a `NEXT_PUBLIC_` variable. Without this configuration, the page still
+shows the existing rosters and explains that proposals are not enabled yet.
+
+The new migration `202609300002_trade_rosters.sql` supplies a read-only owner
+catalogue: verified database IDs, next-two-year picks, and reserved-player flags.
+Unauthenticated/unlinked users cannot access it. The proposal uses authoritative
+database ownership, not the old file-backed rookie-pick editor. That editor
+remains unchanged and is not synchronized with the trade database; complete the
+pick cutover before any live launch. File-only players appear with a disabled
+Trade button until imported; no fabricated database ID is submitted.
+
+After transferring these changes, use the test project only:
+
+```sh
+cd /workspaces/MultiSportFantasy2
+npx supabase link --project-ref tgvuntuhdqucazpoxrrg
+npx supabase db push --linked --dry-run
+```
+
+The only newly pending migration should be `202609300002_trade_rosters.sql`.
+After checking that list:
+
+```sh
+npx supabase db push --linked
+cd supabase/tests
+node import-trade-rosters.mjs --preview
+```
+
+Review dates and player counts before importing. This reads the existing saved
+`web/data/rosters/*.json` files and never calls Fantrax or changes the updater.
+The local checkout used during implementation has September 20 snapshots with
+one NFL player and zero players in the other sports. Use a checkout containing
+newer successfully fetched roster snapshots for fuller testing; never change
+timestamps just to make old files look current.
+
+```sh
+export DRAFT_TEST_CONFIRM=tgvuntuhdqucazpoxrrg
+NODE_EXTRA_CA_CERTS="$HOME/.config/multisport-draft/supabase-ca.crt" node import-trade-rosters.mjs --import
+```
+
+The import validates known league IDs, nine unique owners, counts and player IDs,
+then imports all five sports atomically using the guarded test connection and
+original observation times. Existing database snapshot guards reject stale or
+conflicting files. The picks seeded by the HTTP diagnostic support testing only.
+After adding roster data, the earlier empty-schema/picks-only diagnostic runners
+will intentionally refuse to run; do not delete these records to bypass guards.
+
+Open `/rosters`, sign in as Doug and propose to Chris. Select items on both
+sides, review them, then cancel once to check no offer is created. Repeat and
+send; verify Chris can see it under Your offers and an uninvolved owner cannot.
+Confirm no Propose Trade button appears on the signed-in owner's own card. Test
+on a phone-sized viewport and verify Trade/Remove and keyboard dialog controls.
+Email is explicitly shown as not enabled; sending saves the proposal and queues
+the existing database notification only.

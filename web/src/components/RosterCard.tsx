@@ -15,6 +15,7 @@ export type RosterPlayer = {
 
 export type SportRoster = {
   sport: string;
+  league_id?: string;
   players: RosterPlayer[];
 };
 
@@ -23,6 +24,7 @@ type RosterCardProps = {
   sports: SportRoster[];
   maxRosterSize?: number;
   children?: ReactNode;
+  action?: ReactNode;
 };
 
 function getCountStyle(count: number, max: number) {
@@ -44,6 +46,7 @@ export default function RosterCard({
   sports,
   maxRosterSize = 65,
   children,
+  action,
 }: RosterCardProps) {
   const [expanded, setExpanded] = useState(false);
 
@@ -54,11 +57,12 @@ export default function RosterCard({
 
   return (
     <div className="overflow-hidden rounded-xl border border-blue-100 bg-white shadow-sm">
+      <div className="flex items-center">
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
         aria-expanded={expanded}
-        className="flex w-full items-center justify-between gap-4 p-4 text-left transition hover:bg-blue-50 sm:p-5"
+        className="flex min-w-0 flex-1 items-center justify-between gap-2 p-4 text-left transition hover:bg-blue-50 sm:p-5"
       >
         <div>
           <h2 className="text-lg font-bold text-slate-900 sm:text-xl">
@@ -89,6 +93,8 @@ export default function RosterCard({
           </span>
         </div>
       </button>
+      {action && <div className="shrink-0 pr-3">{action}</div>}
+      </div>
 
       {expanded && (
         <div className="border-t border-blue-100">

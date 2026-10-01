@@ -1,4 +1,5 @@
 import MainNavigation from "@/components/MainNavigation";
+import {Trades,ProposeTradeButton} from "@/components/Trades";
 import { connection } from "next/server";
 import { RookieDraftProvider, OwnerRookiePicks } from "@/components/RookieDraft";
 import { buildRookiePicks, getDraftYears } from "@/lib/rookieDraft";
@@ -84,6 +85,7 @@ function buildCombinedRosters(): OwnerRoster[] {
 
       owner.sports.push({
         sport: league.sport,
+        league_id: league.data.league_id,
         players: roster.players,
       });
 
@@ -172,6 +174,7 @@ export default async function RostersPage() {
         </div>
 
         <RookieDraftProvider initial={draft}>
+        <Trades rosters={owners}>
         <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
           {owners.map((owner) => (
             <RosterCard
@@ -179,11 +182,13 @@ export default async function RostersPage() {
               owner={owner.owner}
               sports={owner.sports}
               maxRosterSize={65}
+              action={<ProposeTradeButton owner={owner.owner} />}
             >
               <OwnerRookiePicks owner={owner.owner} />
             </RosterCard>
           ))}
         </div>
+        </Trades>
         </RookieDraftProvider>
       </div>
     </main>
