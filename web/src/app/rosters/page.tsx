@@ -1,5 +1,5 @@
 import MainNavigation from "@/components/MainNavigation";
-import {Trades,ProposeTradeButton} from "@/components/Trades";
+import {Trades,ProposeTradeButton,TradeOwnerPicks} from "@/components/Trades";
 import { connection } from "next/server";
 import { RookieDraftProvider, OwnerRookiePicks } from "@/components/RookieDraft";
 import { buildRookiePicks, getDraftYears } from "@/lib/rookieDraft";
@@ -184,7 +184,7 @@ export default async function RostersPage() {
               maxRosterSize={65}
               action={<ProposeTradeButton owner={owner.owner} />}
             >
-              <OwnerRookiePicks owner={owner.owner} />
+              <TradeOwnerPicks owner={owner.owner} fallback={<OwnerRookiePicks owner={owner.owner} />} />
             </RosterCard>
           ))}
         </div>

@@ -381,8 +381,7 @@ Send Trade Offer calls the existing authenticated `trade_command`. During an
 uncertain network result the payload/request ID stays fixed and cancel is
 disabled until a retry resolves the outcome, avoiding a misleading cancellation
 of an offer that may already have been saved. Offers can be viewed by their
-parties in Your offers. Acceptance/decline/counter UI and email delivery are not
-part of this proposal-screen change.
+parties in Your offers. Recipient response controls are described below. Email delivery is not enabled.
 
 The connection remains restricted to the existing **test** Supabase URL and
 publishable key, using `NEXT_PUBLIC_DRAFT_SUPABASE_URL` and
@@ -445,3 +444,35 @@ Confirm no Propose Trade button appears on the signed-in owner's own card. Test
 on a phone-sized viewport and verify Trade/Remove and keyboard dialog controls.
 Email is explicitly shown as not enabled; sending saves the proposal and queues
 the existing database notification only.
+
+### Responding to and archiving offers
+
+Recipients now have Accept, Decline and Counter Offer controls for unexpired
+proposals. Accept/Decline require confirmation; all actions carry the original
+revision and keep a fixed request ID for retries after uncertain responses.
+Counter Offer prefills both sides of the original proposal, sends it back to the
+original proposer, and closes the parent only when the counteroffer is sent.
+Cancelling the counter composer leaves the original proposal open.
+
+The dropdown shows only the viewer's unexpired private proposals plus **all
+league accepted trades still awaiting roster confirmation**. Declined, completed,
+withdrawn, expired, invalidated and superseded proposals are archived from the UI;
+their database audit history is preserved. No destructive archive/delete action
+or new database migration is required. Picks-only accepted trades complete and
+archive immediately. The list refreshes on window focus and every 30 seconds
+while visible, so a later roster import's completion removes a finished trade.
+Actual Fantrax reconciliation still requires the roster-import process; this UI
+does not schedule or perform Fantrax transfers.
+
+While signed in with trade data loaded, owner cards display database pick
+ownership and refresh it after acceptance. This replaces the legacy file-based
+pick display for signed-in trading owners; it does not change the legacy file
+ledger or its commissioner controls. Signed-out users retain the old display.
+The full legacy-to-database cutover remains a release prerequisite.
+
+Test as two owners: decline an incoming proposal and confirm it disappears from
+both lists; send a counter and confirm only the replacement remains for the
+parties; accept a picks-only offer and verify the two owner cards' pick ownership
+and removal from the dropdown. An unrelated owner should see accepted pending
+player trades, but no private proposals. Player-trade completion needs roster
+data and a confirming import; do not expect that path from empty player rosters.

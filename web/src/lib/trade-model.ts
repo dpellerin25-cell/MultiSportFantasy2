@@ -5,6 +5,32 @@ export type TradeRoster = {
   players:{id:string;owner_id:string;name:string;sport:string;fantrax_id:string;league_id:string;reserved:boolean}[];
   picks:{id:string;owner_id:string;original_owner_id:string;year:number;round:number}[];
 };
+export type Offer={id:string;proposer_id:string;recipient_id:string;status:string;revision:number;expires_at:string;corrected_at:string|null;assets:{from_owner_id:string;to_owner_id:string;player_id:string|null;pick_id:string|null}[]};
+export type TradeCommand={request_id:string;action:string;args:Record<string,unknown>};
+export function activeOffers(offers:Offer[],viewer:string,now=Date.now()){
+  return offers.filter(o=>o.status==="accepted"||(o.status==="proposed"&&Date.parse(o.expires_at)>now&&[o.proposer_id,o.recipient_id].includes(viewer)));
+}
+export function canRespond(offer:Offer,viewer:string,now=Date.now()){
+  return offer.status==="proposed"&&offer.recipient_id===viewer&&Date.parse(offer.expires_at)>now;
+}
+export function offerResponse(offer:Offer,viewer:string,action:"accept"|"decline",requestId:string):TradeCommand{
+  if(!canRespond(offer,viewer))throw new Error("This offer is no longer available to respond to.");
+  return {request_id:requestId,action,args:{trade_id:offer.id,revision:offer.revision}};
+}
+export function counterSelection(data:TradeRoster,offer:Offer){
+  if(!canRespond(offer,data.viewer_owner_id))throw new Error("This offer is no longer available to counter.");
+  const assets=tradeAssets(data);
+  return offer.assets.map(a=>{
+    const found=assets.find(x=>x.kind===(a.player_id?"player":"pick")&&x.id===(a.player_id??a.pick_id));
+    if(!found||found.owner_id!==a.from_owner_id||found.unavailable)throw new Error("An asset in this offer is no longer available. Refresh trades before countering.");
+    return found;
+  });
+}
+export function counterProposal(data:TradeRoster,offer:Offer,selected:TradeAsset[],requestId:string):TradeCommand{
+  if(!canRespond(offer,data.viewer_owner_id))throw new Error("This offer is no longer available to counter.");
+  const cmd=proposal(data,offer.proposer_id,selected,requestId);
+  return {...cmd,action:"counter",args:{...cmd.args,trade_id:offer.id,revision:offer.revision}};
+}
 export function tradeAssets(data:TradeRoster):TradeAsset[]{
   return [...data.players.map(p=>({key:`player:${p.id}`,id:p.id,kind:"player" as const,owner_id:p.owner_id,label:p.name,sport:p.sport,unavailable:p.reserved?"Awaiting Fantrax transfer":undefined})),
     ...data.picks.map(p=>({key:`pick:${p.id}`,id:p.id,kind:"pick" as const,owner_id:p.owner_id,label:`${p.year} · Round ${p.round} · ${data.owners.find(o=>o.id===p.original_owner_id)?.name ?? "Original owner"}'s pick`}))];
