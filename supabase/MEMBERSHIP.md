@@ -85,3 +85,34 @@ remove that specific disposable container. Keep failure output before cleanup.
 This is PostgreSQL integration validation, not a hosted Auth or multi-session
 concurrency test. Test fixtures and points are synthetic and never exported to
 website data files.
+
+## Independent-session membership race tests
+
+After transferring the tested runner files, run in Codespaces:
+
+    cd /workspaces/MultiSportFantasy2/supabase/tests
+    npx --yes pnpm@11.25.0 install --frozen-lockfile --ignore-scripts
+    npx --yes pnpm@11.25.0 test:membership-concurrency
+
+This creates another fresh disposable PostgreSQL 17 container. No Supabase
+credentials or migration push is needed. The runner uses three independent
+connections and requires `pg_blocking_pids` to confirm the second transaction is
+waiting for the first. A sequential success is not accepted as concurrency proof.
+
+Seven scenarios cover both operation orders for roster imports, trade acceptance
+and draft setup, plus draft start winning against membership changes. Tests check
+final membership, single pick transfer, no partial roster/draft writes, unchanged
+settings/audit after rejection, and preserved clock and snake slots after start.
+For trade acceptance the membership-first case is a compatible expansion; the
+acceptance-first case is an incompatible contraction. These are deliberately
+different operations. A pending proposal already prevents recipient removal.
+
+The fixture uses real `prepareDraft` code but delegates its begin/commit/rollback
+boundaries to the test harness so the transaction can be held open for a competing
+session. Start and trade commands use the authenticated SQL role with simulated
+JWT claims. This does not test hosted Auth or HTTP transport.
+
+Local `membership-race-offline.test.mjs` runs the same scenarios sequentially in
+PGlite to check assertions and fixtures; only the Docker command proves real
+session blocking. No production constraints, permissions, or migrations are
+changed for these tests. Keep the printed fixture inspection/cleanup commands.
