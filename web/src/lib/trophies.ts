@@ -24,8 +24,8 @@ function validateArchive(value: unknown, sport: TrophySport): Archive {
   if (archive.sport !== sport && !(sport === "EPL" && archive.sport === "Premier League")) {
     throw new Error("Archive sport does not match.");
   }
-  if (!Array.isArray(archive.standings) || archive.standings.length !== 9) {
-    throw new Error("Expected complete standings for nine owners.");
+  if (!Array.isArray(archive.standings) || archive.standings.length !== (archive.placement_points?.length ?? 9)) {
+    throw new Error("Expected complete standings for the archived placement table.");
   }
   const names = new Set<string>();
   const ids = new Set<string>();
@@ -33,7 +33,7 @@ function validateArchive(value: unknown, sport: TrophySport): Archive {
     if (!row || typeof row.team !== "string" || !row.team.trim() || row.team !== row.team.trim() ||
         typeof row.team_id !== "string" || !row.team_id.trim() || names.has(row.team) || ids.has(row.team_id) ||
         typeof row.rank !== "string" || !row.rank.trim() || !Number.isInteger(Number(row.rank)) ||
-        Number(row.rank) < 1 || Number(row.rank) > 9 ||
+        Number(row.rank) < 1 || Number(row.rank) > archive.standings.length ||
         typeof row.fantasyPoints !== "string" || !row.fantasyPoints.trim() || !Number.isFinite(Number(row.fantasyPoints))) {
       throw new Error("Archive contains missing, duplicate, or invalid standings.");
     }
@@ -76,7 +76,7 @@ export function deriveTrophyCase(
     if (archives.size === TROPHY_SPORTS.length) {
       const leagues = TROPHY_SPORTS.map((sport) => scoreLeague(archives.get(sport)!));
       const owners = leagues[0].map((row) => row.team);
-      if (leagues.some((league) => league.some((row) => !owners.includes(row.team)))) {
+      if (leagues.some((league) => league.length !== owners.length || league.some((row) => !owners.includes(row.team)))) {
         overall = { category: "Overall", status: "unavailable", note: "Owner names differ between archives · needs review" };
       } else {
         const totals = owners.map((owner) => ({

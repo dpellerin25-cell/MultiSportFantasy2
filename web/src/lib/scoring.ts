@@ -9,6 +9,7 @@ type Standing = {
 type LeagueData = {
   sport: string;
   standings: Standing[];
+  placement_points?: number[];
 };
 
 export type ScoredTeam = {
@@ -69,6 +70,10 @@ function getStandardDeviation(
 export function scoreLeague(
   league: LeagueData
 ): ScoredTeam[] {
+  const points = league.placement_points ?? (league.standings.length === 9 ? Object.values(PLACEMENT_POINTS) : undefined);
+  if (!points || points.length !== league.standings.length || points.some((p,i) => !Number.isFinite(p) || p < 0 || (i > 0 && p >= points[i-1]))) {
+    throw new Error("An approved placement table matching this season's owner count is required.");
+  }
   const fantasyPoints = league.standings.map(
     (team) => Number(team.fantasyPoints ?? 0)
   );
@@ -96,7 +101,7 @@ export function scoreLeague(
           standardDeviation;
 
     const placementPoints =
-      PLACEMENT_POINTS[rank] ?? 0;
+      points[rank - 1] ?? 0;
 
     const sportScore =
       placementPoints + 10 * zScore;
