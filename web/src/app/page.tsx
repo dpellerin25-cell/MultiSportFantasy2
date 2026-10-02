@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getOverallStandings, type SportResult } from "@/lib/overallStandings";
 import { CURRENT_SEASON, getSeason, seasons } from "@/config/seasons";
 import SeasonSelector from "@/components/SeasonSelector";
+import { getSeasonLeagueData } from "@/lib/seasonData";
 
 type HomeProps = {
   searchParams: Promise<{
@@ -154,6 +155,11 @@ export default async function Home({
 
   const currentSeason = getSeason(selectedYear);
   const standings = getOverallStandings(selectedYear);
+  const updateTimes = (currentSeason?.sports ?? [])
+    .filter(sport => sport.status !== "upcoming")
+    .map(sport => Date.parse(getSeasonLeagueData(selectedYear, sport.sport).updated_at ?? ""))
+    .filter(Number.isFinite);
+  const lastUpdated = updateTimes.length ? new Date(Math.max(...updateTimes)) : null;
 
   return (
     <main className="min-h-screen bg-blue-50 px-4 py-6 sm:p-8">
@@ -168,6 +174,10 @@ export default async function Home({
 
           <p className="mt-2 text-sm text-slate-700 sm:text-base">
             Overall standings across all five sports
+          </p>
+          <p className="mt-2 text-sm text-slate-600">
+            Standings last updated: {lastUpdated ? <time dateTime={lastUpdated.toISOString()}>{lastUpdated.toLocaleString("en-US", {timeZone: "America/New_York", dateStyle: "medium", timeStyle: "short"})} Eastern</time> : "Not yet available"}.
+            {selectedYear === CURRENT_SEASON && " Scheduled updates: Tuesdays at 4 a.m. Eastern. Rosters update daily."}
           </p>
 
           {currentSeason && (

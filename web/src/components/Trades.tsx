@@ -1,7 +1,7 @@
 "use client";
 import {createContext,useContext,useEffect,useRef,useState,type ReactNode} from "react";
 import {createClient,type SupabaseClient,type Session} from "@supabase/supabase-js";
-import {proposal,tradeAssets,tradeWarnings,activeOffers,canRespond,offerResponse,counterSelection,counterProposal,type Offer,type TradeCommand,type TradeAsset,type TradeRoster} from "@/lib/trade-model";
+import {proposal,tradeAssets,tradeWarnings,activeOffers,archivedOffers,canRespond,offerResponse,counterSelection,counterProposal,type Offer,type TradeCommand,type TradeAsset,type TradeRoster} from "@/lib/trade-model";
 
 type LocalRoster={owner:string;sports:{sport:string;league_id?:string;players:{player_id:string|null;name:string|null;position:string|null;pro_team:string|null}[]}[]};
 const button="min-h-11 rounded-lg bg-blue-800 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-900 disabled:cursor-not-allowed disabled:opacity-40";
@@ -100,6 +100,7 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
   }
   const assets=data?tradeAssets(data):[],ownerName=(id:string)=>data?.owners.find(o=>o.id===id)?.name??"Owner";
   const visibleOffers=data?activeOffers(offers,data.viewer_owner_id):[];
+  const archived=data?archivedOffers(offers,data.viewer_owner_id):[];
   function column(ownerId:string){
     const local=rosters.find(o=>o.owner===ownerName(ownerId));
     const dbPlayers=assets.filter(a=>a.owner_id===ownerId&&a.kind==="player");
@@ -127,6 +128,15 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
           <button className={secondary} disabled={busy||uncertain} onClick={()=>beginCounter(o)}>Counter Offer</button>
         </div>}
       </article>)}{visibleOffers.length===0&&<p className="text-sm text-slate-600">No active trade proposals or pending player transfers.</p>}</div>
+    </details>}
+    {data&&<details className="mt-4 border-t border-blue-100 pt-4">
+      <summary className="cursor-pointer font-semibold text-blue-800">Archived ({archived.length})</summary>
+      <p className="mt-2 text-sm text-slate-600">Completed league trades and your closed proposals. Unaccepted proposals remain private to the owners involved.</p>
+      <div className="mt-3 space-y-3">{archived.map(o=><article key={o.id} className="rounded-lg border border-blue-100 p-4">
+        <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-semibold">{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</p><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold capitalize text-slate-600">{o.corrected_at?"Reversed · Completed":o.status==="proposed"?"Expired":o.status}</span></div>
+        <ul className="mt-3 space-y-2 text-sm text-slate-700">{o.assets.map((a,i)=><li key={i}>{ownerName(a.from_owner_id)} → {ownerName(a.to_owner_id)}: <strong>{assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"}</strong></li>)}</ul>
+        {o.corrected_at&&<p className="mt-3 text-sm text-slate-600">The original agreement shown above was reversed by the commissioner.</p>}
+      </article>)}{archived.length===0&&<p className="text-sm text-slate-600">No archived trades yet.</p>}</div>
     </details>}</section>
     {children}
     {decision&&data&&<Modal title={decision.action==="accept"?"Accept trade offer":"Decline trade offer"} locked={busy||uncertain} onClose={()=>{if(!busy&&!uncertain){setDecision(null);responsePending.current=null;setError("");}}}>

@@ -13,6 +13,12 @@ export function activeOffers(offers:Offer[],viewer:string,now=Date.now()){
 export function canRespond(offer:Offer,viewer:string,now=Date.now()){
   return offer.status==="proposed"&&offer.recipient_id===viewer&&Date.parse(offer.expires_at)>now;
 }
+export function archivedOffers(offers:Offer[],viewer:string,now=Date.now()){
+  return offers.filter(o=>o.status==="completed"||([o.proposer_id,o.recipient_id].includes(viewer)&&(
+    ["declined","countered","expired","withdrawn","invalidated"].includes(o.status)||
+    (o.status==="proposed"&&Date.parse(o.expires_at)<=now)
+  )));
+}
 export function offerResponse(offer:Offer,viewer:string,action:"accept"|"decline",requestId:string):TradeCommand{
   if(!canRespond(offer,viewer))throw new Error("This offer is no longer available to respond to.");
   return {request_id:requestId,action,args:{trade_id:offer.id,revision:offer.revision}};
