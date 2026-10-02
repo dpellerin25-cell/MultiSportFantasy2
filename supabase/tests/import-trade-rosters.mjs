@@ -7,13 +7,16 @@ const files=[['NFL','nfl','yg0olhfrmtj45dd6'],['MLB','mlb','60ri2nbhmtj4b0km'],[
 let db;
 try{
   const mode=process.argv[2];assert.ok(['--preview','--import'].includes(mode),'Use --preview or --import');
+  const settings=JSON.parse(await readFile(new URL('../../web/data/league-settings.json',import.meta.url),'utf8'));
+  const expected=settings.owners.map(o=>o.slug).sort();
+  const nameToSlug=new Map(settings.owners.map(o=>[o.name,o.slug]));
   const snapshots=[];
   for(const [sport,file,league] of files){
     const data=JSON.parse(await readFile(new URL(`../../web/data/rosters/${file}.json`,import.meta.url),'utf8'));
-    assert.equal(data.league_id,league);assert.equal(data.team_count,9);assert.equal(data.rosters.length,9);
-    const rosters=data.rosters.map(r=>{assert.equal(r.player_count,r.players.length);return {owner:r.owner.toLowerCase(),players:r.players.map(p=>{assert.ok(typeof p.player_id==='string'&&p.player_id&&p.name);return {player_id:p.player_id,name:p.name};})};});
-    assert.equal(new Set(rosters.map(r=>r.owner)).size,9);
-    assert.deepEqual(rosters.map(r=>r.owner).sort(),['brendan','chris','doug','hatch','jack','jacob','nik','ryan','tucker']);
+    assert.equal(data.league_id,league);assert.equal(data.team_count,expected.length);assert.equal(data.rosters.length,expected.length);
+    const rosters=data.rosters.map(r=>{assert.equal(r.player_count,r.players.length);return {owner:nameToSlug.get(r.owner),players:r.players.map(p=>{assert.ok(typeof p.player_id==='string'&&p.player_id&&p.name);return {player_id:p.player_id,name:p.name};})};});
+    assert.equal(new Set(rosters.map(r=>r.owner)).size,expected.length);
+    assert.deepEqual(rosters.map(r=>r.owner).sort(),expected);
     const count=rosters.reduce((n,r)=>n+r.players.length,0);assert.equal(count,data.total_players);
     assert.equal(new Set(rosters.flatMap(r=>r.players.map(p=>p.player_id))).size,count);
     assert.ok(Number.isFinite(Date.parse(data.updated_at))&&Date.parse(data.updated_at)<=Date.now());

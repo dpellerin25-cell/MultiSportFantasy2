@@ -1,3 +1,4 @@
+import math
 import argparse
 import os
 import json
@@ -254,6 +255,18 @@ def parse_standings_table(table):
 # WRITE ONE SPORT'S STANDINGS TO JSON
 # ---------------------------------------------------------
 
+def league_settings(names):
+    with open("web/data/league-settings.json", encoding="utf-8") as file:
+        settings = json.load(file)
+    expected = [owner["name"] for owner in settings["owners"]]
+    points = settings["placement_points"]
+    if len(expected) < 2 or len(set(expected)) != len(expected) or sorted(names) != sorted(expected):
+        raise ValueError("Fantrax owners do not match approved league membership")
+    if len(points) != len(expected) or any(type(p) not in (int, float) or not math.isfinite(p) or p < 0 for p in points) or any(b >= a for a, b in zip(points, points[1:])):
+        raise ValueError("Invalid approved placement points")
+    return settings
+
+
 def save_league_json(
     sport,
     league_id,
@@ -268,6 +281,7 @@ def save_league_json(
         )
 
     standings = parse_standings_table(table)
+    settings = league_settings([row["team"] for row in standings])
     team_info = extract_team_info(standings_data)
 
     league_heading = (
@@ -285,6 +299,8 @@ def save_league_json(
         ).isoformat(),
         "team_count": len(standings),
         "teams": team_info,
+        "placement_points": settings["placement_points"],
+        "championship_year": settings["championship_year"],
         "standings": standings
     }
 
@@ -445,6 +461,7 @@ def save_roster_json(
     rosters
 ):
 
+    league_settings([row["owner"] for row in rosters])
     total_players = sum(
         roster["player_count"]
         for roster in rosters

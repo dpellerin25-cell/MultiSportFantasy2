@@ -1,15 +1,6 @@
 import MainNavigation from "@/components/MainNavigation";
-const placementPoints = [
-  { finish: "1st", points: 100 },
-  { finish: "2nd", points: 80 },
-  { finish: "3rd", points: 65 },
-  { finish: "4th", points: 52 },
-  { finish: "5th", points: 40 },
-  { finish: "6th", points: 30 },
-  { finish: "7th", points: 20 },
-  { finish: "8th", points: 10 },
-  { finish: "9th", points: 0 },
-];
+import settings from "../../../data/league-settings.json";
+const placementPoints = settings.placement_points.map((points, i) => ({points, finish: `${i+1}${i+1===1?'st':i+1===2?'nd':i+1===3?'rd':'th'}`}));
 
 export default function ScoringPage() {
   return (

@@ -60,7 +60,7 @@ try{
     await ingest('NFL',{doug:[player('001','NFL One')],chris:[player('002')]},initial);
     assert.equal(await scalar('select count(*)::int from trading.players'),3);
     await assert.rejects(()=>ingest('NFL',{},initial),/Stale/);
-    await assert.rejects(()=>q('select trading.ingest_rosters($1,$2,clock_timestamp(),$3)',['NBA','league-NBA',json(roster().slice(1))]),/nine-owner/);
+    await assert.rejects(()=>q('select trading.ingest_rosters($1,$2,clock_timestamp(),$3)',['NBA','league-NBA',json(roster().slice(1))]),/active-owner/);
     const bad=roster({doug:[player('same')],chris:[player('same')]});
     await assert.rejects(()=>q('select trading.ingest_rosters($1,$2,clock_timestamp(),$3)',['NBA','league-NBA',json(bad)]),/duplicate player/);
     assert.equal(await scalar("select count(*)::int from trading.roster_snapshots where sport='NBA'"),0);

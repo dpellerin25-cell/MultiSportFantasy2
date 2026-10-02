@@ -1,6 +1,5 @@
-export const DRAFT_OWNERS = [
-  "Brendan", "Chris", "Doug", "Hatch", "Jack", "Jacob", "Nik", "Ryan", "Tucker",
-] as const;
+import settings from "../../data/league-settings.json" with { type: "json" };
+export const DRAFT_OWNERS: readonly string[] = settings.owners.map(owner => owner.name);
 
 export type DraftTrade = {
   id: string;

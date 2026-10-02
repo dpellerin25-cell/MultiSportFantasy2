@@ -23,6 +23,7 @@ type Standing = {
 export type LeagueData = {
   sport: string;
   updated_at?: string;
+  placement_points?: number[];
   standings: Standing[];
 };
 

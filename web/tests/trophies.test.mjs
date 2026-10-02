@@ -111,3 +111,15 @@ test("multiple seasons accumulate titles and history is newest first", () => {
   assert.equal(result.history[0].year, 2028);
   assert.equal(result.history[1].year, 2027);
 });
+test('different season sizes retain their own archived scoring and owners',()=>{
+ const load=(year,sport)=>{
+   if(year===2027)return archive(sport);
+   const count=year===2028?10:8;
+   return {sport,placement_points:Array.from({length:count},(_,i)=>(count-i-1)*10),standings:Array.from({length:count},(_,i)=>({team:`Season ${year} Owner ${i}`,team_id:`${sport}-${i}`,rank:String(i+1),fantasyPoints:String(100-i)}))};
+ };
+ const result=deriveTrophyCase([season(2027),season(2028),season(2029)],load,[]);
+ assert.equal(result.totalTrophies,18);
+ assert.equal(result.history.length,3);
+ assert.ok(result.history.every(s=>s.championships.every(c=>c.status==='awarded')));
+ assert.ok(result.owners.some(o=>o.owner==='Test Owner 1'&&o.total===6));
+});

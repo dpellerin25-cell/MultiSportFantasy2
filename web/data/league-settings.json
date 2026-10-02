@@ -1,0 +1,52 @@
+{
+  "championship_year": 2027,
+  "owners": [
+    {
+      "slug": "brendan",
+      "name": "Brendan"
+    },
+    {
+      "slug": "chris",
+      "name": "Chris"
+    },
+    {
+      "slug": "doug",
+      "name": "Doug"
+    },
+    {
+      "slug": "hatch",
+      "name": "Hatch"
+    },
+    {
+      "slug": "jack",
+      "name": "Jack"
+    },
+    {
+      "slug": "jacob",
+      "name": "Jacob"
+    },
+    {
+      "slug": "nik",
+      "name": "Nik"
+    },
+    {
+      "slug": "ryan",
+      "name": "Ryan"
+    },
+    {
+      "slug": "tucker",
+      "name": "Tucker"
+    }
+  ],
+  "placement_points": [
+    100,
+    80,
+    65,
+    52,
+    40,
+    30,
+    20,
+    10,
+    0
+  ]
+}
