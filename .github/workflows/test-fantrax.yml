@@ -1,10 +1,24 @@
-name: Update All Fantrax Standings
+name: Update Fantrax Data
 
 on:
   workflow_dispatch:
+    inputs:
+      data:
+        description: Data to refresh manually
+        type: choice
+        default: rosters
+        options:
+          - rosters
+          - standings
 
   schedule:
     - cron: "0 9 * * *"
+    - cron: "0 4 * * 2"
+      timezone: "America/New_York"
+
+concurrency:
+  group: fantrax-data-update
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -27,12 +41,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Fetch all Fantrax standings
+      - name: Fetch scheduled Fantrax data
         env:
           FANTRAX_COOKIE: ${{ secrets.FANTRAX_COOKIE }}
-        run: python scripts/fetch_fantrax.py
+          UPDATE_DATA: ${{ github.event_name == 'workflow_dispatch' && inputs.data || (github.event.schedule == '0 4 * * 2' && 'standings' || 'rosters') }}
+        run: python scripts/fetch_fantrax.py --only "$UPDATE_DATA"
 
-      - name: Commit updated standings
+      - name: Commit updated data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -40,8 +55,8 @@ jobs:
           git add web/data/
 
           if git diff --staged --quiet; then
-            echo "No standings changes to commit."
+            echo "No data changes to commit."
           else
-            git commit -m "Update Fantrax standings"
+            git commit -m "Update Fantrax data"
             git push
           fi

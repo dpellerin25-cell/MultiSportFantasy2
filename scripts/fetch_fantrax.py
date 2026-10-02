@@ -1,3 +1,4 @@
+import argparse
 import os
 import json
 import requests
@@ -502,7 +503,10 @@ def save_roster_json(
 # MAIN PROGRAM
 # ---------------------------------------------------------
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Update Fantrax saved data")
+    parser.add_argument("--only", choices=("all", "standings", "rosters"), default="all")
+    args = parser.parse_args(argv)
 
     print(
         "Starting Fantrax multi-sport update..."
@@ -534,30 +538,12 @@ def main():
                 league_id
             )
 
-            save_league_json(
-                sport,
-                league_id,
-                filename,
-                standings_data
-            )
+            if args.only in ("all", "standings"):
+                save_league_json(sport, league_id, filename, standings_data)
 
-            # ---------------------------------------------
-            # ROSTERS
-            # ---------------------------------------------
-
-            rosters = fetch_all_rosters(
-                session,
-                sport,
-                league_id,
-                standings_data
-            )
-
-            save_roster_json(
-                sport,
-                league_id,
-                filename,
-                rosters
-            )
+            if args.only in ("all", "rosters"):
+                rosters = fetch_all_rosters(session, sport, league_id, standings_data)
+                save_roster_json(sport, league_id, filename, rosters)
 
             successful.append(sport)
 
@@ -608,7 +594,7 @@ def main():
 
     print()
     print(
-        "All five Fantrax leagues and rosters "
+        f"All five Fantrax leagues ({args.only}) "
         "updated successfully!"
     )
 

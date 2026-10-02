@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {tradeAssets,proposal,tradeWarnings,activeOffers,canRespond,offerResponse,counterSelection,counterProposal} from '../src/lib/trade-model.ts';
+import {tradeAssets,proposal,tradeWarnings,activeOffers,archivedOffers,canRespond,offerResponse,counterSelection,counterProposal} from '../src/lib/trade-model.ts';
 const data={viewer_owner_id:'doug',ledger_ready:true,owners:[{id:'doug',name:'Doug',can_receive:true},{id:'chris',name:'Chris',can_receive:true},{id:'jack',name:'Jack',can_receive:false}],
   players:[{id:'p',owner_id:'doug',name:'Player',sport:'NFL',reserved:false}],picks:[{id:'pick',owner_id:'chris',original_owner_id:'doug',year:2027,round:1}]};
 test('mixed proposal uses stable database IDs, current owners, original pick label and exact request ID',()=>{
@@ -50,4 +50,14 @@ test('counter prefills both sides without reversing asset ownership; send target
   assert.throws(()=>counterSelection({...recipientData,players:[]},offer));
   assert.throws(()=>counterSelection({...recipientData,players:[{...data.players[0],reserved:true}]},offer));
   assert.throws(()=>counterSelection(data,offer));
+});
+
+test('archive includes completed league trades and private closed offers, never active offers or another owner negotiations',()=>{
+  const rows=[offer,...['declined','completed','countered','expired','withdrawn','invalidated','accepted'].map(status=>({...offer,id:status,status})),{...offer,id:'deadline',expires_at:new Date(now).toISOString()}];
+  assert.deepEqual(archivedOffers(rows,'doug',now).map(o=>o.id),['declined','completed','countered','expired','withdrawn','invalidated','deadline']);
+  assert.deepEqual(archivedOffers(rows,'chris',now).map(o=>o.id),archivedOffers(rows,'doug',now).map(o=>o.id));
+  assert.deepEqual(archivedOffers(rows,'jack',now).map(o=>o.id),['completed']);
+  assert.deepEqual(archivedOffers([],'doug',now),[]);
+  const activeIds=new Set(activeOffers(rows,'doug',now).map(o=>o.id));
+  assert.ok(archivedOffers(rows,'doug',now).every(o=>!activeIds.has(o.id)));
 });
