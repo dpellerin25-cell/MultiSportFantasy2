@@ -58,3 +58,30 @@ together. A final league size and placement table are still required.
 Production targeting and a browser commissioner membership editor are not included.
 Run hosted authorization/concurrency validation against the test project before
 production use; the new membership locking has only been tested offline locally.
+
+## Isolated PostgreSQL validation in Codespaces
+
+Existing started rehearsals intentionally prevent membership changes in the shared
+Supabase test project. Preserve them. Test the change in a fresh Docker PostgreSQL
+17 container instead:
+
+    cd /workspaces/MultiSportFantasy2/supabase/tests
+    npx --yes pnpm@11.25.0 install --frozen-lockfile --ignore-scripts
+    npx --yes pnpm@11.25.0 test:membership-docker
+
+No Supabase environment settings, cookie, or CA certificate are required. Docker
+must be running. The runner creates a uniquely named container, random local-only
+password, and loopback-only port with no host directory mounts. It applies all
+migrations to an empty database and runs the same membership scenarios used by
+the offline tests. No production or hosted test project is contacted.
+
+Coverage: 10-owner expansion and 650 generated startup picks, 8-owner contraction,
+rookie-pick counts, retained identities, incomplete roster rejection, invalid
+placement-table rejection, commissioner checks, blocked browser roles, removal
+of traded assets denied, and started/cancelled draft protection.
+
+On completion (including failure), the runner prints commands to inspect and
+remove that specific disposable container. Keep failure output before cleanup.
+This is PostgreSQL integration validation, not a hosted Auth or multi-session
+concurrency test. Test fixtures and points are synthetic and never exported to
+website data files.
