@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import LeagueSettingsLink from "./LeagueSettingsLink";
 import { usePathname } from "next/navigation";
 
 const links = [
@@ -37,6 +38,7 @@ export default function MainNavigation({ standingsHref = "/" }: { standingsHref?
           </Link>
         );
       })}
+      <LeagueSettingsLink />
     </nav>
   );
 }

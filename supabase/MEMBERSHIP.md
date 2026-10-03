@@ -116,3 +116,37 @@ Local `membership-race-offline.test.mjs` runs the same scenarios sequentially in
 PGlite to check assertions and fixtures; only the Docker command proves real
 session blocking. No production constraints, permissions, or migrations are
 changed for these tests. Keep the printed fixture inspection/cleanup commands.
+
+## Commissioner League Settings page
+
+`/league-settings` is available after applying
+`202610020002_league_settings_api.sql` to the test project. The main-navigation
+link appears only after the current signed-in user passes the commissioner read
+check. Direct page visits by other accounts cannot read or change settings.
+
+The editor permits adding/removing proposed owners and explicitly specifying
+placement points for the current configured season. Preview shares the exact
+validation function used by the existing trusted membership command, makes no
+membership writes, and explains blockers. Apply requires a checked confirmation,
+revalidates all prerequisites under the original locks, rejects stale previews,
+and records an idempotent request plus the membership audit event. Lost responses
+retry the same frozen request. The existing paused/started test drafts intentionally
+block membership application; do not remove history to bypass them.
+
+This page does not create Auth accounts, change Fantrax teams, or deploy files.
+After successful application, download the approved league-settings.json and
+coordinate its publication with matching Fantrax snapshots. Database changes alone
+do not update the file-backed public scoring/roster views. Current connection
+configuration remains restricted to the existing test project.
+
+Validation before deployment:
+
+- Run the full supabase/tests test suite and web `test:league-settings`.
+- Apply only the new API migration to the test project after dry-run review.
+- Sign in as Doug and verify the navigation link and preview.
+- Sign in as an ordinary owner in a separate browser; the link must be absent,
+  and directly opening /league-settings must show access denied.
+- Preview a change with the existing started test draft: confirm it is blocked
+  and there is no enabled Apply control.
+- Successful hosted apply/retry should be rehearsed in a separate clean fixture
+  environment; local SQL tests do not establish hosted HTTP/Auth success.
