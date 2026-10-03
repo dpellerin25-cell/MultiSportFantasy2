@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test:draft": "node --test tests/draft.test.mjs",
-    "test:trades": "node tests/trades.test.mjs"
+    "test:trades": "node tests/trades.test.mjs",
+    "test:league-settings": "node tests/league-settings.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.1",
