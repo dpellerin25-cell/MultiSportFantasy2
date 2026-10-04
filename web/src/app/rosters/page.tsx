@@ -1,9 +1,7 @@
 import MainNavigation from "@/components/MainNavigation";
-import {Trades,ProposeTradeButton,TradeOwnerPicks} from "@/components/Trades";
+import {Trades,ProposeTradeButton} from "@/components/Trades";
 import { connection } from "next/server";
 import { RookieDraftProvider, OwnerRookiePicks } from "@/components/RookieDraft";
-import { buildRookiePicks, getDraftYears } from "@/lib/rookieDraft";
-import { readDraftLedger, canWriteDrafts } from "@/lib/rookieDraftStore";
 
 import nfl from "../../../data/rosters/nfl.json";
 import mlb from "../../../data/rosters/mlb.json";
@@ -130,14 +128,6 @@ function buildCombinedRosters(): OwnerRoster[] {
 export default async function RostersPage() {
   await connection();
   const owners = buildCombinedRosters();
-  const ledger = await readDraftLedger();
-  const years = getDraftYears();
-  const draft = {
-    years,
-    picks: buildRookiePicks(ledger, years),
-    trades: ledger.trades.filter((trade) => years.includes(trade.year)),
-    editingAvailable: canWriteDrafts(),
-  };
 
   return (
     <main className="min-h-screen bg-blue-50 px-4 py-5 text-slate-900 sm:p-8">
@@ -173,7 +163,7 @@ export default async function RostersPage() {
           </div>
         </div>
 
-        <RookieDraftProvider initial={draft}>
+        <RookieDraftProvider>
         <Trades rosters={owners}>
         <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
           {owners.map((owner) => (
@@ -184,7 +174,7 @@ export default async function RostersPage() {
               maxRosterSize={65}
               action={<ProposeTradeButton owner={owner.owner} />}
             >
-              <TradeOwnerPicks owner={owner.owner} fallback={<OwnerRookiePicks owner={owner.owner} />} />
+              <OwnerRookiePicks owner={owner.owner} />
             </RosterCard>
           ))}
         </div>
