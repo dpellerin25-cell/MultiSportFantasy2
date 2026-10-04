@@ -117,6 +117,15 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
   }
   return <Context.Provider value={data?{data,open:id=>{setCounter(null);setRecipient(id);setSelection([]);setError("");setNotice("");}}:null}>
     <section className="mb-6 rounded-xl border border-blue-100 bg-white p-4"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-bold">Trade proposals {data&&`· ${ownerName(data.viewer_owner_id)}`}</h2><p className="mt-1 text-sm text-slate-600">Test league · Choose another owner to build an offer. Email notifications are not enabled yet.</p></div><div className="flex gap-2"><button className={secondary} onClick={()=>void refresh()}>Refresh trades</button><button className={secondary} onClick={()=>void client.auth.signOut({scope:"local"})}>Sign out</button></div></div>{!data&&!error&&<p role="status">Loading trade rosters…</p>}{error&&!recipient&&<p role="alert" className="mt-3 text-red-800">{error}</p>}{notice&&<p role="status" className="mt-3 rounded-lg bg-blue-50 p-3 text-blue-900">{notice}</p>}
+    {data&&acceptedTrades.length>0&&<section className="mt-4 border-t border-blue-100 pt-4" aria-label="Accepted trades awaiting Fantrax">
+      <h3 className="font-bold text-blue-900">Accepted Trades ({acceptedTrades.length})</h3>
+      <p className="mt-2 text-sm text-slate-600">Website rosters automatically update every morning at 4 a.m. Eastern. If a trade needs to be pushed through right away, contact Doug.</p>
+      <div className="mt-3 space-y-3">{acceptedTrades.map(o=><article key={o.id} className="rounded-lg border border-blue-200 p-4">
+        <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-semibold">{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</p><span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">{o.status==="accepted"?(o.corrected_at?"Reversal awaiting Fantrax":"Accepted · Awaiting Fantrax"):o.recipient_id===data.viewer_owner_id?"Received proposal":"Sent proposal"}</span></div>
+        <ul className="mt-3 space-y-2 text-sm text-slate-700">{o.assets.map((a,i)=><li key={i}>{ownerName(o.corrected_at?a.to_owner_id:a.from_owner_id)} sends <strong>{assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"}</strong> to {ownerName(o.corrected_at?a.from_owner_id:a.to_owner_id)}</li>)}</ul>
+        <div className="mt-4 rounded-lg border-l-4 border-amber-500 bg-amber-50 p-4 text-sm text-amber-950"><p className="font-bold">Fantrax action required</p><p className="mt-1 font-medium">Move the listed players on Fantrax. This trade will leave the list after a roster import confirms all player transfers.</p></div>
+      </article>)}</div>
+    </section>}
     {data&&<details className="mt-4">
       <summary className="cursor-pointer font-semibold text-blue-800">Your Offers ({proposals.length})</summary>
       <p className="mt-2 text-sm text-slate-600">Your sent and received proposals. Closed proposals are archived automatically.</p>
@@ -131,14 +140,6 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
         </div>}
       </article>)}{proposals.length===0&&<p className="text-sm text-slate-600">No active trade proposals.</p>}</div>
     </details>}
-    {data&&acceptedTrades.length>0&&<section className="mt-4 border-t border-blue-100 pt-4" aria-label="Accepted trades awaiting Fantrax">
-      <h3 className="font-bold text-blue-900">Accepted Trades ({acceptedTrades.length})</h3>
-      <div className="mt-3 space-y-3">{acceptedTrades.map(o=><article key={o.id} className="rounded-lg border border-blue-200 p-4">
-        <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-semibold">{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</p><span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">{o.status==="accepted"?(o.corrected_at?"Reversal awaiting Fantrax":"Accepted · Awaiting Fantrax"):o.recipient_id===data.viewer_owner_id?"Received proposal":"Sent proposal"}</span></div>
-        <ul className="mt-3 space-y-2 text-sm text-slate-700">{o.assets.map((a,i)=><li key={i}>{ownerName(o.corrected_at?a.to_owner_id:a.from_owner_id)} sends <strong>{assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"}</strong> to {ownerName(o.corrected_at?a.from_owner_id:a.to_owner_id)}</li>)}</ul>
-        <div className="mt-4 rounded-lg border-l-4 border-amber-500 bg-amber-50 p-4 text-sm text-amber-950"><p className="font-bold">Fantrax action required</p><p className="mt-1 font-medium">Move the listed players on Fantrax. This trade will leave the list after a roster import confirms all player transfers.</p></div>
-      </article>)}</div>
-    </section>}
     {data&&<details className="mt-4 border-t border-blue-100 pt-4">
       <summary className="cursor-pointer font-semibold text-blue-800">Archived ({archived.length})</summary>
       <p className="mt-2 text-sm text-slate-600">Completed league trades and your closed proposals. Unaccepted proposals remain private to the owners involved.</p>

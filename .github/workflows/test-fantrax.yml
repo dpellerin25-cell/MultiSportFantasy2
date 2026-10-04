@@ -12,7 +12,8 @@ on:
           - standings
 
   schedule:
-    - cron: "0 9 * * *"
+    - cron: "0 4 * * *"
+      timezone: "America/New_York"
     - cron: "0 4 * * 2"
       timezone: "America/New_York"
 

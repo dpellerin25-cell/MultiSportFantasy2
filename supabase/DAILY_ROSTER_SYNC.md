@@ -3,7 +3,7 @@
 The existing **Update Fantrax Data** workflow now optionally imports the five
 fresh roster files into the selected Supabase trade database after publishing
 the website's roster files. Standings-only runs never perform this import.
-The existing schedules are unchanged: daily rosters at 09:00 UTC and standings
+Daily rosters run at 04:00 America/New_York year-round, and standings run
 on Tuesdays at 04:00 America/New_York.
 
 ## Enable on the TEST project first
