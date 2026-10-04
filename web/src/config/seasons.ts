@@ -18,7 +18,7 @@ export type MultisportSeason = {
 export const seasons: MultisportSeason[] = [
   {
     year: 2027,
-    name: "2027 Championship",
+    name: "2027 Pentagon Cup",
     sports: [
       {
         sport: "NFL",

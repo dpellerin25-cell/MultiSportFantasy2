@@ -1,0 +1,513 @@
+[
+  {
+    "id": "article-1",
+    "title": "1. League Administration",
+    "blocks": [
+      {
+        "kind": "paragraph",
+        "text": "Commissioner: Douglas Pellerin\nDeputy Commissioners: Jacob Jeroszko and Brendan Hughes"
+      },
+      {
+        "kind": "paragraph",
+        "text": "The Commissioner is responsible for the overall administration of the league. The Deputy Commissioners will assist with league administration and may act on behalf of the Commissioner when necessary."
+      }
+    ]
+  },
+  {
+    "id": "article-2",
+    "title": "2. League Platforms",
+    "blocks": [
+      {
+        "kind": "paragraph",
+        "text": "The league will operate across two platforms:"
+      },
+      {
+        "kind": "paragraph",
+        "text": "Fantrax will host each individual sport, including player ownership, starting lineups, individual-sport scoring, and standings."
+      },
+      {
+        "kind": "paragraph",
+        "text": "MultiSportFantasy.com will serve as the central platform for the overall competition. It will track the Pentagon Cup, combined 65-player rosters, multi-sport drafts, cross-sport trades, historical results, and other league-wide information."
+      },
+      {
+        "kind": "paragraph",
+        "text": "Cross-sport trades may be agreed to and recorded through MultiSportFantasy.com. However, owners remain responsible for completing the corresponding player transactions in the appropriate Fantrax leagues."
+      }
+    ]
+  },
+  {
+    "id": "article-3",
+    "title": "3. The Pentagon Cup",
+    "blocks": [
+      {
+        "kind": "paragraph",
+        "text": "The Pentagon Cup is the league's overall championship and combines results from all five sports:"
+      },
+      {
+        "kind": "paragraph",
+        "text": "NFL \u2022 NBA \u2022 MLB \u2022 Premier League \u2022 PGA"
+      },
+      {
+        "kind": "paragraph",
+        "text": "Each sport operates as its own dynasty fantasy league, but performance across all five sports contributes toward the Pentagon Cup standings."
+      },
+      {
+        "kind": "paragraph",
+        "text": "There are no fantasy playoffs. Each sport is a season-long points competition, with final regular-season standings determining that sport's contribution to the Pentagon Cup."
+      },
+      {
+        "kind": "heading",
+        "text": "Championship Calendar"
+      },
+      {
+        "kind": "paragraph",
+        "text": "The 2027 Pentagon Cup consists of:"
+      },
+      {
+        "kind": "table",
+        "rows": [
+          [
+            "Sport",
+            "Season"
+          ],
+          [
+            "PGA",
+            "2027"
+          ],
+          [
+            "MLB",
+            "2027"
+          ],
+          [
+            "Premier League",
+            "2027\u201328"
+          ],
+          [
+            "NFL",
+            "2027\u201328"
+          ],
+          [
+            "NBA",
+            "2027\u201328"
+          ]
+        ]
+      },
+      {
+        "kind": "paragraph",
+        "text": "The Pentagon Cup concludes following the completion of the Premier League season in late May."
+      },
+      {
+        "kind": "paragraph",
+        "text": "Because the five sports operate on different calendars, consecutive Pentagon Cup seasons will overlap. For example, the 2028 PGA and MLB seasons will begin before the 2027 Pentagon Cup has officially concluded."
+      },
+      {
+        "kind": "paragraph",
+        "text": "This overlap is intentional. Each sport's results will be assigned to its designated Pentagon Cup season regardless of whether the previous Pentagon Cup has concluded."
+      },
+      {
+        "kind": "paragraph",
+        "text": "The Pentagon Cup will be updated every Tuesday morning at 6 am."
+      }
+    ]
+  },
+  {
+    "id": "article-4",
+    "title": "4. Individual Sports",
+    "blocks": [
+      {
+        "kind": "paragraph",
+        "text": "All five sports will use a Best Ball format. Each sport begins and ends with its respective regular season."
+      },
+      {
+        "kind": "table",
+        "rows": [
+          [
+            "Sport",
+            "Approx. Season",
+            "Waivers",
+            "Starting Lineup"
+          ],
+          [
+            "NFL",
+            "September\u2013January",
+            "Yes",
+            "QB, 2 RB, 2 WR, TE, 2 FLEX, SF"
+          ],
+          [
+            "NBA",
+            "October\u2013April",
+            "Yes",
+            "2 G, 2 F/C, 4 FLEX"
+          ],
+          [
+            "MLB",
+            "March\u2013October",
+            "TBD; currently leaning No",
+            "4 IF, 3 OF, 2 FLEX, 5 P"
+          ],
+          [
+            "PGA",
+            "January\u2013August",
+            "No",
+            "6 Golfers"
+          ],
+          [
+            "Premier League",
+            "August\u2013May",
+            "TBD; currently leaning No",
+            "GK, 3 D, 3 M, 2 F, 2 FLEX"
+          ]
+        ]
+      },
+      {
+        "kind": "paragraph",
+        "text": "For PGA, the season will conclude with the Tour Championship. The exact opening tournament remains to be determined."
+      },
+      {
+        "kind": "paragraph",
+        "text": "For sports without waivers, unrostered players will remain available for selection in the following annual player draft rather than being added during the season."
+      }
+    ]
+  },
+  {
+    "id": "article-5",
+    "title": "5. Rosters",
+    "blocks": [
+      {
+        "kind": "paragraph",
+        "text": "Each owner controls one combined multi-sport roster with a maximum of 65 players."
+      },
+      {
+        "kind": "paragraph",
+        "text": "There is no minimum number of players that must be rostered in any individual sport."
+      },
+      {
+        "kind": "table",
+        "rows": [
+          [
+            "Sport",
+            "Starting Players",
+            "Roster Minimum"
+          ],
+          [
+            "NFL",
+            "9",
+            "0"
+          ],
+          [
+            "NBA",
+            "8",
+            "0"
+          ],
+          [
+            "MLB",
+            "14",
+            "0"
+          ],
+          [
+            "Premier League",
+            "11",
+            "0"
+          ],
+          [
+            "PGA",
+            "6",
+            "0"
+          ],
+          [
+            "Total",
+            "48",
+            "0"
+          ]
+        ]
+      },
+      {
+        "kind": "paragraph",
+        "text": "Overall roster maximum: 65 players."
+      },
+      {
+        "kind": "paragraph",
+        "text": "There are currently no separate IR roster spots."
+      },
+      {
+        "kind": "paragraph",
+        "text": "Because Fantrax cannot see an owner's combined roster across all five sports, MultiSportFantasy.com is the official source for determining compliance with the 65-player roster limit."
+      },
+      {
+        "kind": "paragraph",
+        "text": "The website updates rosters each morning at approximately 4:00 a.m. If an owner is above the 65-player maximum when the daily roster check occurs, all fantasy points accumulated by that owner's players that day will be forfeited."
+      },
+      {
+        "kind": "paragraph",
+        "text": "The penalty continues each day until the owner is compliant with the 65-player limit. Roster corrections made after the daily update will not restore points for that day."
+      }
+    ]
+  },
+  {
+    "id": "article-6",
+    "title": "6. Startup Draft",
+    "blocks": [
+      {
+        "kind": "paragraph",
+        "text": "The league's initial startup draft will be conducted through MultiSportFantasy.com."
+      },
+      {
+        "kind": "paragraph",
+        "text": "Players from all five sports will be available in a single combined draft pool. Draft results will be permanently recorded on the website, after which owners' initial rosters will be established in the appropriate Fantrax leagues."
+      },
+      {
+        "kind": "paragraph",
+        "text": "The same draft system will subsequently be used for the league's annual player draft."
+      }
+    ]
+  },
+  {
+    "id": "article-7",
+    "title": "7. Annual Player Draft",
+    "blocks": [
+      {
+        "kind": "paragraph",
+        "text": "Following the conclusion of each Pentagon Cup in late May, the league will conduct its annual multi-sport player draft in late May or early June."
+      },
+      {
+        "kind": "paragraph",
+        "text": "Draft order will be determined by the final standings of the recently completed Pentagon Cup."
+      },
+      {
+        "kind": "paragraph",
+        "text": "The annual draft will consist of 10 rounds. Future draft picks may be traded up to two years in advance."
+      },
+      {
+        "kind": "paragraph",
+        "text": "All five sports will be drafted simultaneously from a single player pool."
+      },
+      {
+        "kind": "heading",
+        "text": "Player Eligibility"
+      },
+      {
+        "kind": "paragraph",
+        "text": "NFL: The NFL Draft will already have occurred. Newly drafted NFL players and any other eligible unrostered players may therefore be selected."
+      },
+      {
+        "kind": "paragraph",
+        "text": "NBA: Because the annual fantasy draft occurs before the NBA Draft, NBA prospects expected to enter the upcoming NBA Draft will be eligible. Owners will therefore select NBA prospects before their NBA teams and draft positions are known."
+      },
+      {
+        "kind": "paragraph",
+        "text": "Premier League: All eligible players who are not currently rostered will be available."
+      },
+      {
+        "kind": "paragraph",
+        "text": "PGA: All eligible unrostered golfers will be available."
+      },
+      {
+        "kind": "paragraph",
+        "text": "MLB: All eligible unrostered players will be available."
+      },
+      {
+        "kind": "heading",
+        "text": "MLB and PGA Retroactive Scoring"
+      },
+      {
+        "kind": "paragraph",
+        "text": "Because the upcoming PGA and MLB seasons will already be underway when the annual draft occurs, newly drafted players will receive credit for all points they have accumulated during that Pentagon Cup season prior to being drafted."
+      },
+      {
+        "kind": "paragraph",
+        "text": "For example, if an unrostered golfer wins the Masters before the annual draft, the owner who subsequently drafts that golfer will receive the golfer's Masters points toward that Pentagon Cup."
+      },
+      {
+        "kind": "paragraph",
+        "text": "The same principle applies to MLB. If an unrostered player has an exceptional start to the season and is subsequently selected in the annual draft, his previously accumulated points from that season will count toward his new owner's Pentagon Cup score."
+      }
+    ]
+  },
+  {
+    "id": "article-8",
+    "title": "8. Individual-Sport Scoring",
+    "blocks": [
+      {
+        "kind": "paragraph",
+        "text": "Each sport will use its designated Fantrax scoring system."
+      },
+      {
+        "kind": "paragraph",
+        "text": "The league currently uses Fantrax's standard scoring settings as a starting point, but scoring rules for each sport may be modified by league agreement."
+      },
+      {
+        "kind": "paragraph",
+        "text": "At the conclusion of each sport's regular season, the final standings and each team's relative performance will determine the Pentagon Cup points awarded for that sport."
+      }
+    ]
+  },
+  {
+    "id": "article-9",
+    "title": "9. Pentagon Cup Scoring",
+    "blocks": [
+      {
+        "kind": "paragraph",
+        "text": "Pentagon Cup scoring rewards both finishing position and dominance within an individual sport."
+      },
+      {
+        "kind": "paragraph",
+        "text": "A team that narrowly wins a sport should receive less credit than a team that wins its sport by an overwhelming margin. Likewise, exceptionally poor seasons can negatively affect an owner's overall Pentagon Cup standing."
+      },
+      {
+        "kind": "heading",
+        "text": "Sport Score"
+      },
+      {
+        "kind": "equation",
+        "text": "Sport Score = Placement Points + (10 \u00d7 Z)"
+      },
+      {
+        "kind": "paragraph",
+        "text": "where:"
+      },
+      {
+        "kind": "equation",
+        "text": "Z = (Team Points \u2212 League Average) / Standard Deviation of League Points"
+      },
+      {
+        "kind": "paragraph",
+        "text": "For a nine-team league, placement points are below, this will be adjusted based on final league numbers."
+      },
+      {
+        "kind": "table",
+        "rows": [
+          [
+            "Finish",
+            "Placement Points"
+          ],
+          [
+            "1st",
+            "100"
+          ],
+          [
+            "2nd",
+            "80"
+          ],
+          [
+            "3rd",
+            "65"
+          ],
+          [
+            "4th",
+            "52"
+          ],
+          [
+            "5th",
+            "40"
+          ],
+          [
+            "6th",
+            "30"
+          ],
+          [
+            "7th",
+            "20"
+          ],
+          [
+            "8th",
+            "10"
+          ],
+          [
+            "9th",
+            "0"
+          ]
+        ]
+      },
+      {
+        "kind": "paragraph",
+        "text": "There is no cap or floor on the dominance adjustment."
+      },
+      {
+        "kind": "paragraph",
+        "text": "For example, a champion finishing 2.4 standard deviations above league average earns:"
+      },
+      {
+        "kind": "equation",
+        "text": "100 + (10 \u00d7 2.4) = 124"
+      },
+      {
+        "kind": "paragraph",
+        "text": "A ninth-place team finishing 1.7 standard deviations below average earns:"
+      },
+      {
+        "kind": "equation",
+        "text": "0 + (10 \u00d7 \u22121.7) = \u221217"
+      },
+      {
+        "kind": "paragraph",
+        "text": "Negative sport scores are therefore possible."
+      },
+      {
+        "kind": "paragraph",
+        "text": "An owner's final Pentagon Cup score is the sum of their Sport Scores across all five sports."
+      }
+    ]
+  },
+  {
+    "id": "article-10",
+    "title": "10. Trades",
+    "blocks": [
+      {
+        "kind": "paragraph",
+        "text": "Owners may trade players across different sports."
+      },
+      {
+        "kind": "paragraph",
+        "text": "For example, an NFL player may be traded for an MLB player, or a trade may contain assets from several sports."
+      },
+      {
+        "kind": "paragraph",
+        "text": "Multi-sport trades will be recorded through MultiSportFantasy.com. Owners are responsible for making the corresponding roster moves in each affected Fantrax league after the trade is completed."
+      },
+      {
+        "kind": "paragraph",
+        "text": "Annual draft picks may also be included in trades, including picks up to two years into the future."
+      }
+    ]
+  },
+  {
+    "id": "article-11",
+    "title": "11. Waivers and Unrostered Players",
+    "blocks": [
+      {
+        "kind": "paragraph",
+        "text": "NFL and NBA: Standard waiver-wire systems will be available during the season."
+      },
+      {
+        "kind": "paragraph",
+        "text": "PGA: No waiver wire. Unrostered golfers will enter the annual player-draft pool."
+      },
+      {
+        "kind": "paragraph",
+        "text": "MLB: To be determined. The current proposal is no in-season waiver wire, with unrostered players and prospects instead becoming eligible for the annual draft."
+      },
+      {
+        "kind": "paragraph",
+        "text": "Premier League: To be determined. The current proposal is no in-season waiver wire, with unrostered players and new transfers instead becoming eligible for the annual draft."
+      },
+      {
+        "kind": "paragraph",
+        "text": "These MLB and Premier League rules should be finalized before the inaugural season."
+      }
+    ]
+  },
+  {
+    "id": "article-12",
+    "title": "12. Items to Finalize Before the Inaugural Season",
+    "blocks": [
+      {
+        "kind": "paragraph",
+        "text": "I would keep the unresolved items out of the actual rules and put them in a final \"Items to Finalize\" section. Based on your current document, you still need agreement on:"
+      },
+      {
+        "kind": "paragraph",
+        "text": "Final league membership; 65-player roster maximum and 10-round annual draft; final starting-lineup sizes, particularly PGA; exact PGA opening event; MLB and Premier League waiver rules; final individual-sport Fantrax scoring settings; and whether everyone accepts the late-May/early-June annual draft with retroactive MLB/PGA scoring and pre-NBA-Draft prospect selection."
+      }
+    ]
+  }
+]

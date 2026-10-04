@@ -28,13 +28,13 @@ export default async function TrophyCasePage() {
         <header className="mb-8">
           <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-blue-800"><Trophy /> League honors</div>
           <h1 className="text-3xl font-bold sm:text-4xl">Trophy Case</h1>
-          <p className="mt-2 max-w-2xl text-slate-600">Five sports. One All-Sport Champion. A home for every championship earned by our owners.</p>
+          <p className="mt-2 max-w-2xl text-slate-600">Five sports. One Pentagon Cup Champion. A home for every championship earned by our owners.</p>
         </header>
 
         <dl className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
           {[
             ["Trophies awarded", totalTrophies],
-            ["All-Sport Championships", overallChampionships],
+            ["Pentagon Cup Titles", overallChampionships],
             ["League owners", owners.length],
           ].map(([label, count]) => (
             <div key={label} className="rounded-xl border border-blue-100 bg-white p-5 shadow-sm">
@@ -78,7 +78,7 @@ export default async function TrophyCasePage() {
 
         <section aria-labelledby="championship-history" className="mb-8">
           <h2 id="championship-history" className="text-xl font-bold">Championship history</h2>
-          <p className="mb-4 mt-1 text-sm text-slate-600">Season by season, newest first. Sport titles can be awarded before the overall championship is complete.</p>
+          <p className="mb-4 mt-1 text-sm text-slate-600">Season by season, newest first. Sport titles can be awarded before the Pentagon Cup is decided.</p>
           {history.length === 0 ? (
             <div className="rounded-xl border border-dashed border-blue-200 bg-white p-6 text-sm text-slate-600">Completed sports and championship seasons will appear here as their results are finalized.</div>
           ) : (
@@ -89,7 +89,7 @@ export default async function TrophyCasePage() {
                   <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {season.championships.map((championship) => (
                       <div key={championship.category} className="rounded-lg border border-blue-100 bg-blue-50/50 p-4">
-                        <dt className="text-xs font-semibold uppercase tracking-wide text-slate-600">{championship.category === "Overall" ? "All-Sport Champion" : `${TROPHY_LABELS[championship.category]} Champion`}</dt>
+                        <dt className="text-xs font-semibold uppercase tracking-wide text-slate-600">{championship.category === "Overall" ? "Pentagon Cup Champion" : `${TROPHY_LABELS[championship.category]} Champion`}</dt>
                         <dd className="mt-2">
                           {championship.status === "awarded" ? (
                             <>
@@ -109,8 +109,8 @@ export default async function TrophyCasePage() {
 
         <aside className="rounded-xl bg-blue-100/50 p-5 text-sm leading-6 text-slate-700">
           <h2 className="font-bold text-slate-900">How trophies are awarded</h2>
-          <p className="mt-1">A sport champion must be the sole first-place owner in its confirmed final archive. The All-Sport Champion has the highest combined score across all five final sports, using the league’s existing scoring system. Unresolved ties and incomplete archives are left unawarded.</p>
-          <Link href="/scoring" className="mt-2 inline-block font-semibold text-blue-800 hover:underline">View the scoring system →</Link>
+          <p className="mt-1">A sport champion must be the sole first-place owner in its confirmed final archive. The Pentagon Cup Champion has the highest combined score across all five final sports, using the league’s existing scoring system. Unresolved ties and incomplete archives are left unawarded.</p>
+          <Link href="/scoring" className="mt-2 inline-block font-semibold text-blue-800 hover:underline">View the league constitution →</Link>
         </aside>
       </div>
     </main>

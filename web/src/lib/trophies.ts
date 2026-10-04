@@ -6,7 +6,7 @@ export type TrophySport = typeof TROPHY_SPORTS[number];
 export type TrophyCategory = "Overall" | TrophySport;
 export const TROPHY_CATEGORIES: TrophyCategory[] = ["Overall", ...TROPHY_SPORTS];
 export const TROPHY_LABELS: Record<TrophyCategory, string> = {
-  Overall: "All-Sport Championship", NFL: "NFL", MLB: "MLB", NBA: "NBA", EPL: "Premier League", PGA: "PGA",
+  Overall: "Pentagon Cup", NFL: "NFL", MLB: "MLB", NBA: "NBA", EPL: "Premier League", PGA: "PGA",
 };
 
 type Archive = Parameters<typeof scoreLeague>[0];

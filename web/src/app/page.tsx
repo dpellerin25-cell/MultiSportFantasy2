@@ -222,7 +222,7 @@ export default async function Home({
             href="/scoring"
             className="font-bold text-blue-700 hover:text-blue-900 hover:underline"
           >
-            View Scoring System
+            View League Constitution
           </Link>
         </div>
 
