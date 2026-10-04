@@ -1,7 +1,7 @@
 // Scheduled importer; explicit project selection, verified TLS, no Auth accounts.
 import pg from 'pg';
 import {readFile} from 'node:fs/promises';
-import {ROSTER_FILES,validateRosters,syncConnection,syncRosters} from './trade-roster-sync.mjs';
+import {ROSTER_FILES,validateRosters,syncConnection,syncRosters,SyncSettingsError} from './trade-roster-sync.mjs';
 let db,stage='validating fresh roster files';
 try{
   const mode=process.argv[2];
@@ -19,6 +19,7 @@ try{
     console.log(JSON.stringify({project:process.env.TRADE_ROSTER_PROJECT_REF,...result},null,2));
   }
 }catch(error){
+  if(error instanceof SyncSettingsError)console.error('Setup issue: '+error.message);
   // Never print raw database errors, connection URIs, player records or secrets.
   const code=typeof error.code==='string'&&/^[A-Z0-9_]{1,45}$/.test(error.code)?error.code:'ERROR';
   console.error(`Trade roster sync failed while ${stage} (${code}). No partial five-sport import committed. Check fresh files, membership, target settings and TLS. A connection loss at commit requires a retry to confirm the outcome.`);
