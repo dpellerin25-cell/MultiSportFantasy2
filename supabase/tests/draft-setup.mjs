@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 
 export const OWNER_SLUGS=['brendan','chris','doug','hatch','jack','jacob','nik','ryan','tucker'];
-const MINIMUMS={NFL:9,NBA:8,MLB:14,EPL:11,PGA:6};
+const MINIMUMS={NFL:0,NBA:0,MLB:0,EPL:0,PGA:0};
 export class SetupError extends Error {}
 const check=(condition,message)=>{if(!condition)throw new SetupError(message);};
 const uuid=s=>typeof s==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);

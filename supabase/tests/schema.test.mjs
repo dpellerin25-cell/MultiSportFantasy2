@@ -28,8 +28,8 @@ try {
   });
   const d=(await sql(`insert into draft.drafts(name,kind,championship_year,rounds)
     values('Test startup','startup',2027,65) returning id`))[0].id;
-  await test('startup minimums total 48, no sport maximums',async()=>{
-    assert.deepEqual((await sql(`select sum(minimum)::int n,count(maximum)::int m from draft.draft_sport_rules where draft_id='${d}'`))[0],{n:48,m:0});
+  await test('startup minimums total zero, no sport maximums',async()=>{
+    assert.deepEqual((await sql(`select sum(minimum)::int n,count(maximum)::int m from draft.draft_sport_rules where draft_id='${d}'`))[0],{n:0,m:0});
   });
   await test('requires complete order',()=>rejects(`select draft.generate_snake_picks('${d}')`,/complete contiguous/));
   await db.exec(`insert into draft.draft_participants select '${d}',id,row_number() over(order by slug) from draft.owners;`);

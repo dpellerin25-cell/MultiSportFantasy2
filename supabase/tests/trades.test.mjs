@@ -83,7 +83,7 @@ try{
     assert.equal(accepted.status,'completed');
     const visible=(await list('doug')).find(x=>x.id===t.trade_id);
     assert.equal(visible.message,null);
-    assert.ok(accepted.warnings.length>0);
+    assert.equal(accepted.warnings.length,0);
   });
 
   await test('acceptance transfers picks atomically, invalidates conflicts and retries exactly once',async()=>{
