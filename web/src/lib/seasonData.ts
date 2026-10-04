@@ -65,7 +65,7 @@ function getArchivedData(
 
   if (!fs.existsSync(archivePath)) {
     throw new Error(
-      `${sport} is marked final for the ${year} Championship, ` +
+      `${sport} is marked final for the ${year} Pentagon Cup, ` +
         `but its archive does not exist: ${archivePath}`
     );
   }
@@ -86,7 +86,7 @@ export function getSeasonLeagueData(
 
   if (!season) {
     throw new Error(
-      `Championship season ${year} does not exist.`
+      `Pentagon Cup season ${year} does not exist.`
     );
   }
 
@@ -96,7 +96,7 @@ export function getSeasonLeagueData(
 
   if (!sportSeason) {
     throw new Error(
-      `${sport} is not configured for the ${year} Championship.`
+      `${sport} is not configured for the ${year} Pentagon Cup.`
     );
   }
 

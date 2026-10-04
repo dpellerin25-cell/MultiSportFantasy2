@@ -8,7 +8,7 @@ const links = [
   { href: "/", label: "Standings" },
   { href: "/sports", label: "Sports" },
   { href: "/rosters", label: "Rosters" },
-  { href: "/scoring", label: "Scoring" },
+  { href: "/scoring", label: "League Constitution" },
   { href: "/trophy-case", label: "Trophy Case" },
   { href: "/draft", label: "Draft" },
 ];
