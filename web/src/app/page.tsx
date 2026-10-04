@@ -169,7 +169,7 @@ export default async function Home({
 
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl">
-            Multi-Sport Fantasy League
+            Pentagon Cup
           </h1>
 
           <p className="mt-2 text-sm text-slate-700 sm:text-base">
