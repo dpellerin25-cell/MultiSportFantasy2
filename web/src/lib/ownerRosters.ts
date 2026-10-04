@@ -6,6 +6,12 @@ import pga from "../../data/rosters/pga.json";
 
 const rosters = { NFL: nfl, MLB: mlb, NBA: nba, EPL: epl, PGA: pga };
 
+export function getOwnerRosterPlayers(owner: string, sport: keyof typeof rosters) {
+  return rosters[sport].rosters
+    .filter((roster) => roster.owner === owner)
+    .flatMap((roster) => roster.players);
+}
+
 export function getOwnerRosterCounts(owner: string) {
   const count = (sport: keyof typeof rosters) =>
     rosters[sport].rosters
