@@ -1,7 +1,8 @@
 {
   "sport": "MLB",
   "league_id": "60ri2nbhmtj4b0km",
-  "updated_at": "2026-10-04T14:28:53.766064+00:00",
+  "fetch_started_at": "2026-10-04T21:28:23.113662+00:00",
+  "updated_at": "2026-10-04T21:28:23.691632+00:00",
   "team_count": 9,
   "total_players": 0,
   "rosters": [

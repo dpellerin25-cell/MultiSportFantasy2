@@ -1,7 +1,8 @@
 {
   "sport": "NFL",
   "league_id": "yg0olhfrmtj45dd6",
-  "updated_at": "2026-10-04T14:28:52.637521+00:00",
+  "fetch_started_at": "2026-10-04T21:28:22.424877+00:00",
+  "updated_at": "2026-10-04T21:28:22.971178+00:00",
   "team_count": 9,
   "total_players": 0,
   "rosters": [

@@ -1,7 +1,8 @@
 {
   "sport": "Premier League",
   "league_id": "j08ymyupmtj415q3",
-  "updated_at": "2026-10-04T14:28:57.536762+00:00",
+  "fetch_started_at": "2026-10-04T21:28:27.354781+00:00",
+  "updated_at": "2026-10-04T21:28:27.941966+00:00",
   "team_count": 9,
   "total_players": 0,
   "rosters": [
