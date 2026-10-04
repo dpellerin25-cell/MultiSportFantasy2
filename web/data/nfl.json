@@ -1,8 +1,8 @@
 {
   "sport": "NFL",
   "league_id": "yg0olhfrmtj45dd6",
-  "league_name": "2026 Test_NFL",
-  "updated_at": "2026-10-01T20:50:33.655084+00:00",
+  "league_name": "2026 Pentagon_Cup_NFL",
+  "updated_at": "2026-10-04T22:09:16.098314+00:00",
   "team_count": 9,
   "teams": {
     "fhsj2l6xmtufxavs": {
@@ -60,6 +60,18 @@
       "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/football/jerseys/lightblue_black2_512.webp"
     }
   },
+  "placement_points": [
+    100,
+    80,
+    65,
+    52,
+    40,
+    30,
+    20,
+    10,
+    0
+  ],
+  "championship_year": 2027,
   "standings": [
     {
       "rank": "1",

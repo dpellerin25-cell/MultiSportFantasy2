@@ -2,7 +2,7 @@
   "sport": "MLB",
   "league_id": "60ri2nbhmtj4b0km",
   "league_name": "2026 Test_MLB",
-  "updated_at": "2026-10-01T20:50:34.323967+00:00",
+  "updated_at": "2026-10-04T22:09:16.150173+00:00",
   "team_count": 9,
   "teams": {
     "1uucwggdmtufy7wz": {
@@ -60,6 +60,18 @@
       "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/baseball/jersey/magenta_purple_512.webp"
     }
   },
+  "placement_points": [
+    100,
+    80,
+    65,
+    52,
+    40,
+    30,
+    20,
+    10,
+    0
+  ],
+  "championship_year": 2027,
   "standings": [
     {
       "rank": "1",

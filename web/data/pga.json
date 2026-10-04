@@ -2,7 +2,7 @@
   "sport": "PGA",
   "league_id": "xa7tza2hmthqz8bo",
   "league_name": "2026 Test_PGA",
-  "updated_at": "2026-10-01T20:50:36.579897+00:00",
+  "updated_at": "2026-10-04T22:09:16.373019+00:00",
   "team_count": 9,
   "teams": {
     "plyo3at2mtj6q46k": {
@@ -60,6 +60,18 @@
       "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/golf/tee/brown_green_512.webp"
     }
   },
+  "placement_points": [
+    100,
+    80,
+    65,
+    52,
+    40,
+    30,
+    20,
+    10,
+    0
+  ],
+  "championship_year": 2027,
   "standings": [
     {
       "rank": "1",
