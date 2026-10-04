@@ -1,8 +1,8 @@
 {
   "sport": "Premier League",
   "league_id": "j08ymyupmtj415q3",
-  "fetch_started_at": "2026-10-04T21:53:32.199170+00:00",
-  "updated_at": "2026-10-04T21:53:32.673044+00:00",
+  "fetch_started_at": "2026-10-04T21:59:04.340056+00:00",
+  "updated_at": "2026-10-04T21:59:05.157677+00:00",
   "team_count": 9,
   "total_players": 2,
   "rosters": [
@@ -18,14 +18,14 @@
       "player_count": 1,
       "players": [
         {
-          "player_id": "061vq",
-          "name": "Erling Haaland",
-          "position": "F",
-          "pro_team": "MCI",
-          "pro_team_name": "Manchester City",
+          "player_id": "05r9b",
+          "name": "Martin Odegaard",
+          "position": "M",
+          "pro_team": "ARS",
+          "pro_team_name": "Arsenal",
           "status_id": "1",
-          "roster_position_id": "701",
-          "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Manchester_City.png"
+          "roster_position_id": "702",
+          "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Arsenal.png"
         }
       ]
     },
@@ -35,14 +35,14 @@
       "player_count": 1,
       "players": [
         {
-          "player_id": "05r9b",
-          "name": "Martin Odegaard",
-          "position": "M",
-          "pro_team": "ARS",
-          "pro_team_name": "Arsenal",
+          "player_id": "061vq",
+          "name": "Erling Haaland",
+          "position": "F",
+          "pro_team": "MCI",
+          "pro_team_name": "Manchester City",
           "status_id": "1",
-          "roster_position_id": "702",
-          "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Arsenal.png"
+          "roster_position_id": "701",
+          "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Manchester_City.png"
         }
       ]
     },
