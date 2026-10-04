@@ -1,7 +1,7 @@
 import {PGlite} from '@electric-sql/pglite';
 import {readFile,readdir} from 'node:fs/promises';
 import assert from 'node:assert/strict';
-import {ROSTER_FILES,validateRosters,syncConnection,syncRosters} from './trade-roster-sync.mjs';
+import {ROSTER_FILES,validateRosters,syncConnection,syncRosters,SyncSettingsError} from './trade-roster-sync.mjs';
 
 const ref='tgvuntuhdqucazpoxrrg';
 const env={TRADE_ROSTER_PROJECT_REF:ref,TRADE_ROSTER_DATABASE_URL:`postgresql://postgres:fake@db.${ref}.supabase.co:5432/postgres`};
@@ -9,6 +9,22 @@ assert.equal(syncConnection(env).ssl.rejectUnauthorized,true);
 assert.equal(syncConnection({...env,TRADE_ROSTER_DATABASE_URL:`postgresql://postgres.${ref}:fake@aws-0-us-east-1.pooler.supabase.com:5432/postgres`}).ssl.rejectUnauthorized,true);
 for(const value of [undefined,'postgresql://postgres:fake@localhost:5432/postgres',env.TRADE_ROSTER_DATABASE_URL+'?sslmode=disable',env.TRADE_ROSTER_DATABASE_URL.replace(':5432',':6543'),env.TRADE_ROSTER_DATABASE_URL.replace(ref,'abcdefghijklmnopqrst')])assert.throws(()=>syncConnection({...env,TRADE_ROSTER_DATABASE_URL:value}));
 assert.throws(()=>syncConnection({...env,TRADE_ROSTER_CA_CERT:'not a certificate'}));
+for(const [patch,message] of [
+  [{TRADE_ROSTER_PROJECT_REF:undefined},'repository Variable'],
+  [{TRADE_ROSTER_DATABASE_URL:undefined},'repository Secret'],
+  [{TRADE_ROSTER_DATABASE_URL:' '+env.TRADE_ROSTER_DATABASE_URL},'whitespace'],
+  [{TRADE_ROSTER_DATABASE_URL:'"'+env.TRADE_ROSTER_DATABASE_URL+'"'},'cannot be parsed'],
+  [{TRADE_ROSTER_DATABASE_URL:env.TRADE_ROSTER_DATABASE_URL.replace(':5432',':6543')},'port must be 5432'],
+  [{TRADE_ROSTER_DATABASE_URL:env.TRADE_ROSTER_DATABASE_URL+'?sslmode=require'},'query parameters'],
+  [{TRADE_ROSTER_DATABASE_URL:env.TRADE_ROSTER_DATABASE_URL.replace('postgres:fake@','wrong:fake@')},'username'],
+  [{TRADE_ROSTER_CA_CERT:'/tmp/supabase-ca.crt'},'complete PEM'],
+])assert.throws(()=>syncConnection({...env,...patch}),error=>{
+  assert.ok(error instanceof SyncSettingsError);
+  assert.ok(error.message.includes(message));
+  assert.ok(!error.message.includes('fake')&&!error.message.includes(env.TRADE_ROSTER_DATABASE_URL));
+  return true;
+});
+console.log('PASS actionable setting-specific errors without passwords, URIs or certificate contents');
 console.log('PASS explicit project guard, direct/session-pooler allowlist and mandatory TLS verification');
 
 const db=await PGlite.create(),q=async(s,p=[])=>(await db.query(s,p)).rows;
