@@ -5,7 +5,7 @@ import LeagueSettingsLink from "./LeagueSettingsLink";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { href: "/", label: "Standings" },
+  { href: "/", label: "Pentagon Cup Standings" },
   { href: "/sports", label: "Sports" },
   { href: "/rosters", label: "Rosters" },
   { href: "/scoring", label: "League Constitution" },
