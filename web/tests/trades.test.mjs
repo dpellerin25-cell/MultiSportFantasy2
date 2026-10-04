@@ -19,8 +19,8 @@ test('empty, self, unlinked, duplicate, unavailable and stale selections cannot 
   assert.throws(()=>proposal({...data,players:[{...data.players[0],owner_id:'jack'}]},'chris',assets,'id'));
   assert.throws(()=>proposal({...data,players:[{...data.players[0],reserved:true}]},'chris',assets,'id'));
 });
-test('minimum warnings do not block a valid offer',()=>{
-  const assets=tradeAssets(data);assert.ok(tradeWarnings(data,'chris',assets).some(w=>w.includes('Doug: NFL would have 0')));
+test('zero players in a sport does not warn or block a valid offer',()=>{
+  const assets=tradeAssets(data);assert.deepEqual(tradeWarnings(data,'chris',assets),[]);
   assert.equal(proposal(data,'chris',assets,'id').action,'propose');
 });
 const now=Date.parse('2026-10-01T12:00:00Z');
@@ -60,4 +60,9 @@ test('archive includes completed league trades and private closed offers, never 
   assert.deepEqual(archivedOffers([],'doug',now),[]);
   const activeIds=new Set(activeOffers(rows,'doug',now).map(o=>o.id));
   assert.ok(archivedOffers(rows,'doug',now).every(o=>!activeIds.has(o.id)));
+});
+
+test('65-player limit warns without imposing a sport minimum',()=>{
+  const full={...data,players:Array.from({length:65},(_,i)=>({id:'c'+i,owner_id:'chris',name:'Player',sport:'NFL',reserved:false})).concat(data.players)};
+  assert.deepEqual(tradeWarnings(full,'chris',[tradeAssets(full).find(a=>a.id==='p')]),['Chris: roster would have 66 players (65-player limit).']);
 });

@@ -1,0 +1,42 @@
+import {PGlite} from '@electric-sql/pglite';
+import {readFile,readdir} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+const db=await PGlite.create(),q=async(s,p=[])=>(await db.query(s,p)).rows;
+try {
+  await db.exec(`create role anon;create role authenticated;create schema auth;
+    create table auth.users(id uuid primary key);
+    create function auth.uid() returns uuid language sql as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;`);
+  const dir=new URL('../migrations/',import.meta.url),migration='202610040001_unrestricted_startup_sports.sql';
+  for(const f of (await readdir(dir)).filter(f=>f.endsWith('.sql')&&f<migration).sort())await db.exec(await readFile(new URL(f,dir),'utf8'));
+  const actor=randomUUID();
+  await q('insert into auth.users values($1)',[actor]);
+  await q("insert into draft.league_roles values($1,'commissioner')",[actor]);
+  await q("select set_config('request.jwt.claim.sub',$1,false)",[actor]);
+  const imp=(await q("insert into draft.player_pool_imports(checksum,schema_version) values(repeat('c',64),1) returning id"))[0].id;
+  const d=(await q("insert into draft.drafts(name,kind,championship_year,rounds,import_id,pick_duration_seconds) values('Unrestricted startup','startup',2027,65,$1,86400) returning id",[imp]))[0].id;
+  assert.equal((await q('select sum(minimum)::int n from draft.draft_sport_rules where draft_id=$1',[d]))[0].n,48);
+  await q("insert into draft.players(sport,name) select 'NFL','Fixture '||n from generate_series(1,585) n");
+  await q("insert into draft.player_source_ids(player_id,provider,league_id,external_player_id) select id,'fixture','nfl',id::text from draft.players");
+  await q("insert into draft.player_pool_entries select $1,p.id,s.id,p.sport,p.name,null,null,'free_agent' from draft.players p join draft.player_source_ids s on s.player_id=p.id",[imp]);
+  await q("insert into draft.draft_pool_players(draft_id,import_id,player_id,sport,name,availability,eligible) select $1,$2,id,sport,name,'free_agent',true from draft.players",[d,imp]);
+  await q("update draft.player_pool_imports set status='ready',completed_at=now() where id=$1",[imp]);
+  await db.exec(await readFile(new URL(migration,dir),'utf8'));
+  assert.equal((await q('select sum(minimum)::int n from draft.draft_sport_rules where draft_id=$1',[d]))[0].n,0);
+  assert.equal((await q("select count(*)::int n from draft.draft_events where draft_id=$1 and event_type='sport_minimums_removed'",[d]))[0].n,1);
+  const command=async(action,args={})=>{
+    const revision=(await q('select revision from draft.drafts where id=$1',[d]))[0].revision;
+    return q('select draft.command($1,$2,$3,$4,$5)',[d,randomUUID(),revision,action,JSON.stringify(args)]);
+  };
+  const owners=(await q('select id from draft.owners order by slug')).map(o=>o.id);
+  await command('set_order',{owners});
+  await command('start');
+  const slots=await q('select id from draft.draft_picks where draft_id=$1 order by overall_pick_number',[d]);
+  const players=await q('select id from draft.players order by id');
+  for(let i=0;i<585;i++)await command('assign',{pick_id:slots[i].id,player_id:players[i].id});
+  assert.equal((await q('select status from draft.drafts where id=$1',[d]))[0].status,'completed');
+  const totals=await q('select owner_id,count(*)::int n,count(distinct sport)::int sports from draft.draft_selections where draft_id=$1 group by owner_id',[d]);
+  assert.equal(totals.length,9);
+  assert.ok(totals.every(r=>r.n===65&&r.sports===1));
+  console.log('PASS existing startup migration, audited rule update, start with one-sport pool, all 65 selections per owner in NFL, completed draft');
+}finally{await db.close();}

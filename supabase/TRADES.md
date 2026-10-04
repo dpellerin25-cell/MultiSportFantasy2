@@ -41,9 +41,10 @@ player appears with the destination owner in a complete snapshot observed after
 acceptance. Missing players do not count as confirmation. Separate sports may
 confirm at different times; all must confirm before completion.
 
-Roster minimums produce warnings in the acceptance result/audit record, never
-rejections. They use the imported rosters and this trade's projected transfers;
-they are not a live Fantrax roster check. No roster maximums are enforced.
+After migration 202610040001, no per-sport minimum warnings are generated.
+Historical warnings remain in the audit history. The website warns when a
+projected roster exceeds 65 players without blocking the offer; it is not a live
+Fantrax roster check. No roster maximums are enforced by trade commands.
 
 ## Command/read boundary
 
@@ -111,26 +112,28 @@ request retries and queued notifications. Failed commands roll back everything.
    re-import is harmless; a different ledger is rejected. No trades can be
    created before this import. Do not keep the old file editor writing once the
    database becomes authoritative.
-3. Add a trusted adapter to the existing roster refresh only in a later phase.
-   After confirming successful Fantrax responses for all nine owners, call
-   `trading.ingest_rosters(sport, league_id, observed_at, rosters_jsonb)` once per
-   sport. The normalized payload is:
+3. The daily adapter is now implemented locally; enable it using
+   [DAILY_ROSTER_SYNC.md](DAILY_ROSTER_SYNC.md). It validates all active owners
+   and imports all five sports through `trading.ingest_roster_batch` in one
+   transaction. The existing single-sport importer remains for manual tools.
+   Each sport's normalized roster payload is:
 
    ```json
    [{"owner":"doug","players":[{"player_id":"00123","name":"Example Player"}]}]
    ```
 
-   Include all nine unique owner slugs, including empty rosters. Keep IDs as
+   Include every active owner's unique slug, including empty rosters. Keep IDs as
    strings. Use the fetch observation time, never the time an old file is
    re-imported. Validate the expected league/team-to-owner mapping upstream.
-   Database checks enforce nine known owners, unique player IDs, monotonic
+   Database checks enforce the exact active owner set, unique player IDs, monotonic
    snapshots, fixed league/sport mapping, and no future timestamps. Exact latest
    snapshot retry is harmless. Missing players become unowned, not transferred.
-   An authentication failure or partial fetch must never be converted to nine
+   An authentication failure or partial fetch must never be converted to
    empty rosters: the database cannot independently verify Fantrax success.
 4. Snapshot ingestion invalidates proposals whose player ownership changed and
    checks accepted trades for completion. Only snapshots newer than acceptance
-   (or correction) confirm transfers. The existing daily updater is unchanged.
+   (or correction) confirm transfers. The new batch waits for all five sports
+   before reconciling; database syncing is opt-in and schedules are unchanged.
 5. Schedule private `trading.expire_offers()` later. Acceptance/counter checks
    already enforce expiry at execution time, and reads show expired status even
    without a scheduler. No scheduled job is installed here.

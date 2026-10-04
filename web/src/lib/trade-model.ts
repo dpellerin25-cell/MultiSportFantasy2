@@ -51,9 +51,8 @@ export function proposal(data:TradeRoster,recipient:string,selected:TradeAsset[]
   return {request_id:requestId,action:"propose",args:{recipient_id:recipient,assets:selected.map(a=>({from_owner_id:a.owner_id,...(a.kind==="player"?{player_id:a.id}:{pick_id:a.id})}))}};
 }
 export function tradeWarnings(data:TradeRoster,recipient:string,selected:TradeAsset[]){
-  const minimums:Record<string,number>={NFL:9,MLB:14,NBA:8,EPL:11,PGA:6};
-  return [data.viewer_owner_id,recipient].flatMap(owner=>Object.entries(minimums).flatMap(([sport,min])=>{
-    const count=data.players.filter(p=>p.owner_id===owner&&p.sport===sport).length-selected.filter(a=>a.kind==="player"&&a.owner_id===owner&&a.sport===sport).length+selected.filter(a=>a.kind==="player"&&a.owner_id!==owner&&a.sport===sport).length;
-    return count<min?[`${data.owners.find(o=>o.id===owner)?.name}: ${sport} would have ${count} players (minimum ${min}).`]:[];
-  }));
+  return [data.viewer_owner_id,recipient].flatMap(owner=>{
+    const count=data.players.filter(p=>p.owner_id===owner).length-selected.filter(a=>a.kind==="player"&&a.owner_id===owner).length+selected.filter(a=>a.kind==="player"&&a.owner_id!==owner).length;
+    return count>65?[`${data.owners.find(o=>o.id===owner)?.name}: roster would have ${count} players (65-player limit).`]:[];
+  });
 }

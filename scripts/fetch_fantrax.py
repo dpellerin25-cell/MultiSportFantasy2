@@ -366,11 +366,15 @@ def fetch_team_roster(
 def parse_roster(roster_data):
 
     players = []
+    if not isinstance(roster_data, dict) or not isinstance(roster_data.get("tables"), list) or not roster_data["tables"]:
+        raise ValueError("Missing roster tables; refusing to treat an unexpected response as an empty roster")
 
     # A Fantrax roster can contain multiple tables.
     # For example, NFL can separate offense and other
     # roster groups.
     for table in roster_data.get("tables", []):
+        if not isinstance(table, dict) or not isinstance(table.get("rows"), list):
+            raise ValueError("Missing roster rows")
 
         for row in table.get("rows", []):
 
@@ -458,7 +462,8 @@ def save_roster_json(
     sport,
     league_id,
     filename,
-    rosters
+    rosters,
+    fetch_started_at=None
 ):
 
     league_settings([row["owner"] for row in rosters])
@@ -470,6 +475,7 @@ def save_roster_json(
     output = {
         "sport": sport,
         "league_id": league_id,
+        "fetch_started_at": fetch_started_at,
         "updated_at": datetime.now(
             timezone.utc
         ).isoformat(),
@@ -559,8 +565,9 @@ def main(argv=None):
                 save_league_json(sport, league_id, filename, standings_data)
 
             if args.only in ("all", "rosters"):
+                fetch_started_at = datetime.now(timezone.utc).isoformat()
                 rosters = fetch_all_rosters(session, sport, league_id, standings_data)
-                save_roster_json(sport, league_id, filename, rosters)
+                save_roster_json(sport, league_id, filename, rosters, fetch_started_at)
 
             successful.append(sport)
 

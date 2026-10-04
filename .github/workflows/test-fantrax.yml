@@ -26,6 +26,8 @@ permissions:
 jobs:
   update-standings:
     runs-on: ubuntu-latest
+    env:
+      UPDATE_DATA: ${{ github.event_name == 'workflow_dispatch' && inputs.data || (github.event.schedule == '0 4 * * 2' && 'standings' || 'rosters') }}
 
     steps:
       - name: Get repository code
@@ -44,7 +46,6 @@ jobs:
       - name: Fetch scheduled Fantrax data
         env:
           FANTRAX_COOKIE: ${{ secrets.FANTRAX_COOKIE }}
-          UPDATE_DATA: ${{ github.event_name == 'workflow_dispatch' && inputs.data || (github.event.schedule == '0 4 * * 2' && 'standings' || 'rosters') }}
         run: python scripts/fetch_fantrax.py --only "$UPDATE_DATA"
 
       - name: Commit updated data
@@ -60,3 +61,29 @@ jobs:
             git commit -m "Update Fantrax data"
             git push
           fi
+
+      # Public roster refresh remains independent of the database connection.
+      # Standings-only runs never import roster files into Supabase.
+      - name: Report trade roster sync not configured
+        if: env.UPDATE_DATA == 'rosters' && vars.TRADE_ROSTER_SYNC_ENABLED != 'true'
+        run: echo "::warning::Trade roster database sync is disabled. Configure the documented project variables and secrets to enable daily reconciliation."
+
+      - name: Set up Node for trade roster sync
+        if: env.UPDATE_DATA == 'rosters' && vars.TRADE_ROSTER_SYNC_ENABLED == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
+      - name: Install locked importer dependencies
+        if: env.UPDATE_DATA == 'rosters' && vars.TRADE_ROSTER_SYNC_ENABLED == 'true'
+        working-directory: supabase/tests
+        run: npx --yes pnpm@11.25.0 install --frozen-lockfile --ignore-scripts
+
+      - name: Sync fresh rosters and reconcile accepted trades
+        if: env.UPDATE_DATA == 'rosters' && vars.TRADE_ROSTER_SYNC_ENABLED == 'true'
+        working-directory: supabase/tests
+        env:
+          TRADE_ROSTER_PROJECT_REF: ${{ vars.TRADE_ROSTER_PROJECT_REF }}
+          TRADE_ROSTER_DATABASE_URL: ${{ secrets.TRADE_ROSTER_DATABASE_URL }}
+          TRADE_ROSTER_CA_CERT: ${{ secrets.TRADE_ROSTER_CA_CERT }}
+        run: node sync-trade-rosters.mjs --import

@@ -47,7 +47,9 @@ remains unimplemented: nobody should assume expiration runs with browsers closed
 until a trusted scheduler is connected. service_role by itself is not a player
 identity; a worker integration needs an explicitly authorized pathway later.
 
-Minimum checks count all remaining owned unfilled slots, including skips, and
+Startup sport minimums are zero after migration 202610040001: all 65 selections
+may be in any combination of sports. Other draft types may configure minimums.
+For those drafts, minimum checks count all remaining owned unfilled slots, including skips, and
 reject picks that make the owner's minimums impossible. They also reject a pick
 that would leave too few eligible players in any sport to meet all owners' remaining
 deficits. Commissioner assignments use the same checks and uniqueness constraints.

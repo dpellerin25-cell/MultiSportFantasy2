@@ -6,6 +6,13 @@ import fetch_fantrax as fetch
 
 
 class UpdateModesTest(unittest.TestCase):
+    def test_unexpected_roster_response_is_not_an_empty_roster(self):
+        for data in ({}, {"tables": []}, {"tables": [{}]}, {"tables": "bad"}):
+            with self.assertRaises(ValueError):
+                fetch.parse_roster(data)
+        self.assertEqual(fetch.parse_roster({"tables": [{"rows": []}]}), [])
+        self.assertEqual(fetch.parse_roster({"tables": [{"rows": [{"scorer": None}]}]}), [])
+
     def run_mode(self, mode):
         with patch.object(fetch, 'create_session'), patch.object(fetch, 'fetch_league', return_value={}), patch.object(fetch, 'save_league_json') as standings, patch.object(fetch, 'fetch_all_rosters', return_value=[]) as read_rosters, patch.object(fetch, 'save_roster_json') as rosters, contextlib.redirect_stdout(io.StringIO()):
             fetch.main(['--only', mode])
@@ -13,6 +20,18 @@ class UpdateModesTest(unittest.TestCase):
 
     def test_daily_rosters_never_save_standings(self):
         self.assertEqual(self.run_mode('rosters'), (0, 5, 5))
+
+    def test_roster_reads_record_start_before_fetch(self):
+        from datetime import datetime
+        calls = []
+        def roster_read(*args):
+            calls.append(datetime.now(fetch.timezone.utc))
+            return []
+        with patch.object(fetch, 'create_session'), patch.object(fetch, 'fetch_league', return_value={}), patch.object(fetch, 'fetch_all_rosters', side_effect=roster_read), patch.object(fetch, 'save_roster_json') as save, contextlib.redirect_stdout(io.StringIO()):
+            fetch.main(['--only', 'rosters'])
+            self.assertEqual(len(calls), 5)
+            for observed, call in zip(calls, save.call_args_list):
+                self.assertLessEqual(datetime.fromisoformat(call.args[4]), observed)
 
     def test_weekly_standings_never_fetch_or_save_rosters(self):
         self.assertEqual(self.run_mode('standings'), (5, 0, 0))

@@ -33,8 +33,8 @@ all nine owner slugs in the commissioner-chosen ROUND ONE order:
 These names are an inventory, not a recommended order. Use JSON double quotes
 around each slug, commas between entries, and no trailing comma. The template's
 name/year are editable. Press Ctrl+S to save. The tool refuses a blank order or
-timer. Round count is fixed at 65 and the roster minimums remain NFL9, NBA8,
-MLB14, EPL11, PGA6, without sport maximums.
+timer. Round count is fixed at 65. All sport minimums are zero, with no sport
+maximums (requires migration 202610040001).
 
 ## 2. Preview without writing
 
@@ -47,7 +47,7 @@ NODE_EXTRA_CA_CERTS="$HOME/.config/multisport-draft/supabase-ca.crt" \
 `DRAFT_TEST_DATABASE_URL` must still be exported in this terminal. The preview
 uses a read-only database transaction. Review the owner order, timer, snapshot
 date, sport counts, first two rounds, and final round. It validates enough total
-players for 585 picks and enough per sport for nine owners' minimums. It does
+players for 65 picks per configured owner and a validated pool covering all five sports. It does
 not re-fetch Fantrax or guarantee the saved snapshot is still current.
 
 ## 3. Save the unstarted rehearsal draft

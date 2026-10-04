@@ -1,5 +1,9 @@
 # Draft database foundation
 
+For the opt-in daily Fantrax-to-trade database connection, test-project setup,
+required GitHub secrets and batch-import migration, see
+[DAILY_ROSTER_SYNC.md](DAILY_ROSTER_SYNC.md).
+
 Real-time revision signals and the database timer are implemented locally; see
 [LIVE_TIMER.md](LIVE_TIMER.md) for the new migration, test-only scheduler setup,
 two-client hosted validation, and outstanding concurrency validation.
@@ -74,8 +78,8 @@ the draft's chosen snapshot. UUID identities decouple the engine from Fantrax.
 An eligible entry must be free_agent or waivers; unknown is not auto-eligible.
 PGA position/professional-team fields remain nullable.
 
-Startup drafts require 9 participants and 65 rounds. Inserting a startup draft
-seeds sport minimums NFL=9, NBA=8, MLB=14, EPL=11, PGA=6, without maximums.
+Startup drafts require the approved participant count and 65 rounds. After
+migration 202610040001, all five sport minimums are zero with no sport maximums.
 No actual draft, order, player, selection, or import is seeded.
 
 The SQL administrator can configure order in draft_participants, then call
