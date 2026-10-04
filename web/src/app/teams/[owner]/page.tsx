@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { CURRENT_SEASON, getSeason, seasons } from "@/config/seasons";
 import SeasonSelector from "@/components/SeasonSelector";
 import { getOverallStandings } from "@/lib/overallStandings";
-import { getOwnerRosterCounts } from "@/lib/ownerRosters";
+import { getOwnerRosterCounts, getOwnerRosterPlayers } from "@/lib/ownerRosters";
 
 const sports = ["NFL", "MLB", "NBA", "EPL", "PGA"] as const;
 
@@ -67,7 +67,7 @@ export default async function TeamPage({
             <dd className="mt-3 text-sm text-slate-600">Upcoming sports contribute zero points.</dd>
           </div>
           <div className="rounded-xl border border-blue-100 bg-white p-5 shadow-sm sm:p-6">
-            <dt className="text-sm font-semibold text-slate-600">{isCurrentSeason ? "Current roster count" : "Season roster count"}</dt>
+            <dt className="text-sm font-semibold"><Link href="/rosters" className="inline-flex min-h-11 items-center rounded text-blue-800 underline underline-offset-4 hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-800">Full Roster</Link></dt>
             <dd className={`mt-2 text-4xl font-bold ${totalPlayers >= 65 ? "text-red-800" : "text-blue-900"}`}>
               {isCurrentSeason ? totalPlayers : "—"} {isCurrentSeason && <span className="text-base font-semibold">/ 65 players</span>}
             </dd>
@@ -82,6 +82,7 @@ export default async function TeamPage({
               const result = team[sport];
               const sportSeason = season.sports.find((entry) => entry.sport === sport)!;
               const hasResult = result.rank !== 0;
+              const players = isCurrentSeason ? getOwnerRosterPlayers(team.owner, sport) : [];
               const statusStyle = sportSeason.status === "live"
                 ? "bg-green-100 text-green-800"
                 : sportSeason.status === "final"
@@ -109,8 +110,20 @@ export default async function TeamPage({
                     <div className="flex justify-between gap-3"><dt className="text-slate-600">Fantasy points</dt><dd className="font-semibold">{hasResult ? result.fantasyPoints.toFixed(1) : "—"}</dd></div>
                     <div className="flex justify-between gap-3"><dt className="text-slate-600">Placement points</dt><dd className="font-semibold">{hasResult ? result.placementPoints.toFixed(0) : "—"}</dd></div>
                     <div className="flex justify-between gap-3"><dt className="text-slate-600">Dominance bonus</dt><dd className="font-semibold">{hasResult ? `${result.dominanceScore >= 0 ? "+" : ""}${result.dominanceScore.toFixed(1)}` : "—"}</dd></div>
-                    <div className="flex justify-between gap-3 border-t border-blue-100 pt-3"><dt className="text-slate-600">{isCurrentSeason ? "Current roster" : "Season roster"}</dt><dd className="font-semibold">{isCurrentSeason ? `${rosterCounts[sport]} ${rosterCounts[sport] === 1 ? "player" : "players"}` : "Not archived"}</dd></div>
                   </dl>
+                  {isCurrentSeason ? (
+                    <details className="mt-3 border-t border-blue-100 pt-2">
+                      <summary className="min-h-11 cursor-pointer rounded py-3 text-sm font-semibold text-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800">
+                        Current Roster <span className="font-normal text-slate-600">({players.length} {players.length === 1 ? "player" : "players"})</span>
+                      </summary>
+                      {players.length > 0 ? <ul aria-label={`${team.owner} ${sport} roster`} className="mt-1 divide-y divide-blue-100">
+                        {players.map((player, index) => <li key={player.player_id ?? index} className="py-3 text-sm">
+                          <p className="break-words font-semibold text-slate-900">{player.name ?? "Unknown player"}</p>
+                          <p className="mt-1 text-xs text-slate-600">{[player.position, player.pro_team].filter(Boolean).join(" · ") || "Position and team unavailable"}</p>
+                        </li>)}
+                      </ul> : <p className="py-3 text-sm text-slate-600">No {sport} players on the latest roster.</p>}
+                    </details>
+                  ) : <p className="mt-3 border-t border-blue-100 pt-3 text-sm text-slate-600">Season roster: Not archived</p>}
                 </article>
               );
             })}
