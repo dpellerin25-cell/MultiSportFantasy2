@@ -16,13 +16,6 @@ export function ProposeTradeButton({owner}:{owner:string}){
   if(!ctx||!other||other.id===ctx.data.viewer_owner_id)return null;
   return <button className={button} onClick={()=>ctx.open(other.id)}>Propose Trade</button>;
 }
-export function TradeOwnerPicks({owner,fallback}:{owner:string;fallback:ReactNode}){
-  const ctx=useContext(Context);
-  if(!ctx?.data.ledger_ready)return fallback;
-  const id=ctx.data.owners.find(o=>o.name===owner)?.id;
-  const years=[...new Set(ctx.data.picks.map(p=>p.year))].sort();
-  return <section className="border-b border-blue-100 p-4 sm:p-5" aria-label={`${owner}'s rookie draft picks`}><h3 className="font-bold">Rookie draft picks</h3>{years.map(year=><div key={year} className="mt-4"><h4 className="font-semibold text-blue-900">{year}</h4><ul className="divide-y divide-blue-50">{ctx.data.picks.filter(p=>p.owner_id===id&&p.year===year).map(p=><li key={p.id} className="py-2 text-sm">Round {p.round} · {ctx.data.owners.find(o=>o.id===p.original_owner_id)?.name}’s pick {p.original_owner_id!==id&&<span className="text-blue-800">· Acquired</span>}</li>)}</ul>{!ctx.data.picks.some(p=>p.owner_id===id&&p.year===year)&&<p className="mt-2 text-sm text-slate-600">No picks owned for {year}.</p>}</div>)}</section>;
-}
 function Modal({title,onClose,locked=false,children}:{title:string;onClose:()=>void;locked?:boolean;children:ReactNode}){
   const ref=useRef<HTMLDialogElement>(null);
   useEffect(()=>{const el=ref.current;el?.showModal();return()=>el?.close();},[]);
@@ -91,6 +84,7 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
       const {data:result,error}=await client.rpc("trade_command",responsePending.current);
       if(error){const definite=["P0001","23505","42501","22P02"].includes(error.code);setUncertain(!definite);if(definite)responsePending.current=null;setError(definite?"The offer changed or is no longer available. Close this dialog and refresh trades.":"The result is unconfirmed. Retry this action to check the same request safely.");return;}
       if(!result?.trade_id)throw new Error("Unconfirmed response");
+      window.dispatchEvent(new Event("rookie-picks-changed"));
       setOffers(old=>old.map(o=>o.id===result.trade_id?{...o,status:result.status,revision:result.revision}:o));
       setNotice(decision.action==="decline"?"Offer declined and archived.":result.status==="completed"?"Trade accepted. Picks transferred and the completed trade archived.":"Trade accepted. Picks transferred; the agreement remains visible until Fantrax confirms every player move.");
       setDecision(null);responsePending.current=null;setUncertain(false);
