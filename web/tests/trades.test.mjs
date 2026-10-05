@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {tradeAssets,proposal,tradeWarnings,activeOffers,archivedOffers,canRespond,offerResponse,counterSelection,counterProposal} from '../src/lib/trade-model.ts';
+import {tradeAssets,proposal,tradeWarnings,activeOffers,archivedOffers,leagueCompletedTrades,recentlyCompleted,completedTradeHours,canRespond,offerResponse,counterSelection,counterProposal} from '../src/lib/trade-model.ts';
 const data={viewer_owner_id:'doug',ledger_ready:true,owners:[{id:'doug',name:'Doug',can_receive:true},{id:'chris',name:'Chris',can_receive:true},{id:'jack',name:'Jack',can_receive:false}],
   players:[{id:'p',owner_id:'doug',name:'Player',sport:'NFL',reserved:false}],picks:[{id:'pick',owner_id:'chris',original_owner_id:'doug',year:2027,round:1}]};
 test('mixed proposal uses stable database IDs, current owners, original pick label and exact request ID',()=>{
@@ -52,11 +52,12 @@ test('counter prefills both sides without reversing asset ownership; send target
   assert.throws(()=>counterSelection(data,offer));
 });
 
-test('archive includes completed league trades and private closed offers, never active offers or another owner negotiations',()=>{
+test('private archive excludes league completions and other owner negotiations',()=>{
   const rows=[offer,...['declined','completed','countered','expired','withdrawn','invalidated','accepted'].map(status=>({...offer,id:status,status})),{...offer,id:'deadline',expires_at:new Date(now).toISOString()}];
-  assert.deepEqual(archivedOffers(rows,'doug',now).map(o=>o.id),['declined','completed','countered','expired','withdrawn','invalidated','deadline']);
+  assert.deepEqual(archivedOffers(rows,'doug',now).map(o=>o.id),['declined','countered','expired','withdrawn','invalidated','deadline']);
   assert.deepEqual(archivedOffers(rows,'chris',now).map(o=>o.id),archivedOffers(rows,'doug',now).map(o=>o.id));
-  assert.deepEqual(archivedOffers(rows,'jack',now).map(o=>o.id),['completed']);
+  assert.deepEqual(archivedOffers(rows,'jack',now).map(o=>o.id),[]);
+  assert.deepEqual(leagueCompletedTrades(rows,now).map(o=>o.id),['completed']);
   assert.deepEqual(archivedOffers([],'doug',now),[]);
   const activeIds=new Set(activeOffers(rows,'doug',now).map(o=>o.id));
   assert.ok(archivedOffers(rows,'doug',now).every(o=>!activeIds.has(o.id)));
@@ -65,4 +66,36 @@ test('archive includes completed league trades and private closed offers, never 
 test('65-player limit warns without imposing a sport minimum',()=>{
   const full={...data,players:Array.from({length:65},(_,i)=>({id:'c'+i,owner_id:'chris',name:'Player',sport:'NFL',reserved:false})).concat(data.players)};
   assert.deepEqual(tradeWarnings(full,'chris',[tradeAssets(full).find(a=>a.id==='p')]),['Chris: roster would have 66 players (65-player limit).']);
+});
+
+
+test('completed pick trades remain league-visible for exactly 48 hours; player and mixed trades for 24',()=>{
+  const completedAt=new Date(now).toISOString();
+  const pickOnly={...offer,status:'completed',completed_at:completedAt,assets:[offer.assets[1]]};
+  const playerOnly={...offer,status:'completed',completed_at:completedAt,assets:[offer.assets[0]]};
+  const mixed={...offer,status:'completed',completed_at:completedAt};
+  for(const [trade,hours] of [[pickOnly,48],[playerOnly,24],[mixed,24]]){
+    assert.equal(completedTradeHours(trade),hours);
+    const deadline=now+hours*3600000;
+    assert.equal(recentlyCompleted(trade,deadline-1),true);
+    assert.deepEqual(activeOffers([trade],'jack',deadline-1),[trade]);
+    assert.deepEqual(leagueCompletedTrades([trade],deadline-1),[]);
+    assert.deepEqual(archivedOffers([trade],'doug',deadline-1),[]);
+    assert.equal(recentlyCompleted(trade,deadline),false);
+    assert.deepEqual(activeOffers([trade],'jack',deadline),[]);
+    assert.deepEqual(leagueCompletedTrades([trade],deadline),[trade]);
+    assert.equal(canRespond(trade,'chris',now),false);
+  }
+});
+
+test('completion window uses confirmation timestamp, handles reversals, and does not hide missing-date history',()=>{
+  const pending={...offer,status:'accepted',completed_at:null};
+  assert.deepEqual(activeOffers([pending],'jack',now+90*86400000),[pending]);
+  const corrected={...offer,status:'completed',corrected_at:new Date(now-86400000).toISOString(),completed_at:new Date(now).toISOString()};
+  assert.equal(recentlyCompleted(corrected,now+23*3600000),true);
+  for(const completed_at of [undefined,null,'invalid']){
+    const old={...offer,status:'completed',completed_at};
+    assert.deepEqual(leagueCompletedTrades([old],now),[old]);
+    assert.deepEqual(activeOffers([old],'jack',now),[]);
+  }
 });

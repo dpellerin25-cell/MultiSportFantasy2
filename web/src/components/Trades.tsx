@@ -1,7 +1,7 @@
 "use client";
 import {createContext,useContext,useEffect,useRef,useState,type ReactNode} from "react";
 import {createClient,type SupabaseClient,type Session} from "@supabase/supabase-js";
-import {proposal,tradeAssets,tradeWarnings,activeOffers,archivedOffers,canRespond,offerResponse,counterSelection,counterProposal,type Offer,type TradeCommand,type TradeAsset,type TradeRoster} from "@/lib/trade-model";
+import {proposal,tradeAssets,tradeWarnings,activeOffers,archivedOffers,leagueCompletedTrades,completedTradeHours,canRespond,offerResponse,counterSelection,counterProposal,type Offer,type TradeCommand,type TradeAsset,type TradeRoster} from "@/lib/trade-model";
 
 type LocalRoster={owner:string;sports:{sport:string;league_id?:string;players:{player_id:string|null;name:string|null;position:string|null;pro_team:string|null}[]}[]};
 const button="min-h-11 rounded-lg bg-blue-800 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-900 disabled:cursor-not-allowed disabled:opacity-40";
@@ -41,6 +41,8 @@ export function Trades({children,rosters}:{children:ReactNode;rosters:LocalRoste
 }
 function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters:LocalRoster[];children:ReactNode}){
   const [data,setData]=useState<TradeRoster|null>(null),[offers,setOffers]=useState<Offer[]>([]),[recipient,setRecipient]=useState<string|null>(null),[selection,setSelection]=useState<TradeAsset[]>([]),[review,setReview]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState(""),[notice,setNotice]=useState("");
+  const [displayTime,setDisplayTime]=useState(()=>Date.now());
+  useEffect(()=>{const tick=()=>setDisplayTime(Date.now());const timer=setInterval(tick,1000);window.addEventListener("focus",tick);return()=>{clearInterval(timer);window.removeEventListener("focus",tick);};},[]);
   const loadVersion=useRef(0);
   const sending=useRef(false),pending=useRef<TradeCommand|null>(null),responsePending=useRef<TradeCommand|null>(null),[uncertain,setUncertain]=useState(false);
   const [counter,setCounter]=useState<Offer|null>(null),[decision,setDecision]=useState<{offer:Offer;action:"accept"|"decline"}|null>(null);
@@ -86,17 +88,21 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
       if(!result?.trade_id)throw new Error("Unconfirmed response");
       window.dispatchEvent(new Event("rookie-picks-changed"));
       setOffers(old=>old.map(o=>o.id===result.trade_id?{...o,status:result.status,revision:result.revision}:o));
-      setNotice(decision.action==="decline"?"Offer declined and archived.":result.status==="completed"?"Trade accepted. Picks transferred and the completed trade archived.":"Trade accepted. Picks transferred; the agreement remains visible until Fantrax confirms every player move.");
+      setNotice(decision.action==="decline"?"Offer declined and archived.":result.status==="completed"?"Trade Complete. Picks transferred; this trade remains in Accepted Trades for 48 hours.":"Trade accepted. Picks transferred; the agreement remains visible until Fantrax confirms every player move.");
       setDecision(null);responsePending.current=null;setUncertain(false);
       void refresh().catch(()=>setError("Saved successfully, but the list could not refresh. Use Refresh trades."));
     }catch(e){setUncertain(Boolean(responsePending.current));setError(responsePending.current?"The result is unconfirmed. Retry this action safely.":e instanceof Error?e.message:"Could not respond.");}
     finally{sending.current=false;setBusy(false);}
   }
   const assets=data?tradeAssets(data):[],ownerName=(id:string)=>data?.owners.find(o=>o.id===id)?.name??"Owner";
-  const visibleOffers=data?activeOffers(offers,data.viewer_owner_id):[];
+  const visibleOffers=data?activeOffers(offers,data.viewer_owner_id,displayTime):[];
   const proposals=visibleOffers.filter(o=>o.status==="proposed");
-  const acceptedTrades=visibleOffers.filter(o=>o.status==="accepted");
-  const archived=data?archivedOffers(offers,data.viewer_owner_id):[];
+  const acceptedTrades=visibleOffers.filter(o=>o.status==="accepted"||o.status==="completed");
+  const archived=data?archivedOffers(offers,data.viewer_owner_id,displayTime):[];
+  const completed=leagueCompletedTrades(offers,displayTime);
+  function completionNotice(o:Offer){
+    return <div className="mt-4 rounded-lg border-l-4 border-emerald-500 bg-emerald-50 p-4 text-sm text-emerald-950"><p className="font-bold">Trade Complete</p><p className="mt-1 font-medium">{o.corrected_at?"The commissioner reversal is complete.":o.assets.some(a=>a.player_id)?"All player transfers have been confirmed by the Fantrax roster update.":"Draft pick ownership has been updated."}</p>{o.completed_at&&<p className="mt-2 text-xs">Completed {new Date(o.completed_at).toLocaleString()}</p>}</div>;
+  }
   function column(ownerId:string){
     const local=rosters.find(o=>o.owner===ownerName(ownerId));
     const dbPlayers=assets.filter(a=>a.owner_id===ownerId&&a.kind==="player");
@@ -111,20 +117,20 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
   }
   return <Context.Provider value={data?{data,open:id=>{setCounter(null);setRecipient(id);setSelection([]);setError("");setNotice("");}}:null}>
     <section className="mb-6 rounded-xl border border-blue-100 bg-white p-4"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-bold">Trade proposals {data&&`· ${ownerName(data.viewer_owner_id)}`}</h2><p className="mt-1 text-sm text-slate-600">Test league · Choose another owner to build an offer. Email notifications are not enabled yet.</p></div><div className="flex gap-2"><button className={secondary} onClick={()=>void refresh()}>Refresh trades</button><button className={secondary} onClick={()=>void client.auth.signOut({scope:"local"})}>Sign out</button></div></div>{!data&&!error&&<p role="status">Loading trade rosters…</p>}{error&&!recipient&&<p role="alert" className="mt-3 text-red-800">{error}</p>}{notice&&<p role="status" className="mt-3 rounded-lg bg-blue-50 p-3 text-blue-900">{notice}</p>}
-    {data&&acceptedTrades.length>0&&<section className="mt-4 border-t border-blue-100 pt-4" aria-label="Accepted trades awaiting Fantrax">
+    {data&&acceptedTrades.length>0&&<section className="mt-4 border-t border-blue-100 pt-4" aria-label="Accepted and recently completed trades">
       <h3 className="font-bold text-blue-900">Accepted Trades ({acceptedTrades.length})</h3>
       <p className="mt-2 text-sm text-slate-600">Website rosters automatically update every morning at 4 a.m. Eastern. If a trade needs to be pushed through right away, contact Doug.</p>
       <div className="mt-3 space-y-3">{acceptedTrades.map(o=><article key={o.id} className="rounded-lg border border-blue-200 p-4">
-        <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-semibold">{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</p><span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">{o.status==="accepted"?(o.corrected_at?"Reversal awaiting Fantrax":"Accepted · Awaiting Fantrax"):o.recipient_id===data.viewer_owner_id?"Received proposal":"Sent proposal"}</span></div>
+        <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-semibold">{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</p><span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">{o.status==="completed"?"Trade Complete":o.status==="accepted"?(o.corrected_at?"Reversal awaiting Fantrax":"Accepted · Awaiting Fantrax"):o.recipient_id===data.viewer_owner_id?"Received proposal":"Sent proposal"}</span></div>
         <ul className="mt-3 space-y-2 text-sm text-slate-700">{o.assets.map((a,i)=><li key={i}>{ownerName(o.corrected_at?a.to_owner_id:a.from_owner_id)} sends <strong>{assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"}</strong> to {ownerName(o.corrected_at?a.from_owner_id:a.to_owner_id)}</li>)}</ul>
-        <div className="mt-4 rounded-lg border-l-4 border-amber-500 bg-amber-50 p-4 text-sm text-amber-950"><p className="font-bold">Fantrax action required</p><p className="mt-1 font-medium">Move the listed players on Fantrax. This trade will leave the list after a roster import confirms all player transfers.</p></div>
+        {o.status==="completed"?<>{completionNotice(o)}<p className="mt-2 text-xs text-slate-600">Visible here for {completedTradeHours(o)} hours after completion, then in League Completed Trades.</p></>:<div className="mt-4 rounded-lg border-l-4 border-amber-500 bg-amber-50 p-4 text-sm text-amber-950"><p className="font-bold">Fantrax action required</p><p className="mt-1 font-medium">Move the listed players on Fantrax. After a roster import confirms all player transfers, this trade will show as complete here for 24 hours before moving to League Completed Trades.</p></div>}
       </article>)}</div>
     </section>}
     {data&&<details className="mt-4">
       <summary className="cursor-pointer font-semibold text-blue-800">Your Offers ({proposals.length})</summary>
       <p className="mt-2 text-sm text-slate-600">Your sent and received proposals. Closed proposals are archived automatically.</p>
       <div className="mt-3 space-y-3">{proposals.map(o=><article key={o.id} className="rounded-lg border border-blue-100 p-4">
-        <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-semibold">{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</p><span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">{o.status==="accepted"?(o.corrected_at?"Reversal awaiting Fantrax":"Accepted · Awaiting Fantrax"):o.recipient_id===data.viewer_owner_id?"Received proposal":"Sent proposal"}</span></div>
+        <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-semibold">{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</p><span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">{o.status==="completed"?"Trade Complete":o.status==="accepted"?(o.corrected_at?"Reversal awaiting Fantrax":"Accepted · Awaiting Fantrax"):o.recipient_id===data.viewer_owner_id?"Received proposal":"Sent proposal"}</span></div>
         <ul className="mt-3 space-y-2 text-sm text-slate-700">{o.assets.map((a,i)=><li key={i}>{ownerName(o.corrected_at?a.to_owner_id:a.from_owner_id)} sends <strong>{assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"}</strong> to {ownerName(o.corrected_at?a.from_owner_id:a.to_owner_id)}</li>)}</ul>
         <p className="mt-3 text-xs text-slate-500">Expires {new Date(o.expires_at).toLocaleString()}</p>
         {canRespond(o,data.viewer_owner_id)&&<div className="mt-4 flex flex-wrap gap-2">
@@ -135,19 +141,29 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
       </article>)}{proposals.length===0&&<p className="text-sm text-slate-600">No active trade proposals.</p>}</div>
     </details>}
     {data&&<details className="mt-4 border-t border-blue-100 pt-4">
+      <summary className="cursor-pointer font-semibold text-blue-800">League Completed Trades ({completed.length})</summary>
+      <p className="mt-2 text-sm text-slate-600">Completed pick-only trades appear here after 48 hours; trades involving players appear here 24 hours after completion.</p>
+      <div className="mt-3 space-y-3">{completed.map(o=><article key={o.id} className="rounded-lg border border-blue-100 p-4">
+        <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-semibold">{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</p><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold capitalize text-slate-600">{o.corrected_at?"Reversed · Completed":o.status==="proposed"?"Expired":o.status}</span></div>
+        <ul className="mt-3 space-y-2 text-sm text-slate-700">{o.assets.map((a,i)=><li key={i}>{ownerName(a.from_owner_id)} → {ownerName(a.to_owner_id)}: <strong>{assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"}</strong></li>)}</ul>
+        {completionNotice(o)}
+        {o.corrected_at&&<p className="mt-3 text-sm text-slate-600">The original agreement shown above was reversed by the commissioner.</p>}
+      </article>)}{completed.length===0&&<p className="text-sm text-slate-600">No completed league trades yet.</p>}</div>
+    </details>}
+    {data&&<details className="mt-4 border-t border-blue-100 pt-4">
       <summary className="cursor-pointer font-semibold text-blue-800">Archived ({archived.length})</summary>
-      <p className="mt-2 text-sm text-slate-600">Completed league trades and your closed proposals. Unaccepted proposals remain private to the owners involved.</p>
+      <p className="mt-2 text-sm text-slate-600">Your declined, expired, withdrawn and other closed proposals. Only the owners involved can see these.</p>
       <div className="mt-3 space-y-3">{archived.map(o=><article key={o.id} className="rounded-lg border border-blue-100 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-semibold">{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</p><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold capitalize text-slate-600">{o.corrected_at?"Reversed · Completed":o.status==="proposed"?"Expired":o.status}</span></div>
         <ul className="mt-3 space-y-2 text-sm text-slate-700">{o.assets.map((a,i)=><li key={i}>{ownerName(a.from_owner_id)} → {ownerName(a.to_owner_id)}: <strong>{assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"}</strong></li>)}</ul>
         {o.corrected_at&&<p className="mt-3 text-sm text-slate-600">The original agreement shown above was reversed by the commissioner.</p>}
-      </article>)}{archived.length===0&&<p className="text-sm text-slate-600">No archived trades yet.</p>}</div>
+      </article>)}{archived.length===0&&<p className="text-sm text-slate-600">No archived proposals yet.</p>}</div>
     </details>}</section>
     {children}
     {decision&&data&&<Modal title={decision.action==="accept"?"Accept trade offer":"Decline trade offer"} locked={busy||uncertain} onClose={()=>{if(!busy&&!uncertain){setDecision(null);responsePending.current=null;setError("");}}}>
       <h2 className="text-2xl font-bold">{decision.action==="accept"?"Accept trade offer?":"Decline trade offer?"}</h2>
       <ul className="my-4 space-y-2">{decision.offer.assets.map((a,i)=><li key={i}>{ownerName(a.from_owner_id)} sends {assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"} to {ownerName(a.to_owner_id)}</li>)}</ul>
-      <p className="mb-4 text-sm text-slate-600">{decision.action==="accept"?"Acceptance finalizes the agreement immediately. Picks move now. Players must be moved on Fantrax; the trade stays visible until those moves are confirmed. Picks-only trades complete and archive immediately.":"Declining closes and archives this proposal. No players or picks will move."}</p>
+      <p className="mb-4 text-sm text-slate-600">{decision.action==="accept"?"Acceptance finalizes the agreement immediately. Picks move now. Players must be moved on Fantrax; the trade stays visible until those moves are confirmed. Pick-only trades complete immediately and stay in Accepted Trades for 48 hours. Player trades stay there for 24 hours after Fantrax confirmation.":"Declining closes and archives this proposal. No players or picks will move."}</p>
       {error&&<p role="alert" className="mb-4 text-red-800">{error}</p>}
       <div className="flex flex-wrap gap-3"><button className={button} disabled={busy} onClick={()=>void respond()}>{busy?"Saving…":decision.action==="accept"?"Confirm Acceptance":"Confirm Decline"}</button><button className={secondary} disabled={busy||uncertain} onClick={()=>{setDecision(null);responsePending.current=null;setError("");}}>Keep Reviewing</button></div>
     </Modal>}
