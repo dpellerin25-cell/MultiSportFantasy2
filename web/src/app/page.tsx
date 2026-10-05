@@ -80,7 +80,7 @@ function SportCell({
             </div>
 
             <div className="text-sm text-slate-600">
-              Final sport score
+              Total sport points
             </div>
           </div>
 
@@ -130,9 +130,11 @@ function SportCell({
 
           <div className="mt-3 border-t border-blue-100 pt-3">
             <div className="flex justify-between font-bold text-slate-900">
-              <span>Total</span>
+              <span>Total points</span>
               <span>{result.sportScore.toFixed(1)}</span>
             </div>
+            <p className="mt-2 text-xs font-semibold text-blue-800">Total Points = Placement Points + Dominance</p>
+            {result.rank > 0 && <p className="mt-1 text-xs text-slate-600">{result.placementPoints.toFixed(0)} {dominance} = {result.sportScore.toFixed(1)}</p>}
           </div>
         </div>
       </div>
@@ -226,9 +228,10 @@ export default async function Home({
           </Link>
         </div>
 
-        <p className="mb-8 text-sm font-medium text-slate-600">
-          Hover over a sport score to see the scoring breakdown.
-        </p>
+        <div className="mb-6 rounded-xl border border-blue-100 bg-white p-4 text-sm">
+          <p className="font-semibold text-blue-900">Each sport: Total Points = Placement Points + Dominance</p>
+          <p className="mt-1 text-slate-600">The overall Total adds your total points from all five sports. Hover over or tap a sport score to see its breakdown.</p>
+        </div>
 
         <div className="overflow-x-auto rounded-xl border border-blue-100 bg-white shadow-sm">
           <table className="w-full min-w-[850px] border-collapse">

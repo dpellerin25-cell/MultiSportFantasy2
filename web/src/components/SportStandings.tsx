@@ -64,6 +64,9 @@ export default function SportStandings({
         <p className="mb-8 text-slate-800 sm:text-blue-500">
           Fantasy standings and championship scoring breakdown.
         </p>
+        <p className="mb-6 rounded-xl border border-blue-100 bg-white p-4 text-sm font-semibold text-blue-900">
+          Total Points = Placement Points + Dominance
+        </p>
 
         {/* STANDINGS TABLE */}
 
@@ -85,7 +88,7 @@ export default function SportStandings({
                 </th>
 
                 <th className="p-4 text-right">
-                  Placement
+                  Placement Points
                 </th>
 
                 <th className="p-4 text-right">
@@ -97,7 +100,8 @@ export default function SportStandings({
                 </th>
 
                 <th className="p-4 text-right">
-                  Sport Score
+                  Total Points
+                  <span className="mt-1 block text-xs font-normal text-slate-600">Placement + Dominance</span>
                 </th>
               </tr>
             </thead>
