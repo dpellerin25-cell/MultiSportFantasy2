@@ -111,6 +111,7 @@ export default async function TeamPage({
                     <div className="flex justify-between gap-3"><dt className="text-slate-600">Placement points</dt><dd className="font-semibold">{hasResult ? result.placementPoints.toFixed(0) : "—"}</dd></div>
                     <div className="flex justify-between gap-3"><dt className="text-slate-600">Dominance bonus</dt><dd className="font-semibold">{hasResult ? `${result.dominanceScore >= 0 ? "+" : ""}${result.dominanceScore.toFixed(1)}` : "—"}</dd></div>
                   </dl>
+                  <p className="mt-3 text-xs font-semibold text-blue-800">Total Points = Placement Points + Dominance</p>
                   {isCurrentSeason ? (
                     <details className="mt-3 border-t border-blue-100 pt-2">
                       <summary className="min-h-11 cursor-pointer rounded py-3 text-sm font-semibold text-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800">
