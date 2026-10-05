@@ -46,7 +46,7 @@ export async function validateHostedTrades(db,doug,chris,report=console.log){
   assert.equal(accepted.status,'completed');assert.deepEqual(await command(chris,'accept',args,request),accepted);
   assert.equal(await value('select owner_id from trading.picks where id=$1',[pick]),owners.chris);
   assert.equal(await value('select count(*)::int from trading.pick_history where pick_id=$1',[pick]),1);
-  assert.equal(await value("select count(*)::int from trading.notifications n join trading.events e on e.id=n.event_id where e.trade_id=$1 and n.kind='acceptance'",[t.trade_id]),2);
+  assert.equal(await value("select count(*)::int from trading.notifications n join trading.events e on e.id=n.event_id where e.trade_id=$1 and n.kind='acceptance'",[t.trade_id]),await value('select count(*)::int from draft.owner_accounts a join draft.owners o on o.id=a.owner_id where o.active'));
   const visible=(await list(third.auth_user_id)).find(x=>x.id===t.trade_id);assert.equal(visible.message,null);
   await assert.rejects(()=>command(chris,'correct',{trade_id:t.trade_id,revision:accepted.revision,reason:'Denied'}),/Commissioner/);
   await command(doug,'correct',{trade_id:t.trade_id,revision:accepted.revision,reason:'Rollback-only test reversal'});

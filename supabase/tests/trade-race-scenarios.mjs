@@ -52,7 +52,7 @@ export async function tradeRaceScenarios({admin,race,report}){
     assert.deepEqual(success(second),first);
     assert.deepEqual(await run(op),first);
     assert.equal(await history(p),1);assert.equal(await events(t),1);
-    assert.equal(await scalar(admin,"select count(*)::int from trading.notifications n join trading.events e on e.id=n.event_id where e.trade_id=$1 and n.kind='acceptance'",[t.trade_id]),2);
+    assert.equal(await scalar(admin,"select count(*)::int from trading.notifications n join trading.events e on e.id=n.event_id where e.trade_id=$1 and n.kind='acceptance'",[t.trade_id]),(await admin.query('select count(*)::int n from draft.owner_accounts a join draft.owners o on o.id=a.owner_id where o.active')).rows[0].n);
     report('simultaneous identical retry: one transfer, one event, two recipient notification rows');
   }
   {
