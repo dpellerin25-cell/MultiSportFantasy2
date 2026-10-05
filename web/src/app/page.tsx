@@ -228,10 +228,6 @@ export default async function Home({
           </Link>
         </div>
 
-        <div className="mb-6 rounded-xl border border-blue-100 bg-white p-4 text-sm">
-          <p className="font-semibold text-blue-900">Each sport: Total Points = Placement Points + Dominance</p>
-          <p className="mt-1 text-slate-600">The overall Total adds your total points from all five sports. Hover over or tap a sport score to see its breakdown.</p>
-        </div>
 
         <div className="overflow-x-auto rounded-xl border border-blue-100 bg-white shadow-sm">
           <table className="w-full min-w-[850px] border-collapse">
