@@ -25,6 +25,7 @@ export default function ConstitutionPage() {
                 <h2 id={`${section.id}-title`} className="mb-4 text-xl font-bold text-blue-950 sm:text-2xl">{section.title}</h2>
                 <div className="space-y-4 leading-7 text-slate-700">
                   {section.blocks.map((block, index) => {
+                    if ("items" in block) return <ul key={index} className="list-disc space-y-2 pl-6">{block.items.map((item, i) => <li key={i}>{item}</li>)}</ul>;
                     if (block.kind === "table" && block.rows) return (
                       <div key={index} className="overflow-x-auto rounded-lg border border-blue-100">
                         <table className="w-full text-left text-sm">

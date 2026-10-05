@@ -501,12 +501,16 @@
     "title": "12. Items to Finalize Before the Inaugural Season",
     "blocks": [
       {
-        "kind": "paragraph",
-        "text": "I would keep the unresolved items out of the actual rules and put them in a final \"Items to Finalize\" section. Based on your current document, you still need agreement on:"
-      },
-      {
-        "kind": "paragraph",
-        "text": "Final league membership; 65-player roster maximum and 10-round annual draft; final starting-lineup sizes, particularly PGA; exact PGA opening event; MLB and Premier League waiver rules; final individual-sport Fantrax scoring settings; and whether everyone accepts the late-May/early-June annual draft with retroactive MLB/PGA scoring and pre-NBA-Draft prospect selection."
+        "kind": "list",
+        "items": [
+          "Final league membership",
+          "65-player roster maximum and 10-round annual draft",
+          "final starting-lineup sizes, particularly PGA",
+          "exact PGA opening event",
+          "MLB and Premier League waiver rules",
+          "final individual-sport Fantrax scoring settings",
+          "whether everyone accepts the late-May/early-June annual draft with retroactive MLB/PGA scoring and pre-NBA-Draft prospect selection"
+        ]
       }
     ]
   }
