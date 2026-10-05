@@ -1,0 +1,43 @@
+name: Send Trade Notifications
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Preview or send queued notifications
+        type: choice
+        default: preview
+        options: [preview, send]
+  schedule:
+    - cron: '*/5 * * * *'
+permissions:
+  contents: read
+concurrency:
+  group: trade-email-delivery
+  cancel-in-progress: false
+jobs:
+  email:
+    if: vars.TRADE_EMAIL_ENABLED == 'true' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'preview')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: supabase/tests
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - run: npx --yes pnpm@11.25.0 install --frozen-lockfile --ignore-scripts
+      - name: Process notification queue
+        env:
+          TRADE_ROSTER_PROJECT_REF: ${{ vars.TRADE_ROSTER_PROJECT_REF }}
+          TRADE_ROSTER_DATABASE_URL: ${{ secrets.TRADE_ROSTER_DATABASE_URL }}
+          TRADE_ROSTER_CA_CERT: ${{ secrets.TRADE_ROSTER_CA_CERT }}
+          TRADE_EMAIL_ENABLED: ${{ vars.TRADE_EMAIL_ENABLED }}
+          TRADE_EMAIL_MODE: ${{ vars.TRADE_EMAIL_MODE }}
+          TRADE_EMAIL_NOT_BEFORE: ${{ vars.TRADE_EMAIL_NOT_BEFORE }}
+          TRADE_EMAIL_SITE_URL: ${{ vars.TRADE_EMAIL_SITE_URL }}
+          TRADE_EMAIL_TEST_RECIPIENT: ${{ secrets.TRADE_EMAIL_TEST_RECIPIENT }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          DELIVERY_MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'send' }}
+        run: node send-trade-emails.mjs "--$DELIVERY_MODE"

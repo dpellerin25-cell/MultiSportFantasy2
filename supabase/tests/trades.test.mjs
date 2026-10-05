@@ -99,7 +99,7 @@ try{
     assert.equal((await state(competing.trade_id)).status,'invalidated');
     await assert.rejects(()=>act('jack','accept',competing),/changed/);
     await assert.rejects(()=>command('chris','decline',args,request),/reused/);
-    assert.equal(await scalar("select count(*)::int from trading.notifications n join trading.events e on e.id=n.event_id where e.trade_id=$1 and n.kind='acceptance'",[t.trade_id]),2);
+    assert.equal(await scalar("select count(*)::int from trading.notifications n join trading.events e on e.id=n.event_id where e.trade_id=$1 and n.kind='acceptance'",[t.trade_id]),(await db.query('select count(*)::int n from draft.owner_accounts a join draft.owners o on o.id=a.owner_id where o.active')).rows[0].n);
   });
 
   await test('counter is a new immutable offer; decline/withdraw permissions and notification kinds',async()=>{

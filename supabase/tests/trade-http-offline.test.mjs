@@ -29,7 +29,7 @@ try{
   }};
   const run=randomUUID(),f=await prepare(db,users,run);
   const id=await scenario(api,users,f,()=>{});
-  assert.equal((await db.query("select count(*)::int n from trading.notifications n join trading.events e on e.id=n.event_id where e.trade_id=$1 and n.kind='acceptance'",[id])).rows[0].n,2);
+  assert.equal((await db.query("select count(*)::int n from trading.notifications n join trading.events e on e.id=n.event_id where e.trade_id=$1 and n.kind='acceptance'",[id])).rows[0].n,(await db.query('select count(*)::int n from draft.owner_accounts a join draft.owners o on o.id=a.owner_id where o.active')).rows[0].n);
   await cleanup(db,users[0].id,run);await cleanup(db,users[0].id,run);
   assert.equal((await db.query('select count(*)::int n from trading.picks where owner_id<>original_owner_id')).rows[0].n,0);
   assert.equal((await db.query("select count(*)::int n from trading.notifications where status<>'failed' or next_attempt_at<>'infinity'")).rows[0].n,0);

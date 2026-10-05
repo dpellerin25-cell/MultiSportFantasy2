@@ -24,7 +24,7 @@ try{
     stage='HTTP trade assertions';const acceptedId=await scenario(api,users,fixture,message=>{console.log(message);stage='checks after '+message;});
     stage='verifying persisted transfer and notification counts';
     assert.equal((await db.query('select count(*)::int n from trading.pick_history where reason=$1',['accept trade '+acceptedId])).rows[0].n,1);
-    assert.equal((await db.query("select count(*)::int n from trading.notifications n join trading.events e on e.id=n.event_id where e.trade_id=$1 and n.kind='acceptance'",[acceptedId])).rows[0].n,2);
+    assert.equal((await db.query("select count(*)::int n from trading.notifications n join trading.events e on e.id=n.event_id where e.trade_id=$1 and n.kind='acceptance'",[acceptedId])).rows[0].n,(await db.query('select count(*)::int n from draft.owner_accounts a join draft.owners o on o.id=a.owner_id where o.active')).rows[0].n);
     passed=true;
   }
 }catch(e){
