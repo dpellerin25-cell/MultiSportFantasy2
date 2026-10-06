@@ -49,7 +49,7 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
   const [counter,setCounter]=useState<Offer|null>(null),[decision,setDecision]=useState<{offer:Offer;action:"accept"|"decline"}|null>(null);
   useEffect(()=>{
     let active=true,inFlight=false;
-    const load=async()=>{if(inFlight||sending.current||pending.current||responsePending.current)return;inFlight=true;const version=++loadVersion.current;try{const [r,l]=await Promise.all([client.rpc("trade_rosters"),client.rpc("trade_list")]);if(!active||sending.current||version!==loadVersion.current)return;if(r.error||l.error){setError("Could not load trade data. Refresh trades to try again.");return;}setData(r.data);setOffers(l.data);}catch{if(active)setError("Could not connect to trades. Please refresh.");}finally{inFlight=false;}};
+    const load=async()=>{if(inFlight||sending.current||pending.current||responsePending.current)return;inFlight=true;const version=++loadVersion.current;try{const [r,l]=await Promise.all([client.rpc("trade_rosters"),client.rpc("trade_list")]);if(!active||sending.current||version!==loadVersion.current)return;if(r.error||l.error){setError("Could not load trade data. The list will retry automatically.");return;}setData(r.data);setOffers(l.data);}catch{if(active)setError("Could not connect to trades. Please refresh.");}finally{inFlight=false;}};
     void load();const timer=setInterval(()=>{if(document.visibilityState==="visible")void load();},30000);
     window.addEventListener("focus",load);return()=>{active=false;clearInterval(timer);window.removeEventListener("focus",load);};
   },[client]);
@@ -72,7 +72,7 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
       setNotice(`${counter?"Counteroffer":"Trade offer"} sent to ${name}. It expires in seven days. Email notifications are not enabled yet.`);
       setTradeTab("proposals");
       setRecipient(null);setSelection([]);setReview(false);setCounter(null);pending.current=null;setUncertain(false);
-      void refresh().catch(()=>setError("Offer saved, but the list could not refresh. Use Refresh trades."));
+      void refresh().catch(()=>setError("Offer saved, but the list could not refresh. The list will retry automatically."));
     }catch{setUncertain(Boolean(pending.current));setError("Could not confirm the offer. Retry Send Trade Offer to check the same request safely.");}
     finally{sending.current=false;setBusy(false);}
   }
@@ -90,10 +90,10 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
       if(!result?.trade_id)throw new Error("Unconfirmed response");
       window.dispatchEvent(new Event("rookie-picks-changed"));
       setOffers(old=>old.map(o=>o.id===result.trade_id?{...o,status:result.status,revision:result.revision}:o));
-      setNotice(decision.action==="decline"?"Offer declined and archived.":result.status==="completed"?"Trade Complete. Picks transferred; this trade remains in Accepted Trades for 48 hours.":"Trade accepted. Picks transferred; the agreement remains visible until Fantrax confirms every player move.");
-      setTradeTab(decision.action==="accept"?"accepted":"archived");
+      setNotice(decision.action==="decline"?"Offer declined and archived.":result.status==="completed"?"Trade Complete. Picks transferred; this trade remains in League Pending Trades for 48 hours.":"Trade accepted. Picks transferred; the agreement remains visible until Fantrax confirms every player move.");
+      setTradeTab(decision.action==="accept"?"accepted":"proposals");
       setDecision(null);responsePending.current=null;setUncertain(false);
-      void refresh().catch(()=>setError("Saved successfully, but the list could not refresh. Use Refresh trades."));
+      void refresh().catch(()=>setError("Saved successfully, but the list could not refresh. The list will retry automatically."));
     }catch(e){setUncertain(Boolean(responsePending.current));setError(responsePending.current?"The result is unconfirmed. Retry this action safely.":e instanceof Error?e.message:"Could not respond.");}
     finally{sending.current=false;setBusy(false);}
   }
@@ -119,13 +119,12 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
     return <section className="min-w-0 overflow-hidden rounded-xl border border-blue-100 bg-white"><header className="sticky top-0 z-10 border-b border-blue-100 bg-white p-4"><h3 className="text-xl font-bold">{ownerName(ownerId)} {ownerId===data?.viewer_owner_id&&<span className="text-sm font-normal text-blue-700">(You)</span>}</h3><p className="text-sm text-slate-600">{selection.filter(a=>a.owner_id===ownerId).length} selected</p></header><div className="md:max-h-[52dvh] md:overflow-y-auto">{["NFL","MLB","NBA","EPL","PGA"].map(sport=><section key={sport}><h4 className="bg-slate-50 px-4 py-2 text-sm font-bold text-blue-900">{sport}</h4>{playerRows.some(a=>a.sport===sport)?<ul>{playerRows.filter(a=>a.sport===sport).map(row)}</ul>:<p className="px-4 py-3 text-sm text-slate-500">No players</p>}</section>)}<h4 className="bg-slate-50 px-4 py-2 text-sm font-bold text-blue-900">Rookie draft picks</h4><ul>{assets.filter(a=>a.owner_id===ownerId&&a.kind==="pick").map(row)}</ul></div></section>;
   }
   return <Context.Provider value={data?{data,open:id=>{setCounter(null);setRecipient(id);setSelection([]);setError("");setNotice("");}}:null}>
-    <section className="mb-6 rounded-xl border border-blue-100 bg-white p-4"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-bold">Trade proposals {data&&`· ${ownerName(data.viewer_owner_id)}`}</h2><p className="mt-1 text-sm text-slate-600">Test league · Choose another owner to build an offer. Email notifications are not enabled yet.</p></div><div className="flex gap-2"><button className={secondary} onClick={()=>void refresh()}>Refresh trades</button><button className={secondary} onClick={()=>void client.auth.signOut({scope:"local"})}>Sign out</button></div></div>{!data&&!error&&<p role="status">Loading trade rosters…</p>}{error&&!recipient&&<p role="alert" className="mt-3 text-red-800">{error}</p>}{notice&&<p role="status" className="mt-3 rounded-lg bg-blue-50 p-3 text-blue-900">{notice}</p>}
+    <section className="mb-6 rounded-xl border border-blue-100 bg-white p-4"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-bold">Trade proposals {data&&`· ${ownerName(data.viewer_owner_id)}`}</h2><p className="mt-1 text-sm text-slate-600">Test league · Choose another owner to build an offer. Email notifications are not enabled yet.</p></div><div className="flex gap-2"><button className={secondary} onClick={()=>void client.auth.signOut({scope:"local"})}>Sign out</button></div></div>{!data&&!error&&<p role="status">Loading trade rosters…</p>}{error&&!recipient&&<p role="alert" className="mt-3 text-red-800">{error}</p>}{notice&&<p role="status" className="mt-3 rounded-lg bg-blue-50 p-3 text-blue-900">{notice}</p>}
     {data&&<div role="tablist" aria-label="Trades" className="mt-4 flex gap-1 overflow-x-auto border-b border-blue-200 pb-1">
       {[
-        {id:"accepted",label:"Accepted Trades",count:acceptedTrades.length},
-        {id:"proposals",label:"Trade Proposals",count:proposals.length},
+        {id:"accepted",label:"League Pending Trades",count:acceptedTrades.length},
+        {id:"proposals",label:"Proposals",count:proposals.length+archived.length},
         {id:"completed",label:"League Completed Trades",count:completed.length},
-        {id:"archived",label:"Archived",count:archived.length},
       ].map((tab,index,tabs)=><button key={tab.id} type="button" role="tab" id={`trade-tab-${tab.id}`} aria-controls={`trade-panel-${tab.id}`} aria-selected={tradeTab===tab.id} tabIndex={tradeTab===tab.id?0:-1}
         className={`min-h-11 shrink-0 rounded-t-lg border-b-2 px-4 py-3 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 ${tradeTab===tab.id?"border-blue-800 bg-blue-800 text-white":"border-transparent text-blue-800 hover:bg-blue-50"}`}
         onClick={()=>setTradeTab(tab.id)} onKeyDown={event=>{
@@ -134,7 +133,7 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
         }}>{tab.label} ({tab.count})</button>)}
     </div>}
     {data&&<section role="tabpanel" id="trade-panel-accepted" aria-labelledby="trade-tab-accepted" hidden={tradeTab!=="accepted"} tabIndex={0} className="pt-4">
-      <h3 className="sr-only">Accepted Trades</h3>
+      <h3 className="sr-only">League Pending Trades</h3>
       {acceptedTrades.length===0&&<p className="text-sm text-slate-600">No accepted trades awaiting transfer or recently completed trades.</p>}
       <p className="mt-2 text-sm text-slate-600">Website rosters automatically update every morning at 4 a.m. Eastern. If a trade needs to be pushed through right away, contact Doug.</p>
       <div className="mt-3 space-y-3">{acceptedTrades.map(o=><article key={o.id} className="rounded-lg border border-blue-200 p-4">
@@ -144,10 +143,10 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
       </article>)}</div>
     </section>}
     {data&&<section role="tabpanel" id="trade-panel-proposals" aria-labelledby="trade-tab-proposals" hidden={tradeTab!=="proposals"} tabIndex={0} className="pt-4">
-      <h3 className="sr-only">Trade Proposals</h3>
-      <p className="mt-2 text-sm text-slate-600">Your sent and received proposals. Closed proposals are archived automatically.</p>
-      <div className="mt-3 space-y-3">{proposals.map(o=><article key={o.id} className="rounded-lg border border-blue-100 p-4">
-        <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-semibold">{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</p><span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">{o.status==="completed"?"Trade Complete":o.status==="accepted"?(o.corrected_at?"Reversal awaiting Fantrax":"Accepted · Awaiting Fantrax"):o.recipient_id===data.viewer_owner_id?"Received proposal":"Sent proposal"}</span></div>
+      <h3 className="sr-only">Proposals</h3>
+      <p className="mt-2 text-sm text-slate-600">Your active and closed proposals. Click a proposal to view its details. Only the owners involved can see these.</p>
+      <div className="mt-3 space-y-3">{[...proposals,...archived].map(o=><details key={o.id} className="rounded-lg border border-blue-100 p-4">
+        <summary className="cursor-pointer font-semibold"><span>{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</span><span className="ml-3 inline-block rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">{o.status==="proposed"?(Date.parse(o.expires_at)<=displayTime?"Expired":o.recipient_id===data.viewer_owner_id?"Received proposal":"Sent proposal"):o.status}</span></summary>
         <ul className="mt-3 space-y-2 text-sm text-slate-700">{o.assets.map((a,i)=><li key={i}>{ownerName(o.corrected_at?a.to_owner_id:a.from_owner_id)} sends <strong>{assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"}</strong> to {ownerName(o.corrected_at?a.from_owner_id:a.to_owner_id)}</li>)}</ul>
         <p className="mt-3 text-xs text-slate-500">Expires {new Date(o.expires_at).toLocaleString()}</p>
         {canRespond(o,data.viewer_owner_id)&&<div className="mt-4 flex flex-wrap gap-2">
@@ -155,7 +154,7 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
           <button className={secondary} disabled={busy||uncertain} onClick={()=>{setDecision({offer:o,action:"decline"});setError("");}}>Decline</button>
           <button className={secondary} disabled={busy||uncertain} onClick={()=>beginCounter(o)}>Counter Offer</button>
         </div>}
-      </article>)}{proposals.length===0&&<p className="text-sm text-slate-600">No active trade proposals.</p>}</div>
+      </details>)}{proposals.length+archived.length===0&&<p className="text-sm text-slate-600">No proposals yet.</p>}</div>
     </section>}
     {data&&<section role="tabpanel" id="trade-panel-completed" aria-labelledby="trade-tab-completed" hidden={tradeTab!=="completed"} tabIndex={0} className="pt-4">
       <h3 className="sr-only">League Completed Trades</h3>
@@ -167,20 +166,12 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
         {o.corrected_at&&<p className="mt-3 text-sm text-slate-600">The original agreement shown above was reversed by the commissioner.</p>}
       </article>)}{completed.length===0&&<p className="text-sm text-slate-600">No completed league trades yet.</p>}</div>
     </section>}
-    {data&&<section role="tabpanel" id="trade-panel-archived" aria-labelledby="trade-tab-archived" hidden={tradeTab!=="archived"} tabIndex={0} className="pt-4">
-      <h3 className="sr-only">Archived</h3>
-      <p className="mt-2 text-sm text-slate-600">Your declined, expired, withdrawn and other closed proposals. Only the owners involved can see these.</p>
-      <div className="mt-3 space-y-3">{archived.map(o=><article key={o.id} className="rounded-lg border border-blue-100 p-4">
-        <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-semibold">{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</p><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold capitalize text-slate-600">{o.corrected_at?"Reversed · Completed":o.status==="proposed"?"Expired":o.status}</span></div>
-        <ul className="mt-3 space-y-2 text-sm text-slate-700">{o.assets.map((a,i)=><li key={i}>{ownerName(a.from_owner_id)} → {ownerName(a.to_owner_id)}: <strong>{assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"}</strong></li>)}</ul>
-        {o.corrected_at&&<p className="mt-3 text-sm text-slate-600">The original agreement shown above was reversed by the commissioner.</p>}
-      </article>)}{archived.length===0&&<p className="text-sm text-slate-600">No archived proposals yet.</p>}</div>
-    </section>}</section>
+</section>
     {children}
     {decision&&data&&<Modal title={decision.action==="accept"?"Accept trade offer":"Decline trade offer"} locked={busy||uncertain} onClose={()=>{if(!busy&&!uncertain){setDecision(null);responsePending.current=null;setError("");}}}>
       <h2 className="text-2xl font-bold">{decision.action==="accept"?"Accept trade offer?":"Decline trade offer?"}</h2>
       <ul className="my-4 space-y-2">{decision.offer.assets.map((a,i)=><li key={i}>{ownerName(a.from_owner_id)} sends {assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"} to {ownerName(a.to_owner_id)}</li>)}</ul>
-      <p className="mb-4 text-sm text-slate-600">{decision.action==="accept"?"Acceptance finalizes the agreement immediately. Picks move now. Players must be moved on Fantrax; the trade stays visible until those moves are confirmed. Pick-only trades complete immediately and stay in Accepted Trades for 48 hours. Player trades stay there for 24 hours after Fantrax confirmation.":"Declining closes and archives this proposal. No players or picks will move."}</p>
+      <p className="mb-4 text-sm text-slate-600">{decision.action==="accept"?"Acceptance finalizes the agreement immediately. Picks move now. Players must be moved on Fantrax; the trade stays visible until those moves are confirmed. Pick-only trades complete immediately and stay in League Pending Trades for 48 hours. Player trades stay there for 24 hours after Fantrax confirmation.":"Declining closes and archives this proposal. No players or picks will move."}</p>
       {error&&<p role="alert" className="mb-4 text-red-800">{error}</p>}
       <div className="flex flex-wrap gap-3"><button className={button} disabled={busy} onClick={()=>void respond()}>{busy?"Saving…":decision.action==="accept"?"Confirm Acceptance":"Confirm Decline"}</button><button className={secondary} disabled={busy||uncertain} onClick={()=>{setDecision(null);responsePending.current=null;setError("");}}>Keep Reviewing</button></div>
     </Modal>}
