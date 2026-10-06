@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import OwnerIdentity from "./OwnerIdentity";
 
 export type RosterPlayer = {
   player_id: string | null;
@@ -30,7 +31,7 @@ type RosterCardProps = {
 function getCountStyle(count: number, max: number) {
   const percentage = count / max;
 
-  if (percentage >= 1) {
+  if (count > max) {
     return "bg-red-100 text-red-800";
   }
 
@@ -56,8 +57,8 @@ export default function RosterCard({
   );
 
   return (
-    <div className="overflow-hidden rounded-xl border border-blue-100 bg-white shadow-sm">
-      <div className="flex items-center">
+    <div className="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
+      <div className="flex flex-wrap items-center">
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
@@ -66,7 +67,7 @@ export default function RosterCard({
       >
         <div>
           <h2 className="text-lg font-bold text-slate-900 sm:text-xl">
-            {owner}
+            <OwnerIdentity name={owner} />
           </h2>
 
           <p className="mt-1 text-sm font-medium text-slate-700">
@@ -89,11 +90,16 @@ export default function RosterCard({
               expanded ? "rotate-180" : ""
             }`}
           >
-            ↓
+            â†“
           </span>
         </div>
       </button>
-      {action && <div className="shrink-0 pr-3">{action}</div>}
+      {action && <div className="px-4 pb-4 sm:px-5">{action}</div>}
+      </div>
+
+      <div className="flex flex-wrap gap-2 border-t border-blue-50 px-4 py-3 sm:px-5">
+        {sports.map(sport=><span key={sport.sport} className="rounded-md bg-slate-50 px-2 py-1 text-xs text-slate-600">{sport.sport==="Premier League"?"EPL":sport.sport} <strong className="ml-1 text-blue-950">{sport.players.length}</strong></span>)}
+        {totalPlayers>maxRosterSize&&<p className="w-full text-sm font-semibold text-red-800">Over roster limit by {totalPlayers-maxRosterSize} players</p>}
       </div>
 
       {expanded && (
