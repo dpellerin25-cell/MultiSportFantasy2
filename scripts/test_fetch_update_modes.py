@@ -55,6 +55,17 @@ class UpdateModesTest(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     fetch.league_settings(names)
 
+    def test_john_expansion_configuration(self):
+        import json
+        from pathlib import Path
+        settings = json.loads(Path("web/data/league-settings.json").read_text(encoding="utf-8"))
+        names = [owner["name"] for owner in settings["owners"]]
+        self.assertIn("John", names)
+        self.assertEqual(len(names), 10)
+        self.assertEqual(fetch.league_settings(names)["placement_points"], [100,82,68,56,45,35,26,18,10,0])
+        with self.assertRaisesRegex(ValueError, "Missing:.*John"):
+            fetch.league_settings([name for name in names if name != "John"])
+
     def test_failed_fetch_fails_job_before_commit(self):
         with patch.object(fetch, 'create_session'), patch.object(fetch, 'fetch_league', side_effect=RuntimeError('offline')), patch.object(fetch, 'save_league_json') as save, contextlib.redirect_stdout(io.StringIO()):
             with self.assertRaises(RuntimeError):

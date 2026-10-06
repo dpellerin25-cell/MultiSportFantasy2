@@ -62,9 +62,9 @@ export default async function TeamPage({
           <div className="rounded-xl border border-blue-100 bg-white p-5 shadow-sm sm:p-6">
             <dt className="text-sm font-semibold text-slate-600">Overall score</dt>
             <dd className="mt-2 text-4xl font-bold text-blue-900">
-              {team.total.toFixed(1)} <span className="text-base font-semibold">points</span>
+              {sports.every(s=>team[s].rank===0)?"—":team.total.toFixed(1)} <span className="text-base font-semibold">points</span>
             </dd>
-            <dd className="mt-3 text-sm text-slate-600">Upcoming sports contribute zero points.</dd>
+            <dd className="mt-3 text-sm text-slate-600">Upcoming sports contribute zero points. Missing Fantrax results are awaiting a roster and standings sync.</dd>
           </div>
           <div className="rounded-xl border border-blue-100 bg-white p-5 shadow-sm sm:p-6">
             <dt className="text-sm font-semibold"><Link href="/rosters" className="inline-flex min-h-11 items-center rounded text-blue-800 underline underline-offset-4 hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-800">Full Roster</Link></dt>

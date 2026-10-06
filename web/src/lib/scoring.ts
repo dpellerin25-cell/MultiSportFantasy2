@@ -23,7 +23,9 @@ export type ScoredTeam = {
   sportScore: number;
 };
 
-const PLACEMENT_POINTS: Record<number, number> = {
+// Fallback only for legacy nine-owner snapshots without an archived table.
+// Current seasons supply their approved table through current-membership.ts.
+const LEGACY_PLACEMENT_POINTS: Record<number, number> = {
   1: 100,
   2: 80,
   3: 65,
@@ -70,7 +72,7 @@ function getStandardDeviation(
 export function scoreLeague(
   league: LeagueData
 ): ScoredTeam[] {
-  const points = league.placement_points ?? (league.standings.length === 9 ? Object.values(PLACEMENT_POINTS) : undefined);
+  const points = league.placement_points ?? (league.standings.length === 9 ? Object.values(LEGACY_PLACEMENT_POINTS) : undefined);
   if (!points || points.length !== league.standings.length || points.some((p,i) => !Number.isFinite(p) || p < 0 || (i > 0 && p >= points[i-1]))) {
     throw new Error("An approved placement table matching this season's owner count is required.");
   }

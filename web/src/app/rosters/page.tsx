@@ -1,3 +1,4 @@
+import settings from "../../../data/league-settings.json";
 import MainNavigation from "@/components/MainNavigation";
 import {Trades,ProposeTradeButton} from "@/components/Trades";
 import { connection } from "next/server";
@@ -63,7 +64,7 @@ type OwnerRoster = {
 };
 
 function buildCombinedRosters(): OwnerRoster[] {
-  const owners = new Map<string, OwnerRoster>();
+  const owners = new Map<string, OwnerRoster>(settings.owners.map(o=>[o.name,{owner:o.name,sports:[],totalPlayers:0}]));
 
   for (const league of leagues) {
     for (const roster of league.data.rosters) {
@@ -163,6 +164,7 @@ export default async function RostersPage() {
           </div>
         </div>
 
+        {settings.owners.some(o=>leagues.some(l=>!l.data.rosters.some(r=>r.owner===o.name)))&&<p className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">Some owners are awaiting a fresh Fantrax roster sync. Empty rosters may not yet reflect their Fantrax teams.</p>}
         <RookieDraftProvider>
         <Trades rosters={owners}>
         <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">

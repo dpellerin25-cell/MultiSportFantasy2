@@ -1,3 +1,4 @@
+import settings from "../../data/league-settings.json";
 import { getSeason } from "@/config/seasons";
 import { getSeasonLeagueData } from "@/lib/seasonData";
 import { scoreLeague, type ScoredTeam } from "@/lib/scoring";
@@ -58,11 +59,11 @@ export function getOverallStandings(selectedYear: number): OverallRow[] {
 
   const allOwners = Array.from(
     new Set(
-      scoredLeagues.flatMap((league) =>
+      [...(selectedYear===settings.championship_year?settings.owners.map(o=>o.name):[]),...scoredLeagues.flatMap((league) =>
         league.scored.map(
           (team) => team.team
         )
-      )
+      )]
     )
   );
 
@@ -162,7 +163,7 @@ const getSportResult = (
     });
 
   standings.sort(
-    (a, b) => b.total - a.total
+    (a, b) => Number([a.NFL,a.MLB,a.NBA,a.EPL,a.PGA].every(s=>s.rank===0))-Number([b.NFL,b.MLB,b.NBA,b.EPL,b.PGA].every(s=>s.rank===0)) || b.total - a.total
   );
 
   return standings;

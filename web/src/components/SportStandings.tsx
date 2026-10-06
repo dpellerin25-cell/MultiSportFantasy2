@@ -1,3 +1,4 @@
+import {currentLeague,missingOwners} from "@/lib/current-membership";
 import MainNavigation from "@/components/MainNavigation";
 import Link from "next/link";
 import {
@@ -34,7 +35,7 @@ export default function SportStandings({
   title,
   league,
 }: SportStandingsProps) {
-  const standings = scoreLeague(league).sort(
+  const standings = scoreLeague(currentLeague(league)).sort(
     (a, b) => a.rank - b.rank
   );
 
@@ -46,6 +47,7 @@ export default function SportStandings({
 
         <MainNavigation />
 
+        {missingOwners(league).length>0&&<p className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">Awaiting Fantrax standings for {missingOwners(league).join(", ")}. Scores use the new placement table but remain provisional until the full league is refreshed.</p>}
         {/* BACK LINK */}
 
         <Link
@@ -148,6 +150,7 @@ export default function SportStandings({
                   </tr>
                 );
               })}
+              {missingOwners(league).map(owner=><tr key={owner} className="border-t border-blue-100"><td className="p-4 text-center">—</td><td className="p-4 font-semibold">{owner}</td><td colSpan={5} className="p-4 text-sm text-slate-500">Awaiting Fantrax sync</td></tr>)}
             </tbody>
           </table>
         </div>

@@ -261,7 +261,7 @@ def league_settings(names):
     expected = [owner["name"] for owner in settings["owners"]]
     points = settings["placement_points"]
     if len(expected) < 2 or len(set(expected)) != len(expected) or sorted(names) != sorted(expected):
-        raise ValueError("Fantrax owners do not match approved league membership")
+        raise ValueError(f"Fantrax owners do not match approved league membership. Missing: {sorted(set(expected)-set(names))}; unexpected: {sorted(set(names)-set(expected))}. Use the approved owner names in every Fantrax league.")
     if len(points) != len(expected) or any(type(p) not in (int, float) or not math.isfinite(p) or p < 0 for p in points) or any(b >= a for a, b in zip(points, points[1:])):
         raise ValueError("Invalid approved placement points")
     return settings

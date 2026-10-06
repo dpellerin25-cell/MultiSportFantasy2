@@ -16,3 +16,10 @@ test('legacy nine-owner scoring retained; other sizes need explicit valid tables
  assert.throws(()=>scoreLeague({sport:'NFL',standings:rows(8),placement_points:[100]}),/approved placement/);
  assert.throws(()=>scoreLeague({sport:'NFL',standings:rows(8),placement_points:Array(8).fill(0)}),/approved placement/);
 });
+
+test('approved John expansion uses exact ten-owner placement rules',async()=>{
+ const {readFile}=await import('node:fs/promises');
+ const settings=JSON.parse(await readFile(new URL('../data/league-settings.json',import.meta.url),'utf8'));
+ assert.equal(settings.owners.length,10);assert.ok(settings.owners.some(o=>o.slug==='john'&&o.name==='John'));
+ assert.deepEqual(scoreLeague({sport:'NFL',standings:rows(10),placement_points:settings.placement_points}).map(r=>r.placementPoints),[100,82,68,56,45,35,26,18,10,0]);
+});
