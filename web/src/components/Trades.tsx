@@ -106,6 +106,19 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
   function completionNotice(o:Offer){
     return <div className="mt-4 rounded-lg border-l-4 border-emerald-500 bg-emerald-50 p-4 text-sm text-emerald-950"><p className="font-bold">Trade Complete</p><p className="mt-1 font-medium">{o.corrected_at?"The commissioner reversal is complete.":o.assets.some(a=>a.player_id)?"All player transfers have been confirmed by the Fantrax roster update.":"Draft pick ownership has been updated."}</p>{o.completed_at&&<p className="mt-2 text-xs">Completed {new Date(o.completed_at).toLocaleString()}</p>}</div>;
   }
+  function proposalCard(o:Offer){
+    if(!data)return null;
+    return <details key={o.id} className="rounded-lg border border-blue-100 p-4">
+        <summary className="cursor-pointer font-semibold"><span>{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</span><span className="ml-3 inline-block rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">{o.status==="proposed"?(Date.parse(o.expires_at)<=displayTime?"Expired":o.recipient_id===data.viewer_owner_id?"Received proposal":"Sent proposal"):o.status}</span></summary>
+        <ul className="mt-3 space-y-2 text-sm text-slate-700">{o.assets.map((a,i)=><li key={i}>{ownerName(o.corrected_at?a.to_owner_id:a.from_owner_id)} sends <strong>{assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"}</strong> to {ownerName(o.corrected_at?a.from_owner_id:a.to_owner_id)}</li>)}</ul>
+        <p className="mt-3 text-xs text-slate-500">Expires {new Date(o.expires_at).toLocaleString()}</p>
+        {canRespond(o,data.viewer_owner_id)&&<div className="mt-4 flex flex-wrap gap-2">
+          <button className={button} disabled={busy||uncertain} onClick={()=>{setDecision({offer:o,action:"accept"});setError("");}}>Accept</button>
+          <button className={secondary} disabled={busy||uncertain} onClick={()=>{setDecision({offer:o,action:"decline"});setError("");}}>Decline</button>
+          <button className={secondary} disabled={busy||uncertain} onClick={()=>beginCounter(o)}>Counter Offer</button>
+        </div>}
+      </details>;
+  }
   function column(ownerId:string){
     const local=rosters.find(o=>o.owner===ownerName(ownerId));
     const dbPlayers=assets.filter(a=>a.owner_id===ownerId&&a.kind==="player");
@@ -123,14 +136,14 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
     {data&&<div role="tablist" aria-label="Trades" className="mt-4 flex gap-1 overflow-x-auto border-b border-blue-200 pb-1">
       {[
         {id:"accepted",label:"League Pending Trades",count:acceptedTrades.length},
-        {id:"proposals",label:"Proposals",count:proposals.length+archived.length},
-        {id:"completed",label:"League Completed Trades",count:completed.length},
+        {id:"proposals",label:"Proposals",count:proposals.length},
+        {id:"completed",label:"League Completed Trades",count:null},
       ].map((tab,index,tabs)=><button key={tab.id} type="button" role="tab" id={`trade-tab-${tab.id}`} aria-controls={`trade-panel-${tab.id}`} aria-selected={tradeTab===tab.id} tabIndex={tradeTab===tab.id?0:-1}
         className={`min-h-11 shrink-0 rounded-t-lg border-b-2 px-4 py-3 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 ${tradeTab===tab.id?"border-blue-800 bg-blue-800 text-white":"border-transparent text-blue-800 hover:bg-blue-50"}`}
         onClick={()=>setTradeTab(tab.id)} onKeyDown={event=>{
           const next=event.key==="ArrowRight"?(index+1)%tabs.length:event.key==="ArrowLeft"?(index+tabs.length-1)%tabs.length:event.key==="Home"?0:event.key==="End"?tabs.length-1:null;
           if(next===null)return;event.preventDefault();setTradeTab(tabs[next].id);document.getElementById(`trade-tab-${tabs[next].id}`)?.focus();
-        }}>{tab.label} ({tab.count})</button>)}
+        }}>{tab.label}{tab.count!==null&&` (${tab.count})`}</button>)}
     </div>}
     {data&&<section role="tabpanel" id="trade-panel-accepted" aria-labelledby="trade-tab-accepted" hidden={tradeTab!=="accepted"} tabIndex={0} className="pt-4">
       <h3 className="sr-only">League Pending Trades</h3>
@@ -145,26 +158,21 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
     {data&&<section role="tabpanel" id="trade-panel-proposals" aria-labelledby="trade-tab-proposals" hidden={tradeTab!=="proposals"} tabIndex={0} className="pt-4">
       <h3 className="sr-only">Proposals</h3>
       <p className="mt-2 text-sm text-slate-600">Your active and closed proposals. Click a proposal to view its details. Only the owners involved can see these.</p>
-      <div className="mt-3 space-y-3">{[...proposals,...archived].map(o=><details key={o.id} className="rounded-lg border border-blue-100 p-4">
-        <summary className="cursor-pointer font-semibold"><span>{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</span><span className="ml-3 inline-block rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">{o.status==="proposed"?(Date.parse(o.expires_at)<=displayTime?"Expired":o.recipient_id===data.viewer_owner_id?"Received proposal":"Sent proposal"):o.status}</span></summary>
-        <ul className="mt-3 space-y-2 text-sm text-slate-700">{o.assets.map((a,i)=><li key={i}>{ownerName(o.corrected_at?a.to_owner_id:a.from_owner_id)} sends <strong>{assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"}</strong> to {ownerName(o.corrected_at?a.from_owner_id:a.to_owner_id)}</li>)}</ul>
-        <p className="mt-3 text-xs text-slate-500">Expires {new Date(o.expires_at).toLocaleString()}</p>
-        {canRespond(o,data.viewer_owner_id)&&<div className="mt-4 flex flex-wrap gap-2">
-          <button className={button} disabled={busy||uncertain} onClick={()=>{setDecision({offer:o,action:"accept"});setError("");}}>Accept</button>
-          <button className={secondary} disabled={busy||uncertain} onClick={()=>{setDecision({offer:o,action:"decline"});setError("");}}>Decline</button>
-          <button className={secondary} disabled={busy||uncertain} onClick={()=>beginCounter(o)}>Counter Offer</button>
-        </div>}
-      </details>)}{proposals.length+archived.length===0&&<p className="text-sm text-slate-600">No proposals yet.</p>}</div>
+      <div className="mt-3 space-y-3">{proposals.map(proposalCard)}{proposals.length===0&&<p className="text-sm text-slate-600">No active proposals.</p>}</div>
+      <details className="mt-4 rounded-lg border border-blue-100 p-4">
+        <summary className="cursor-pointer font-semibold text-blue-800">Archive</summary>
+        <div className="mt-3 space-y-3">{archived.map(proposalCard)}{archived.length===0&&<p className="text-sm text-slate-600">No archived proposals.</p>}</div>
+      </details>
     </section>}
     {data&&<section role="tabpanel" id="trade-panel-completed" aria-labelledby="trade-tab-completed" hidden={tradeTab!=="completed"} tabIndex={0} className="pt-4">
       <h3 className="sr-only">League Completed Trades</h3>
       <p className="mt-2 text-sm text-slate-600">Completed pick-only trades appear here after 48 hours; trades involving players appear here 24 hours after completion.</p>
-      <div className="mt-3 space-y-3">{completed.map(o=><article key={o.id} className="rounded-lg border border-blue-100 p-4">
-        <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-semibold">{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</p><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold capitalize text-slate-600">{o.corrected_at?"Reversed · Completed":o.status==="proposed"?"Expired":o.status}</span></div>
+      <div className="mt-3 space-y-3">{completed.map(o=><details key={o.id} className="rounded-lg border border-blue-100 p-4">
+        <summary className="cursor-pointer font-semibold text-blue-900">{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</summary>
         <ul className="mt-3 space-y-2 text-sm text-slate-700">{o.assets.map((a,i)=><li key={i}>{ownerName(a.from_owner_id)} → {ownerName(a.to_owner_id)}: <strong>{assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"}</strong></li>)}</ul>
         {completionNotice(o)}
         {o.corrected_at&&<p className="mt-3 text-sm text-slate-600">The original agreement shown above was reversed by the commissioner.</p>}
-      </article>)}{completed.length===0&&<p className="text-sm text-slate-600">No completed league trades yet.</p>}</div>
+      </details>)}{completed.length===0&&<p className="text-sm text-slate-600">No completed league trades yet.</p>}</div>
     </section>}
 </section>
     {children}
