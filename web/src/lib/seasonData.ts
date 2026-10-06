@@ -1,3 +1,4 @@
+import {currentLeague} from "./current-membership";
 import fs from "fs";
 import path from "path";
 
@@ -104,5 +105,5 @@ export function getSeasonLeagueData(
     return getArchivedData(year, sport);
   }
 
-  return liveData[sport];
+  return currentLeague(liveData[sport]);
 }

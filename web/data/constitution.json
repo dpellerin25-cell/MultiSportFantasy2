@@ -371,7 +371,7 @@
       },
       {
         "kind": "paragraph",
-        "text": "For a nine-team league, placement points are below, this will be adjusted based on final league numbers."
+        "text": "The ten-team league awards the following placement points in each sport. Total sport points equal placement points plus the dominance adjustment."
       },
       {
         "kind": "table",
@@ -386,34 +386,38 @@
           ],
           [
             "2nd",
-            "80"
+            "82"
           ],
           [
             "3rd",
-            "65"
+            "68"
           ],
           [
             "4th",
-            "52"
+            "56"
           ],
           [
             "5th",
-            "40"
+            "45"
           ],
           [
             "6th",
-            "30"
+            "35"
           ],
           [
             "7th",
-            "20"
+            "26"
           ],
           [
             "8th",
-            "10"
+            "18"
           ],
           [
             "9th",
+            "10"
+          ],
+          [
+            "10th",
             "0"
           ]
         ]
@@ -432,7 +436,7 @@
       },
       {
         "kind": "paragraph",
-        "text": "A ninth-place team finishing 1.7 standard deviations below average earns:"
+        "text": "A tenth-place team finishing 1.7 standard deviations below average earns:"
       },
       {
         "kind": "equation",

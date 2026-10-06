@@ -1,3 +1,4 @@
+import {missingOwners} from "@/lib/current-membership";
 import MainNavigation from "@/components/MainNavigation";
 import Link from "next/link";
 
@@ -229,6 +230,7 @@ export default async function Home({
         </div>
 
 
+        {selectedYear===CURRENT_SEASON&&currentSeason?.sports.some(s=>s.status!=="final"&&missingOwners(getSeasonLeagueData(selectedYear,s.sport)).length>0)&&<p className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">League membership and placement points have been updated. Awaiting complete Fantrax standings; scores are provisional and missing results are shown as a dash.</p>}
         <div className="overflow-x-auto rounded-xl border border-blue-100 bg-white shadow-sm">
           <table className="w-full min-w-[850px] border-collapse">
             <thead>
@@ -275,7 +277,7 @@ export default async function Home({
                     className="border-b border-blue-100 last:border-b-0 hover:bg-blue-50/50"
                   >
                     <td className="p-4 text-center text-lg font-bold text-slate-900">
-                      {index + 1}
+                      {[team.NFL,team.MLB,team.NBA,team.EPL,team.PGA].every(s=>s.rank===0)?"—":index + 1}
                     </td>
 
                     <td className="p-4 font-semibold text-slate-900">
@@ -294,7 +296,7 @@ export default async function Home({
                     <SportCell result={team.PGA} />
 
                     <td className="border-l-2 border-blue-200 bg-blue-100 p-4 text-center text-lg font-extrabold tabular-nums text-blue-950">
-                      {team.total.toFixed(1)}
+                      {[team.NFL,team.MLB,team.NBA,team.EPL,team.PGA].every(s=>s.rank===0)?"—":team.total.toFixed(1)}
                     </td>
                   </tr>
                 )
