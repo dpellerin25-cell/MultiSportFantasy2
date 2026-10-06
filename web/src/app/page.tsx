@@ -1,3 +1,4 @@
+import OwnerIdentity from "@/components/OwnerIdentity";
 import MainNavigation from "@/components/MainNavigation";
 import Link from "next/link";
 
@@ -43,7 +44,7 @@ function SportCell({
           className="min-w-20 rounded-lg px-3 py-2 font-bold text-slate-900 transition hover:bg-blue-50 focus:bg-blue-50 focus:outline-none"
         >
           <span className="block">
-            {result.rank === 0 ? "—" : result.sportScore.toFixed(1)}
+            {result.rank === 0 ? "â€”" : result.sportScore.toFixed(1)}
           </span>
           {result.rank > 0 && (
             <span className="mt-1 block text-xs font-normal text-slate-500">
@@ -169,7 +170,7 @@ export default async function Home({
 
         <MainNavigation />
 
-        <div className="mb-6">
+        <div className="mb-5 rounded-2xl border border-blue-100 bg-white p-5 sm:p-6">
           <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl">
             Pentagon Cup
           </h1>
@@ -177,18 +178,16 @@ export default async function Home({
           <p className="mt-2 text-sm text-slate-700 sm:text-base">
             Overall standings across all five sports
           </p>
+
+
+          {currentSeason && (
+            <>
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-blue-100 pt-4">
+                <SeasonSelector seasons={seasons} selectedYear={selectedYear} />
           <p className="mt-2 text-sm text-slate-600">
             Standings last updated: {lastUpdated ? <time dateTime={lastUpdated.toISOString()}>{lastUpdated.toLocaleString("en-US", {timeZone: "America/New_York", dateStyle: "medium", timeStyle: "short"})} Eastern</time> : "Not yet available"}.
             {selectedYear === CURRENT_SEASON && " Scheduled updates: Tuesdays at 4 a.m. Eastern. Rosters update daily."}
           </p>
-
-          {currentSeason && (
-            <>
-              <div className="mt-4">
-                <SeasonSelector
-                  seasons={seasons}
-                  selectedYear={selectedYear}
-                />
               </div>
 
               <div className="mt-4 flex flex-wrap gap-2">
@@ -219,18 +218,9 @@ export default async function Home({
           )}
         </div>
 
-        <div className="mb-6">
-          <Link
-            href="/scoring"
-            className="font-bold text-blue-700 hover:text-blue-900 hover:underline"
-          >
-            View League Constitution
-          </Link>
-        </div>
-
-
         <div className="overflow-x-auto rounded-xl border border-blue-100 bg-white shadow-sm">
-          <table className="w-full min-w-[850px] border-collapse">
+          <table className="w-full min-w-[850px] border-collapse tabular-nums">
+            <caption className="border-b border-blue-100 bg-white p-5 text-left text-lg font-bold text-blue-950">Pentagon Cup Standings<span className="mt-1 block text-xs font-normal text-slate-500">Select an owner to view their team. Select a sport score for its breakdown.</span></caption>
             <thead>
               <tr className="border-b border-blue-100 bg-blue-50">
                 <th className="p-4 text-center font-bold text-slate-900">
@@ -272,10 +262,10 @@ export default async function Home({
                 (team, index) => (
                   <tr
                     key={team.owner}
-                    className="border-b border-blue-100 last:border-b-0 hover:bg-blue-50/50"
+                    className="border-b border-blue-100 even:bg-slate-50/50 last:border-b-0 hover:bg-blue-50/70"
                   >
                     <td className="p-4 text-center text-lg font-bold text-slate-900">
-                      {index + 1}
+                      <span className={`inline-flex h-8 w-8 items-center justify-center rounded-full text-sm ${index===0?"bg-amber-100 text-amber-900":"bg-slate-100 text-slate-600"}`}>{index + 1}</span>
                     </td>
 
                     <td className="p-4 font-semibold text-slate-900">
@@ -283,7 +273,7 @@ export default async function Home({
                         href={`/teams/${encodeURIComponent(team.owner)}?season=${selectedYear}`}
                         className="inline-flex min-h-11 items-center rounded text-blue-800 underline decoration-blue-200 underline-offset-4 transition hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-700"
                       >
-                        {team.owner}
+                        <OwnerIdentity name={team.owner} />
                       </Link>
                     </td>
 
@@ -293,7 +283,7 @@ export default async function Home({
                     <SportCell result={team.EPL} />
                     <SportCell result={team.PGA} />
 
-                    <td className="border-l-2 border-blue-200 bg-blue-100 p-4 text-center text-lg font-extrabold tabular-nums text-blue-950">
+                    <td className="border-l-2 border-blue-200 bg-blue-100 p-4 text-center text-base font-extrabold tabular-nums text-blue-950">
                       {team.total.toFixed(1)}
                     </td>
                   </tr>
@@ -302,6 +292,16 @@ export default async function Home({
             </tbody>
           </table>
         </div>
+        <div className="mb-6">
+          <Link
+            href="/scoring"
+            className="font-bold text-blue-700 hover:text-blue-900 hover:underline"
+          >
+            View League Constitution
+          </Link>
+        </div>
+
+
       </div>
     </main>
   );
