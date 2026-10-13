@@ -41,3 +41,37 @@ secret query values before sharing. Do not capture or execute a renewal action.
 
 Offline tests:
 python -m unittest discover -s scripts -p test_diagnose_league_renewal.py
+
+## Connection discovery preview (next step)
+
+New files: scripts/preview_fantrax_connections.py,
+scripts/fantrax-renewal-preview.json, scripts/test_preview_fantrax_connections.py.
+This configuration is ONLY for preview; production connections remain unchanged.
+The duplicate PGA league xtv5ph2gmulolm8g is excluded by ID before metadata
+requests or candidate matching. It is never selected or deleted.
+
+After transferring the files to Codespaces:
+
+```bash
+cd /workspaces/MultiSportFantasy2
+read -rsp 'Fantrax User Secret ID: ' FANTRAX_USER_SECRET_ID
+printf '\n'
+export FANTRAX_USER_SECRET_ID
+python scripts/preview_fantrax_connections.py > /tmp/fantrax-connections-preview.json
+unset FANTRAX_USER_SECRET_ID
+cat /tmp/fantrax-connections-preview.json
+```
+
+MLB is pinned to the shared history ID observed in the live diagnostic and targets
+2027. PGA targets 2027 but its history is read from the existing approved PGA ID.
+NFL, NBA and EPL intentionally have no target seasonYear yet: their cross-year
+labels do not prove Fantrax's numeric season convention. Their metadata will be
+shown for review, but no new connection proposed until the target is confirmed.
+No match, multiple matches, unreadable candidate metadata, mismatched sport or
+changed pinned history blocks a proposal. A match is a candidate for review,
+not a database migration or proof that all roster/settings checks have passed.
+No credential-bearing errors, league names or private team data are printed.
+
+Send the resulting preview for review. Hosted connection activation, archived
+standings, player identity migration and pending-trade continuity must be handled
+in a later step. No web interface or automatic connection switching is included.
