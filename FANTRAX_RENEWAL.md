@@ -75,3 +75,17 @@ No credential-bearing errors, league names or private team data are printed.
 Send the resulting preview for review. Hosted connection activation, archived
 standings, player identity migration and pending-trade continuity must be handled
 in a later step. No web interface or automatic connection switching is included.
+
+### Detailed metadata diagnostics
+
+Re-run the same preview command after updating the script. Each current league
+now has `current_metadata_diagnostic`; rejected candidates have
+`candidate_diagnostics`. These distinguish missing/null history IDs, invalid
+history format, season value types, API error fields, HTTP failures, invalid JSON,
+timeouts and network/TLS failures. Numeric and cross-year season strings are
+reported for review but are not coerced into accepted seasons. Arbitrary response
+values and exception messages are omitted to protect credentials. A missing
+history ID never enables switching.
+
+Offline verification:
+`python -B -m unittest discover -s scripts -p test_preview_fantrax_connections.py`
