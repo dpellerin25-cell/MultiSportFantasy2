@@ -1,7 +1,7 @@
 "use client";
 import {createContext,useContext,useEffect,useRef,useState,type ReactNode} from "react";
 import {createClient,type SupabaseClient,type Session} from "@supabase/supabase-js";
-import {proposal,tradeAssets,tradeWarnings,activeOffers,archivedOffers,leagueCompletedTrades,completedTradeHours,canRespond,offerResponse,counterSelection,counterProposal,type Offer,type TradeCommand,type TradeAsset,type TradeRoster} from "@/lib/trade-model";
+import {canCorrect,correctionCommand,proposal,tradeAssets,tradeWarnings,activeOffers,archivedOffers,leagueCompletedTrades,completedTradeHours,canRespond,offerResponse,counterSelection,counterProposal,type Offer,type TradeCommand,type TradeAsset,type TradeRoster} from "@/lib/trade-model";
 
 type LocalRoster={owner:string;sports:{sport:string;league_id?:string;players:{player_id:string|null;name:string|null;position:string|null;pro_team:string|null}[]}[]};
 const button="min-h-11 rounded-lg bg-blue-800 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-900 disabled:cursor-not-allowed disabled:opacity-40";
@@ -41,12 +41,14 @@ export function Trades({children,rosters}:{children:ReactNode;rosters:LocalRoste
 }
 function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters:LocalRoster[];children:ReactNode}){
   const [data,setData]=useState<TradeRoster|null>(null),[offers,setOffers]=useState<Offer[]>([]),[recipient,setRecipient]=useState<string|null>(null),[selection,setSelection]=useState<TradeAsset[]>([]),[review,setReview]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState(""),[notice,setNotice]=useState("");
+  const [commissioner,setCommissioner]=useState(false),[correctionReason,setCorrectionReason]=useState("");
+  useEffect(()=>{let active=true;void Promise.resolve(client.rpc("league_settings_state")).then(({error,data})=>{if(active)setCommissioner(!error&&!!data);}).catch(()=>{if(active)setCommissioner(false);});return()=>{active=false;};},[client]);
   const [tradeTab,setTradeTab]=useState("accepted");
   const [displayTime,setDisplayTime]=useState(()=>Date.now());
   useEffect(()=>{const tick=()=>setDisplayTime(Date.now());const timer=setInterval(tick,1000);window.addEventListener("focus",tick);return()=>{clearInterval(timer);window.removeEventListener("focus",tick);};},[]);
   const loadVersion=useRef(0);
   const sending=useRef(false),pending=useRef<TradeCommand|null>(null),responsePending=useRef<TradeCommand|null>(null),[uncertain,setUncertain]=useState(false);
-  const [counter,setCounter]=useState<Offer|null>(null),[decision,setDecision]=useState<{offer:Offer;action:"accept"|"decline"}|null>(null);
+  const [counter,setCounter]=useState<Offer|null>(null),[decision,setDecision]=useState<{offer:Offer;action:"accept"|"decline"|"correct"}|null>(null);
   useEffect(()=>{
     let active=true,inFlight=false;
     const load=async()=>{if(inFlight||sending.current||pending.current||responsePending.current)return;inFlight=true;const version=++loadVersion.current;try{const [r,l]=await Promise.all([client.rpc("trade_rosters"),client.rpc("trade_list")]);if(!active||sending.current||version!==loadVersion.current)return;if(r.error||l.error){setError("Could not load trade data. The list will retry automatically.");return;}setData(r.data);setOffers(l.data);}catch{if(active)setError("Could not connect to trades. Please refresh.");}finally{inFlight=false;}};
@@ -84,14 +86,14 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
     if(!data||!decision||sending.current)return;
     sending.current=true;++loadVersion.current;setBusy(true);setError("");
     try{
-      responsePending.current??=offerResponse(decision.offer,data.viewer_owner_id,decision.action,crypto.randomUUID());
+      responsePending.current??=decision.action==="correct"?correctionCommand(decision.offer,commissioner,correctionReason,crypto.randomUUID()):offerResponse(decision.offer,data.viewer_owner_id,decision.action,crypto.randomUUID());
       const {data:result,error}=await client.rpc("trade_command",responsePending.current);
-      if(error){const definite=["P0001","23505","42501","22P02"].includes(error.code);setUncertain(!definite);if(definite)responsePending.current=null;setError(definite?"The offer changed or is no longer available. Close this dialog and refresh trades.":"The result is unconfirmed. Retry this action to check the same request safely.");return;}
+      if(error){const definite=["P0001","23505","42501","22P02"].includes(error.code);setUncertain(!definite);if(definite)responsePending.current=null;setError(definite?(decision.action==="correct"?"The reversal was blocked. The trade may already be reversed, an asset may have moved again, or commissioner access may have changed. Close this dialog and review the latest trade.":"The offer changed or is no longer available. Close this dialog and wait for the latest trade data."):"The result is unconfirmed. Retry this action to check the same request safely.");return;}
       if(!result?.trade_id)throw new Error("Unconfirmed response");
       window.dispatchEvent(new Event("rookie-picks-changed"));
       setOffers(old=>old.map(o=>o.id===result.trade_id?{...o,status:result.status,revision:result.revision}:o));
-      setNotice(decision.action==="decline"?"Offer declined and archived.":result.status==="completed"?"Trade Complete. Picks transferred; this trade remains in League Pending Trades for 48 hours.":"Trade accepted. Picks transferred; the agreement remains visible until Fantrax confirms every player move.");
-      setTradeTab(decision.action==="accept"?"accepted":"proposals");
+      setNotice(decision.action==="correct"?"Trade reversal saved. Picks were returned immediately; any player moves must be reversed in Fantrax and confirmed by a fresh roster import.":decision.action==="decline"?"Offer declined and archived.":result.status==="completed"?"Trade Complete. Picks transferred; this trade remains in League Pending Trades for 48 hours.":"Trade accepted. Picks transferred; the agreement remains visible until Fantrax confirms every player move.");
+      setTradeTab(decision.action!=="decline"?"accepted":"proposals");
       setDecision(null);responsePending.current=null;setUncertain(false);
       void refresh().catch(()=>setError("Saved successfully, but the list could not refresh. The list will retry automatically."));
     }catch(e){setUncertain(Boolean(responsePending.current));setError(responsePending.current?"The result is unconfirmed. Retry this action safely.":e instanceof Error?e.message:"Could not respond.");}
@@ -103,6 +105,10 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
   const acceptedTrades=visibleOffers.filter(o=>o.status==="accepted"||o.status==="completed");
   const archived=data?archivedOffers(offers,data.viewer_owner_id,displayTime):[];
   const completed=leagueCompletedTrades(offers,displayTime);
+  function correctionControl(o:Offer){
+    if(!canCorrect(o,commissioner))return null;
+    return <button className={`${secondary} mt-4`} disabled={busy||uncertain} onClick={()=>{setCorrectionReason("");setDecision({offer:o,action:"correct"});setError("");}}>Commissioner: Reverse Trade</button>;
+  }
   function completionNotice(o:Offer){
     return <div className="mt-4 rounded-lg border-l-4 border-emerald-500 bg-emerald-50 p-4 text-sm text-emerald-950"><p className="font-bold">Trade Complete</p><p className="mt-1 font-medium">{o.corrected_at?"The commissioner reversal is complete.":o.assets.some(a=>a.player_id)?"All player transfers have been confirmed by the Fantrax roster update.":"Draft pick ownership has been updated."}</p>{o.completed_at&&<p className="mt-2 text-xs">Completed {new Date(o.completed_at).toLocaleString()}</p>}</div>;
   }
@@ -153,6 +159,7 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
         <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-semibold">{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</p><span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">{o.status==="completed"?"Trade Complete":o.status==="accepted"?(o.corrected_at?"Reversal awaiting Fantrax":"Accepted · Awaiting Fantrax"):o.recipient_id===data.viewer_owner_id?"Received proposal":"Sent proposal"}</span></div>
         <ul className="mt-3 space-y-2 text-sm text-slate-700">{o.assets.map((a,i)=><li key={i}>{ownerName(o.corrected_at?a.to_owner_id:a.from_owner_id)} sends <strong>{assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"}</strong> to {ownerName(o.corrected_at?a.from_owner_id:a.to_owner_id)}</li>)}</ul>
         {o.status==="completed"?<>{completionNotice(o)}<p className="mt-2 text-xs text-slate-600">Visible here for {completedTradeHours(o)} hours after completion, then in League Completed Trades.</p></>:<div className="mt-4 rounded-lg border-l-4 border-amber-500 bg-amber-50 p-4 text-sm text-amber-950"><p className="font-bold">Fantrax action required</p><p className="mt-1 font-medium">Move the listed players on Fantrax. After a roster import confirms all player transfers, this trade will show as complete here for 24 hours before moving to League Completed Trades.</p></div>}
+        {correctionControl(o)}
       </article>)}</div>
     </section>}
     {data&&<section role="tabpanel" id="trade-panel-proposals" aria-labelledby="trade-tab-proposals" hidden={tradeTab!=="proposals"} tabIndex={0} className="pt-4">
@@ -171,17 +178,19 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
         <summary className="cursor-pointer font-semibold text-blue-900">{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</summary>
         <ul className="mt-3 space-y-2 text-sm text-slate-700">{o.assets.map((a,i)=><li key={i}>{ownerName(a.from_owner_id)} → {ownerName(a.to_owner_id)}: <strong>{assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"}</strong></li>)}</ul>
         {completionNotice(o)}
+        {correctionControl(o)}
         {o.corrected_at&&<p className="mt-3 text-sm text-slate-600">The original agreement shown above was reversed by the commissioner.</p>}
       </details>)}{completed.length===0&&<p className="text-sm text-slate-600">No completed league trades yet.</p>}</div>
     </section>}
 </section>
     {children}
-    {decision&&data&&<Modal title={decision.action==="accept"?"Accept trade offer":"Decline trade offer"} locked={busy||uncertain} onClose={()=>{if(!busy&&!uncertain){setDecision(null);responsePending.current=null;setError("");}}}>
-      <h2 className="text-2xl font-bold">{decision.action==="accept"?"Accept trade offer?":"Decline trade offer?"}</h2>
-      <ul className="my-4 space-y-2">{decision.offer.assets.map((a,i)=><li key={i}>{ownerName(a.from_owner_id)} sends {assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"} to {ownerName(a.to_owner_id)}</li>)}</ul>
-      <p className="mb-4 text-sm text-slate-600">{decision.action==="accept"?"Acceptance finalizes the agreement immediately. Picks move now. Players must be moved on Fantrax; the trade stays visible until those moves are confirmed. Pick-only trades complete immediately and stay in League Pending Trades for 48 hours. Player trades stay there for 24 hours after Fantrax confirmation.":"Declining closes and archives this proposal. No players or picks will move."}</p>
+    {decision&&data&&<Modal title={decision.action==="correct"?"Reverse trade":decision.action==="accept"?"Accept trade offer":"Decline trade offer"} locked={busy||uncertain} onClose={()=>{if(!busy&&!uncertain){setDecision(null);responsePending.current=null;setError("");}}}>
+      <h2 className="text-2xl font-bold">{decision.action==="correct"?"Reverse this trade?":decision.action==="accept"?"Accept trade offer?":"Decline trade offer?"}</h2>
+      <ul className="my-4 space-y-2">{decision.offer.assets.map((a,i)=><li key={i}>{ownerName(decision.action==="correct"?a.to_owner_id:a.from_owner_id)} sends {assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"} to {ownerName(decision.action==="correct"?a.from_owner_id:a.to_owner_id)}</li>)}</ul>
+      <p className="mb-4 text-sm text-slate-600">{decision.action==="correct"?"This reverses the entire agreement once; it does not edit individual assets. Picks return immediately. Move players back manually in Fantrax; a fresh roster import confirms completion. If an asset moved again, the database may block reversal. Your reason is recorded in the audit history.":decision.action==="accept"?"Acceptance finalizes the agreement immediately. Picks move now. Players must be moved on Fantrax; the trade stays visible until those moves are confirmed. Pick-only trades complete immediately and stay in League Pending Trades for 48 hours. Player trades stay there for 24 hours after Fantrax confirmation.":"Declining closes and archives this proposal. No players or picks will move."}</p>
+      {decision.action==="correct"&&<label className="mb-4 block text-sm font-semibold">Reason for correction<textarea className="mt-2 block min-h-24 w-full rounded-lg border border-blue-200 bg-white p-3" maxLength={2000} required disabled={busy||uncertain} value={correctionReason} onChange={e=>setCorrectionReason(e.target.value)}/></label>}
       {error&&<p role="alert" className="mb-4 text-red-800">{error}</p>}
-      <div className="flex flex-wrap gap-3"><button className={button} disabled={busy} onClick={()=>void respond()}>{busy?"Saving…":decision.action==="accept"?"Confirm Acceptance":"Confirm Decline"}</button><button className={secondary} disabled={busy||uncertain} onClick={()=>{setDecision(null);responsePending.current=null;setError("");}}>Keep Reviewing</button></div>
+      <div className="flex flex-wrap gap-3"><button className={button} disabled={busy||(decision.action==="correct"&&!correctionReason.trim())} onClick={()=>void respond()}>{busy?"Saving…":decision.action==="correct"?"Confirm Trade Reversal":decision.action==="accept"?"Confirm Acceptance":"Confirm Decline"}</button><button className={secondary} disabled={busy||uncertain} onClick={()=>{setDecision(null);responsePending.current=null;setError("");}}>Keep Reviewing</button></div>
     </Modal>}
     {recipient&&data&&<Modal title="Propose a trade" onClose={close} locked={busy||uncertain}><div className="mb-4 flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-2xl font-bold">{counter?"Counter offer":"Propose a trade"}</h2><p className="text-sm text-slate-600">{counter?"Adjust the original offer. It stays open until you send this counteroffer.":"Choose players and picks from either roster."}</p></div><button className={secondary} disabled={busy||uncertain} onClick={close}>Cancel Trade Offer</button></div>
       {!data.owners.find(o=>o.id===recipient)?.can_receive&&<p role="alert" className="mb-3 rounded-lg bg-amber-50 p-3">This owner needs a linked account before they can receive offers.</p>}

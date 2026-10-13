@@ -49,7 +49,7 @@ export function counterProposal(data:TradeRoster,offer:Offer,selected:TradeAsset
 }
 export function tradeAssets(data:TradeRoster):TradeAsset[]{
   return [...data.players.map(p=>({key:`player:${p.id}`,id:p.id,kind:"player" as const,owner_id:p.owner_id,label:p.name,sport:p.sport,unavailable:p.reserved?"Awaiting Fantrax transfer":undefined})),
-    ...data.picks.map(p=>({key:`pick:${p.id}`,id:p.id,kind:"pick" as const,owner_id:p.owner_id,label:`${p.year} · Round ${p.round} · ${data.owners.find(o=>o.id===p.original_owner_id)?.name ?? "Original owner"}'s pick`}))];
+    ...data.picks.map(p=>({key:`pick:${p.id}`,id:p.id,kind:"pick" as const,owner_id:p.owner_id,label:`${p.year} Â· Round ${p.round} Â· ${data.owners.find(o=>o.id===p.original_owner_id)?.name ?? "Original owner"}'s pick`}))];
 }
 export function proposal(data:TradeRoster,recipient:string,selected:TradeAsset[],requestId:string){
   if(!data.ledger_ready)throw new Error("Trade picks have not been set up yet.");
@@ -65,4 +65,14 @@ export function tradeWarnings(data:TradeRoster,recipient:string,selected:TradeAs
     const count=data.players.filter(p=>p.owner_id===owner).length-selected.filter(a=>a.kind==="player"&&a.owner_id===owner).length+selected.filter(a=>a.kind==="player"&&a.owner_id!==owner).length;
     return count>65?[`${data.owners.find(o=>o.id===owner)?.name}: roster would have ${count} players (65-player limit).`]:[];
   });
+}
+
+export function canCorrect(offer:Offer,commissioner:boolean){
+  return commissioner&&!offer.corrected_at&&['accepted','completed'].includes(offer.status);
+}
+export function correctionCommand(offer:Offer,commissioner:boolean,reason:string,requestId:string):TradeCommand{
+  if(!canCorrect(offer,commissioner))throw new Error("Only a commissioner can reverse an uncorrected accepted trade.");
+  const explanation=reason.trim();
+  if(!explanation||explanation.length>2000)throw new Error("Enter a correction reason (1–2000 characters).");
+  return {request_id:requestId,action:'correct',args:{trade_id:offer.id,revision:offer.revision,reason:explanation}};
 }

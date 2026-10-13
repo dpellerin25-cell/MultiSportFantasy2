@@ -255,12 +255,15 @@ def parse_standings_table(table):
 # WRITE ONE SPORT'S STANDINGS TO JSON
 # ---------------------------------------------------------
 
-def league_settings(names):
+def league_settings(names, *, allow_missing_john=False):
     with open("web/data/league-settings.json", encoding="utf-8") as file:
         settings = json.load(file)
     expected = [owner["name"] for owner in settings["owners"]]
     points = settings["placement_points"]
-    if len(expected) < 2 or len(set(expected)) != len(expected) or sorted(names) != sorted(expected):
+    missing = set(expected) - set(names)
+    unexpected = set(names) - set(expected)
+    allowed_missing = {"John"} if allow_missing_john else set()
+    if len(expected) < 2 or len(set(expected)) != len(expected) or len(set(names)) != len(names) or unexpected or missing - allowed_missing:
         raise ValueError(f"Fantrax owners do not match approved league membership. Missing: {sorted(set(expected)-set(names))}; unexpected: {sorted(set(names)-set(expected))}. Use the approved owner names in every Fantrax league.")
     if len(points) != len(expected) or any(type(p) not in (int, float) or not math.isfinite(p) or p < 0 for p in points) or any(b >= a for a, b in zip(points, points[1:])):
         raise ValueError("Invalid approved placement points")
@@ -281,7 +284,10 @@ def save_league_json(
         )
 
     standings = parse_standings_table(table)
-    settings = league_settings([row["team"] for row in standings])
+    settings = league_settings([row["team"] for row in standings], allow_missing_john=True)
+    missing_owners = sorted(set(owner["name"] for owner in settings["owners"]) - set(row["team"] for row in standings))
+    if missing_owners:
+        print(f"NOTICE: {sport}: no standings for {', '.join(missing_owners)}; displaying blank results.")
     team_info = extract_team_info(standings_data)
 
     league_heading = (
@@ -298,6 +304,7 @@ def save_league_json(
             timezone.utc
         ).isoformat(),
         "team_count": len(standings),
+        "missing_owners": missing_owners,
         "teams": team_info,
         "placement_points": settings["placement_points"],
         "championship_year": settings["championship_year"],

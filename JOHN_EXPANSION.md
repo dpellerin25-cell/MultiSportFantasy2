@@ -3,7 +3,7 @@
 Current website membership includes John and placement points are
 100, 82, 68, 56, 45, 35, 26, 18, 10, 0.
 Existing saved Fantrax files still contain nine teams. Missing results are not
-fabricated; the website marks scores provisional until refreshed. Historical
+fabricated; the website leaves absent owners blank. Historical
 archives keep their original rules and results.
 
 1. In each of the five Fantrax leagues, John's team display name must be `John`.
@@ -25,5 +25,7 @@ archives keep their original rules and results.
    order. Existing historical draft slots are not changed.
 
 No remote settings, Fantrax teams, accounts, or saved results were modified by
-this local implementation. The importer intentionally rejects a missing or
-mismatched owner instead of importing an incomplete league.
+this local implementation. The standings importer allows John alone to be absent, records missing_owners,
+and leaves his results blank. Unknown/duplicate owners and other missing owners
+still fail validation. Roster imports remain strict to protect trade ownership
+and completion checks. A missing John does not enter the dominance calculation.

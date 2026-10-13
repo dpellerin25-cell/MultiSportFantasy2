@@ -26,6 +26,7 @@ function SportCell({
 }: {
   result: SportResult;
 }) {
+  if(result.rank===0)return <td className="p-3 text-center text-slate-500" aria-label="No result available">—</td>;
   const dominance =
     result.dominanceScore >= 0
       ? `+${result.dominanceScore.toFixed(1)}`
@@ -230,7 +231,7 @@ export default async function Home({
         </div>
 
 
-        {selectedYear===CURRENT_SEASON&&currentSeason?.sports.some(s=>s.status!=="final"&&missingOwners(getSeasonLeagueData(selectedYear,s.sport)).length>0)&&<p className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">League membership and placement points have been updated. Awaiting complete Fantrax standings; scores are provisional and missing results are shown as a dash.</p>}
+        {selectedYear===CURRENT_SEASON&&currentSeason?.sports.some(s=>s.status!=="final"&&missingOwners(getSeasonLeagueData(selectedYear,s.sport)).length>0)&&<p className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">Owners absent from a sport’s Fantrax standings are shown as a dash and earn no points for that sport. Dominance uses only the teams reported by Fantrax.</p>}
         <div className="overflow-x-auto rounded-xl border border-blue-100 bg-white shadow-sm">
           <table className="w-full min-w-[850px] border-collapse">
             <thead>
