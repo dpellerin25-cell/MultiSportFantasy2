@@ -1,6 +1,6 @@
 import copy
 import unittest
-from preview_fantrax_connections import discover
+from preview_fantrax_connections import discover, ReadFailure
 OLD='60ri2nbhmtj4b0km'
 NEW='rk8bvnk3mulovx9a'
 EXCLUDED='xtv5ph2gmulolm8g'
@@ -53,6 +53,47 @@ class PreviewTests(unittest.TestCase):
         self.assertEqual(self.result()['status'],'blocked')
         self.rows[0]['sport']='MLB'
         self.config['sports']['MLB']['league_history_id']='abcdefghijklmnop'
-        self.assertEqual(self.result()['status'],'blocked')
+        self.assertIn('differs',self.result()['reason'])
+
+    def test_missing_history_preserves_observed_season(self):
+        self.info[OLD]={'seasonYear':2026}
+        result=self.result()
+        fields=result['current_metadata_diagnostic']['fields']
+        self.assertEqual(fields['leagueHistoryId']['state'],'missing')
+        self.assertEqual(fields['seasonYear']['observed_value'],2026)
+        self.assertIsNone(result['proposed_league_id'])
+
+    def test_null_and_cross_year_are_reported_without_coercion(self):
+        self.info[OLD]={'leagueHistoryId':None,'seasonYear':'2026-27'}
+        result=self.result()
+        fields=result['current_metadata_diagnostic']['fields']
+        self.assertEqual(fields['leagueHistoryId']['state'],'null')
+        self.assertEqual(fields['seasonYear']['observed_value'],'2026-27')
+        self.assertFalse(fields['seasonYear']['valid'])
+        self.assertEqual(result['status'],'blocked')
+
+    def test_private_values_and_api_error_text_are_not_printed(self):
+        self.info[OLD]={'leagueHistoryId':'private-secret','seasonYear':'private-secret',
+                        'pageError':{'text':'private-secret'},'private-secret':'private-secret'}
+        result=self.result()
+        self.assertNotIn('private-secret',str(result))
+        self.assertEqual(result['current_metadata_diagnostic']['api_error_fields'],['pageError'])
+
+    def test_transport_diagnostics_do_not_echo_exception(self):
+        for failure in [ReadFailure('http_error',403),ReadFailure('invalid_json',200),
+                        ReadFailure('timeout'), RuntimeError('private-secret')]:
+            def get(endpoint,lid):
+                if endpoint=='getLeagues':return {'leagues':self.rows}
+                raise failure
+            result=discover(get,self.config)['results'][0]
+            self.assertEqual(result['status'],'blocked')
+            self.assertNotIn('private-secret',str(result))
+            self.assertIn('request_status',result['current_metadata_diagnostic'])
+
+    def test_failed_candidate_has_specific_diagnostic(self):
+        self.info[NEW]={'leagueHistoryId':HISTORY,'seasonYear':True}
+        result=self.result()
+        self.assertFalse(result['candidate_diagnostics'][NEW]['fields']['seasonYear']['valid'])
+        self.assertEqual(result['status'],'blocked')
 
 if __name__=='__main__':unittest.main()

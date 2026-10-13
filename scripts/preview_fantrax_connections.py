@@ -12,6 +12,37 @@ CONFIG = Path(__file__).with_name('fantrax-renewal-preview.json')
 ID = re.compile(r'^[a-z0-9]{16}$')
 
 
+class ReadFailure(Exception):
+    def __init__(self, category, http_status=None):
+        self.details = {'request_status': category}
+        if http_status is not None:
+            self.details['http_status'] = http_status
+
+
+def inspect_metadata(raw):
+    """Describe only known fields; never echo arbitrary response/error text."""
+    report = {'request_status': 'json_received', 'response_type': type(raw).__name__}
+    if not isinstance(raw, dict):
+        return {**report, 'issue': 'Expected a JSON object'}
+    report['api_error_fields'] = [k for k in ('error', 'errors', 'pageError') if k in raw]
+    fields = {}
+    for key in ('leagueHistoryId', 'seasonYear'):
+        value = raw.get(key)
+        field = {'state': 'missing' if key not in raw else 'null' if value is None else 'present',
+                 'type': type(value).__name__}
+        if key == 'leagueHistoryId' and isinstance(value, str):
+            field['valid'] = bool(ID.fullmatch(value))
+            field['length'] = len(value)
+        if key == 'seasonYear':
+            field['valid'] = type(value) is int and 2000 <= value <= 2200
+            # Observe numeric/cross-year representations without interpreting them.
+            if field['valid'] or (isinstance(value, str) and re.fullmatch(r'20\d{2}(?:[-/]\d{2,4})?', value)):
+                field['observed_value'] = value
+        fields[key] = field
+    report['fields'] = fields
+    return report
+
+
 def metadata(raw):
     if not isinstance(raw, dict) or any(k in raw for k in ('error', 'errors', 'pageError')):
         raise ValueError('Invalid league metadata')
@@ -42,11 +73,19 @@ def discover(get, config):
             raise ValueError('Invalid or duplicate league identity')
         leagues[lid] = row['sport']
     cache = {}
+    diagnostics = {}
     def info(lid):
         if lid not in cache:
             try:
-                cache[lid] = metadata(get('getLeagueInfo', lid))
+                raw_info = get('getLeagueInfo', lid)
+                diagnostics[lid] = inspect_metadata(raw_info)
+                cache[lid] = metadata(raw_info)
+                diagnostics[lid]['valid_metadata'] = True
+            except ReadFailure as exc:
+                diagnostics[lid] = exc.details
+                cache[lid] = None
             except Exception:
+                diagnostics.setdefault(lid, {'request_status': 'request_failed_details_redacted'})
                 cache[lid] = None
         return cache[lid]
     results = []
@@ -59,8 +98,12 @@ def discover(get, config):
             result['reason'] = 'Current league absent from account list or sport mismatch'
             continue
         baseline = info(current)
-        if not baseline or (setting.get('league_history_id') and setting['league_history_id'] != baseline['league_history_id']):
-            result['reason'] = 'Current league metadata unavailable or pinned history changed'
+        result['current_metadata_diagnostic'] = diagnostics[current]
+        if not baseline:
+            result['reason'] = 'Current league metadata failed validation; see current_metadata_diagnostic'
+            continue
+        if setting.get('league_history_id') and setting['league_history_id'] != baseline['league_history_id']:
+            result['reason'] = 'Current league history differs from configured history'
             continue
         result['current_metadata'] = baseline
         failed = []
@@ -75,6 +118,7 @@ def discover(get, config):
         if failed:
             result['reason'] = 'Candidate metadata incomplete; cannot safely rule out another match'
             result['unreadable_league_ids'] = failed
+            result['candidate_diagnostics'] = {lid: diagnostics[lid] for lid in failed}
         elif type(target) is not int or not 2000 <= target <= 2200:
             result['reason'] = 'Confirm Fantrax seasonYear for this sport before proposing a connection'
         else:
@@ -100,10 +144,18 @@ def main():
         with requests.Session() as session:
             def get(endpoint, lid):
                 params = {'userSecretId': secret} if endpoint == 'getLeagues' else {'leagueId': lid}
-                response = session.get(BASE + endpoint, params=params, timeout=30, allow_redirects=False)
+                try:
+                    response = session.get(BASE + endpoint, params=params, timeout=30, allow_redirects=False)
+                except requests.Timeout:
+                    raise ReadFailure('timeout') from None
+                except requests.RequestException:
+                    raise ReadFailure('network_or_tls_error') from None
                 if response.status_code != 200:
-                    raise ValueError('Read failed')
-                return response.json()
+                    raise ReadFailure('http_error', response.status_code)
+                try:
+                    return response.json()
+                except ValueError:
+                    raise ReadFailure('invalid_json', response.status_code) from None
             report = discover(get, config)
         # Output only validated IDs, integer seasons, fixed messages. No names,
         # private team data, response text, request URLs or credentials.
