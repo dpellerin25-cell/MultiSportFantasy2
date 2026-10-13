@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {tradeAssets,proposal,tradeWarnings,activeOffers,archivedOffers,leagueCompletedTrades,recentlyCompleted,completedTradeHours,canRespond,offerResponse,counterSelection,counterProposal} from '../src/lib/trade-model.ts';
+import {canCorrect,correctionCommand,tradeAssets,proposal,tradeWarnings,activeOffers,archivedOffers,leagueCompletedTrades,recentlyCompleted,completedTradeHours,canRespond,offerResponse,counterSelection,counterProposal} from '../src/lib/trade-model.ts';
 const data={viewer_owner_id:'doug',ledger_ready:true,owners:[{id:'doug',name:'Doug',can_receive:true},{id:'chris',name:'Chris',can_receive:true},{id:'jack',name:'Jack',can_receive:false}],
   players:[{id:'p',owner_id:'doug',name:'Player',sport:'NFL',reserved:false}],picks:[{id:'pick',owner_id:'chris',original_owner_id:'doug',year:2027,round:1}]};
 test('mixed proposal uses stable database IDs, current owners, original pick label and exact request ID',()=>{
@@ -98,4 +98,18 @@ test('completion window uses confirmation timestamp, handles reversals, and does
     assert.deepEqual(leagueCompletedTrades([old],now),[old]);
     assert.deepEqual(activeOffers([old],'jack',now),[]);
   }
+});
+
+test('commissioner reversal requires eligible accepted trade, audit reason and preserves retry identity',()=>{
+ const offer={id:'trade',revision:3,status:'accepted',corrected_at:null};
+ assert.equal(canCorrect(offer,true),true);
+ assert.equal(canCorrect({...offer,status:'completed'},true),true);
+ for(const status of ['proposed','declined','withdrawn','expired'])assert.equal(canCorrect({...offer,status},true),false);
+ assert.equal(canCorrect(offer,false),false);
+ assert.equal(canCorrect({...offer,corrected_at:'2026-10-07'},true),false);
+ for(const reason of ['', '   ', 'x'.repeat(2001)])assert.throws(()=>correctionCommand(offer,true,reason,'id'));
+ assert.throws(()=>correctionCommand(offer,false,'Correction','id'));
+ const expected={request_id:'id',action:'correct',args:{trade_id:'trade',revision:3,reason:'Agreed reversal'}};
+ assert.deepEqual(correctionCommand(offer,true,' Agreed reversal ','id'),expected);
+ assert.deepEqual(correctionCommand(offer,true,' Agreed reversal ','id'),expected);
 });

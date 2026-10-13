@@ -66,6 +66,18 @@ class UpdateModesTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Missing:.*John"):
             fetch.league_settings([name for name in names if name != "John"])
 
+    def test_optional_john_is_standings_only(self):
+        import json
+        from pathlib import Path
+        names = [o["name"] for o in json.loads(Path("web/data/league-settings.json").read_text())["owners"]]
+        without_john = [n for n in names if n != "John"]
+        self.assertEqual(len(fetch.league_settings(without_john, allow_missing_john=True)["placement_points"]), 10)
+        with self.assertRaises(ValueError):
+            fetch.league_settings(without_john)
+        for invalid in ([n for n in without_john if n != "Doug"], without_john + ["Unknown"], without_john + [without_john[0]], []):
+            with self.assertRaises(ValueError):
+                fetch.league_settings(invalid, allow_missing_john=True)
+
     def test_failed_fetch_fails_job_before_commit(self):
         with patch.object(fetch, 'create_session'), patch.object(fetch, 'fetch_league', side_effect=RuntimeError('offline')), patch.object(fetch, 'save_league_json') as save, contextlib.redirect_stdout(io.StringIO()):
             with self.assertRaises(RuntimeError):

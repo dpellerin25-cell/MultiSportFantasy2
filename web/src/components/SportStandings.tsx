@@ -47,7 +47,7 @@ export default function SportStandings({
 
         <MainNavigation />
 
-        {missingOwners(league).length>0&&<p className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">Awaiting Fantrax standings for {missingOwners(league).join(", ")}. Scores use the new placement table but remain provisional until the full league is refreshed.</p>}
+        {missingOwners(league).length>0&&<p className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">No Fantrax standings for {missingOwners(league).join(", ")}. Their results are blank; dominance uses only the teams reported by Fantrax.</p>}
         {/* BACK LINK */}
 
         <Link
@@ -150,7 +150,7 @@ export default function SportStandings({
                   </tr>
                 );
               })}
-              {missingOwners(league).map(owner=><tr key={owner} className="border-t border-blue-100"><td className="p-4 text-center">—</td><td className="p-4 font-semibold">{owner}</td><td colSpan={5} className="p-4 text-sm text-slate-500">Awaiting Fantrax sync</td></tr>)}
+              {missingOwners(league).map(owner=><tr key={owner} className="border-t border-blue-100"><td className="p-4 text-center">—</td><td className="p-4 font-semibold">{owner}</td><td colSpan={5} className="p-4 text-sm text-slate-500">No result available</td></tr>)}
             </tbody>
           </table>
         </div>
