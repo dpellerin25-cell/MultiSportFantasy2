@@ -64,9 +64,13 @@ cat /tmp/fantrax-connections-preview.json
 
 MLB is pinned to the shared history ID observed in the live diagnostic and targets
 2027. PGA targets 2027 but its history is read from the existing approved PGA ID.
-NFL, NBA and EPL intentionally have no target seasonYear yet: their cross-year
-labels do not prove Fantrax's numeric season convention. Their metadata will be
-shown for review, but no new connection proposed until the target is confirmed.
+NFL, NBA and EPL target Fantrax seasonYear 2026 for championship year 2027,
+based on their observed metadata and the approved cross-year season mapping.
+An absent history ID is normal before renewal, as confirmed by the commissioner.
+An approved ID at the target season is unchanged; an older approved ID without
+history is awaiting_renewal. Neither condition switches connections. A history ID
+appearing on a later run enables exact-history candidate discovery. Null or
+malformed history values and disappearance of a pinned history still block discovery.
 No match, multiple matches, unreadable candidate metadata, mismatched sport or
 changed pinned history blocks a proposal. A match is a candidate for review,
 not a database migration or proof that all roster/settings checks have passed.
@@ -85,7 +89,8 @@ history format, season value types, API error fields, HTTP failures, invalid JSO
 timeouts and network/TLS failures. Numeric and cross-year season strings are
 reported for review but are not coerced into accepted seasons. Arbitrary response
 values and exception messages are omitted to protect credentials. A missing
-history ID never enables switching.
+history ID never enables switching. The preview registry remains separate from
+production consumers until player identity and pending-trade migration are tested.
 
 Offline verification:
 `python -B -m unittest discover -s scripts -p test_preview_fantrax_connections.py`

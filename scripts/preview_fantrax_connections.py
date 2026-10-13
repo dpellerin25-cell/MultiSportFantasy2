@@ -47,7 +47,7 @@ def metadata(raw):
     if not isinstance(raw, dict) or any(k in raw for k in ('error', 'errors', 'pageError')):
         raise ValueError('Invalid league metadata')
     history, year = raw.get('leagueHistoryId'), raw.get('seasonYear')
-    if not isinstance(history, str) or not ID.fullmatch(history) or type(year) is not int or not 2000 <= year <= 2200:
+    if ('leagueHistoryId' in raw and (not isinstance(history, str) or not ID.fullmatch(history))) or type(year) is not int or not 2000 <= year <= 2200:
         raise ValueError('Missing history or season')
     return {'league_history_id': history, 'season_year': year}
 
@@ -106,6 +106,20 @@ def discover(get, config):
             result['reason'] = 'Current league history differs from configured history'
             continue
         result['current_metadata'] = baseline
+        result['approved_connection_retained'] = True
+        if baseline['league_history_id'] is None:
+            if type(target) is not int or not 2000 <= target <= 2200:
+                result['reason'] = 'Confirm target season before checking renewal'
+            elif baseline['season_year'] == target:
+                result['status'] = 'unchanged'
+                result['proposed_league_id'] = current
+                result['reason'] = 'Approved league matches target season; not yet renewed'
+            elif baseline['season_year'] < target:
+                result['status'] = 'awaiting_renewal'
+                result['reason'] = 'Approved league retained; no history ID yet to identify a renewal'
+            else:
+                result['reason'] = 'Approved league is newer than target season; review season mapping'
+            continue
         failed = []
         for lid, candidate_sport in leagues.items():
             if candidate_sport != sport:
