@@ -96,4 +96,36 @@ class PreviewTests(unittest.TestCase):
         self.assertFalse(result['candidate_diagnostics'][NEW]['fields']['seasonYear']['valid'])
         self.assertEqual(result['status'],'blocked')
 
+    def test_unrenewed_approved_connection_and_later_renewal(self):
+        del self.config['sports']['MLB']['league_history_id']
+        self.info[OLD]={'seasonYear':2026}
+        before=copy.deepcopy(self.config)
+        self.assertEqual(self.result()['status'],'awaiting_renewal')
+        self.assertIsNone(self.result()['proposed_league_id'])
+        self.config['sports']['MLB']['target_season_year']=2026
+        self.assertEqual(self.result()['status'],'unchanged')
+        self.assertEqual(self.result()['proposed_league_id'],OLD)
+        self.config=before
+        self.info[OLD]['leagueHistoryId']=HISTORY
+        self.assertEqual(self.result()['proposed_league_id'],NEW)
+        self.assertEqual(self.config,before)
+
+    def test_missing_history_cannot_match_unrelated_candidate(self):
+        del self.config['sports']['MLB']['league_history_id']
+        self.info[OLD]={'seasonYear':2026}
+        self.info[NEW]={'seasonYear':2027}
+        self.assertIsNone(self.result()['proposed_league_id'])
+        self.info[OLD]['leagueHistoryId']=HISTORY
+        self.assertIsNone(self.result()['proposed_league_id'])
+
+    def test_pinned_history_disappearance_still_blocks(self):
+        self.info[OLD]={'seasonYear':2026}
+        self.assertEqual(self.result()['status'],'blocked')
+
+    def test_explicit_invalid_history_is_not_unrenewed(self):
+        del self.config['sports']['MLB']['league_history_id']
+        for history in [None,'',False,'bad']:
+            self.info[OLD]={'seasonYear':2026,'leagueHistoryId':history}
+            self.assertEqual(self.result()['status'],'blocked')
+
 if __name__=='__main__':unittest.main()
