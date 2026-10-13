@@ -2,9 +2,16 @@
   "sport": "NFL",
   "league_id": "yg0olhfrmtj45dd6",
   "league_name": "2026 Pentagon_Cup_NFL",
-  "updated_at": "2026-10-06T14:45:10.007213+00:00",
-  "team_count": 9,
+  "updated_at": "2026-10-13T23:26:03.621044+00:00",
+  "team_count": 10,
+  "missing_owners": [],
   "teams": {
+    "rsm99wdimux6whk2": {
+      "team_id": "rsm99wdimux6whk2",
+      "name": "John",
+      "short_name": "John",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/football/foam_fingers/pink_black_512.webp"
+    },
     "fhsj2l6xmtufxavs": {
       "team_id": "fhsj2l6xmtufxavs",
       "name": "Jack",
@@ -62,12 +69,13 @@
   },
   "placement_points": [
     100,
-    80,
-    65,
-    52,
-    40,
-    30,
-    20,
+    82,
+    68,
+    56,
+    45,
+    35,
+    26,
+    18,
     10,
     0
   ],
@@ -82,7 +90,7 @@
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "2",
+      "wwOrder": "10",
       "pointsBehindLeader": "0"
     },
     {
@@ -94,7 +102,7 @@
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "1",
+      "wwOrder": "9",
       "pointsBehindLeader": "0"
     },
     {
@@ -106,7 +114,7 @@
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "7",
+      "wwOrder": "8",
       "pointsBehindLeader": "0"
     },
     {
@@ -118,7 +126,7 @@
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "5",
+      "wwOrder": "7",
       "pointsBehindLeader": "0"
     },
     {
@@ -142,7 +150,19 @@
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "3",
+      "wwOrder": "5",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "John",
+      "team_id": "rsm99wdimux6whk2",
+      "fantasyPoints": "0",
+      "pointsBased": "0",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "groupname": "0",
+      "wwOrder": "4",
       "pointsBehindLeader": "0"
     },
     {
@@ -154,7 +174,7 @@
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "4",
+      "wwOrder": "3",
       "pointsBehindLeader": "0"
     },
     {
@@ -166,7 +186,7 @@
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "9",
+      "wwOrder": "2",
       "pointsBehindLeader": "0"
     },
     {
@@ -178,7 +198,7 @@
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "wwOrder": "8",
+      "wwOrder": "1",
       "pointsBehindLeader": "0"
     }
   ]

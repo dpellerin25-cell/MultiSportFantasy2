@@ -2,8 +2,11 @@
   "sport": "PGA",
   "league_id": "xa7tza2hmthqz8bo",
   "league_name": "2026 Test_PGA",
-  "updated_at": "2026-10-06T14:45:10.945879+00:00",
+  "updated_at": "2026-10-13T23:26:04.164570+00:00",
   "team_count": 9,
+  "missing_owners": [
+    "John"
+  ],
   "teams": {
     "plyo3at2mtj6q46k": {
       "team_id": "plyo3at2mtj6q46k",
@@ -62,12 +65,13 @@
   },
   "placement_points": [
     100,
-    80,
-    65,
-    52,
-    40,
-    30,
-    20,
+    82,
+    68,
+    56,
+    45,
+    35,
+    26,
+    18,
     10,
     0
   ],

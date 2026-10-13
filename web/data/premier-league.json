@@ -2,8 +2,9 @@
   "sport": "Premier League",
   "league_id": "j08ymyupmtj415q3",
   "league_name": "2026 Pentagon_Cup_EPL",
-  "updated_at": "2026-10-06T14:45:10.765736+00:00",
-  "team_count": 9,
+  "updated_at": "2026-10-13T23:26:04.043151+00:00",
+  "team_count": 10,
+  "missing_owners": [],
   "teams": {
     "n1ifyr4umtug18ye": {
       "team_id": "n1ifyr4umtug18ye",
@@ -16,6 +17,12 @@
       "name": "Chris",
       "short_name": "Chris",
       "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/gloves/black_yellow_512.webp"
+    },
+    "b7ryxgmxmux6wud7": {
+      "team_id": "b7ryxgmxmux6wud7",
+      "name": "John",
+      "short_name": "John",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/jerseys/blue_red_white_512.webp"
     },
     "y00vzeaumtj4175c": {
       "team_id": "y00vzeaumtj4175c",
@@ -62,12 +69,13 @@
   },
   "placement_points": [
     100,
-    80,
-    65,
-    52,
-    40,
-    30,
-    20,
+    82,
+    68,
+    56,
+    45,
+    35,
+    26,
+    18,
     10,
     0
   ],
@@ -77,23 +85,23 @@
       "rank": "1",
       "team": "Chris",
       "team_id": "dxxlben8mtug18ye",
-      "fantasyPoints": "76.25",
+      "fantasyPoints": "89",
       "pointsBased": "",
-      "FPtsPerGame": "15.25",
-      "sc": "5",
-      "groupname": "76.25",
+      "FPtsPerGame": "14.83",
+      "sc": "6",
+      "groupname": "89",
       "pointsBehindLeader": "0"
     },
     {
       "rank": "2",
       "team": "Doug",
       "team_id": "y00vzeaumtj4175c",
-      "fantasyPoints": "57.5",
+      "fantasyPoints": "60",
       "pointsBased": "",
-      "FPtsPerGame": "11.5",
-      "sc": "5",
-      "groupname": "57.5",
-      "pointsBehindLeader": "18.75"
+      "FPtsPerGame": "10",
+      "sc": "6",
+      "groupname": "60",
+      "pointsBehindLeader": "29"
     },
     {
       "rank": "3",
@@ -104,7 +112,7 @@
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "pointsBehindLeader": "76.25"
+      "pointsBehindLeader": "89"
     },
     {
       "rank": "3",
@@ -115,7 +123,7 @@
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "pointsBehindLeader": "76.25"
+      "pointsBehindLeader": "89"
     },
     {
       "rank": "3",
@@ -126,7 +134,7 @@
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "pointsBehindLeader": "76.25"
+      "pointsBehindLeader": "89"
     },
     {
       "rank": "3",
@@ -137,7 +145,18 @@
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "pointsBehindLeader": "76.25"
+      "pointsBehindLeader": "89"
+    },
+    {
+      "rank": "3",
+      "team": "John",
+      "team_id": "b7ryxgmxmux6wud7",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "groupname": "0",
+      "pointsBehindLeader": "89"
     },
     {
       "rank": "3",
@@ -148,7 +167,7 @@
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "pointsBehindLeader": "76.25"
+      "pointsBehindLeader": "89"
     },
     {
       "rank": "3",
@@ -159,7 +178,7 @@
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "pointsBehindLeader": "76.25"
+      "pointsBehindLeader": "89"
     },
     {
       "rank": "3",
@@ -170,7 +189,7 @@
       "FPtsPerGame": "0",
       "sc": "0",
       "groupname": "0",
-      "pointsBehindLeader": "76.25"
+      "pointsBehindLeader": "89"
     }
   ]
 }

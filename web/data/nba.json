@@ -2,8 +2,9 @@
   "sport": "NBA",
   "league_id": "u1byx3qkmtj47ogg",
   "league_name": "2026 Pentagon_Cup_NBA",
-  "updated_at": "2026-10-06T14:45:10.517245+00:00",
-  "team_count": 9,
+  "updated_at": "2026-10-13T23:26:03.885642+00:00",
+  "team_count": 10,
+  "missing_owners": [],
   "teams": {
     "5x73rx07mtug00lx": {
       "team_id": "5x73rx07mtug00lx",
@@ -41,6 +42,12 @@
       "short_name": "Jack",
       "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/shoes/silver_blue_white_512.webp"
     },
+    "qx0r1s22mux6vzbc": {
+      "team_id": "qx0r1s22mux6vzbc",
+      "name": "John",
+      "short_name": "John",
+      "logo_url": "https://fantraximg.com/assets/images/icons/fantasyteams/basketball/shoes/red_yellow_512.webp"
+    },
     "xiq1wt7vmtug00lx": {
       "team_id": "xiq1wt7vmtug00lx",
       "name": "Tucker",
@@ -62,12 +69,13 @@
   },
   "placement_points": [
     100,
-    80,
-    65,
-    52,
-    40,
-    30,
-    20,
+    82,
+    68,
+    56,
+    45,
+    35,
+    26,
+    18,
     10,
     0
   ],
@@ -92,7 +100,7 @@
       "pointsBased": "",
       "FPtsPerGame": "0",
       "sc": "0",
-      "wwOrder": "3",
+      "wwOrder": "8",
       "pointsBehindLeader": "0"
     },
     {
@@ -103,7 +111,7 @@
       "pointsBased": "",
       "FPtsPerGame": "0",
       "sc": "0",
-      "wwOrder": "2",
+      "wwOrder": "5",
       "pointsBehindLeader": "0"
     },
     {
@@ -125,7 +133,7 @@
       "pointsBased": "",
       "FPtsPerGame": "0",
       "sc": "0",
-      "wwOrder": "6",
+      "wwOrder": "10",
       "pointsBehindLeader": "0"
     },
     {
@@ -136,7 +144,18 @@
       "pointsBased": "",
       "FPtsPerGame": "0",
       "sc": "0",
-      "wwOrder": "9",
+      "wwOrder": "2",
+      "pointsBehindLeader": "0"
+    },
+    {
+      "rank": "1",
+      "team": "John",
+      "team_id": "qx0r1s22mux6vzbc",
+      "fantasyPoints": "0",
+      "pointsBased": "",
+      "FPtsPerGame": "0",
+      "sc": "0",
+      "wwOrder": "6",
       "pointsBehindLeader": "0"
     },
     {
@@ -147,7 +166,7 @@
       "pointsBased": "",
       "FPtsPerGame": "0",
       "sc": "0",
-      "wwOrder": "8",
+      "wwOrder": "9",
       "pointsBehindLeader": "0"
     },
     {
@@ -158,7 +177,7 @@
       "pointsBased": "",
       "FPtsPerGame": "0",
       "sc": "0",
-      "wwOrder": "5",
+      "wwOrder": "1",
       "pointsBehindLeader": "0"
     },
     {
@@ -169,7 +188,7 @@
       "pointsBased": "",
       "FPtsPerGame": "0",
       "sc": "0",
-      "wwOrder": "1",
+      "wwOrder": "3",
       "pointsBehindLeader": "0"
     }
   ]

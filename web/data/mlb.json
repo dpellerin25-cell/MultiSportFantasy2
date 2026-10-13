@@ -2,8 +2,11 @@
   "sport": "MLB",
   "league_id": "60ri2nbhmtj4b0km",
   "league_name": "2026 Test_MLB",
-  "updated_at": "2026-10-06T14:45:10.234770+00:00",
+  "updated_at": "2026-10-13T23:26:03.766196+00:00",
   "team_count": 9,
+  "missing_owners": [
+    "John"
+  ],
   "teams": {
     "1uucwggdmtufy7wz": {
       "team_id": "1uucwggdmtufy7wz",
@@ -62,12 +65,13 @@
   },
   "placement_points": [
     100,
-    80,
-    65,
-    52,
-    40,
-    30,
-    20,
+    82,
+    68,
+    56,
+    45,
+    35,
+    26,
+    18,
     10,
     0
   ],
