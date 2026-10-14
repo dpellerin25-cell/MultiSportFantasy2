@@ -1,5 +1,41 @@
 # Controlled MLB renewal — not activated
 
+## Disposable Docker rehearsal (safe with active Supabase trades)
+
+From Codespaces, after pulling the updated files:
+
+```bash
+cd /workspaces/MultiSportFantasy2/supabase/tests
+npx --yes pnpm@11.25.0 install --frozen-lockfile --ignore-scripts
+npx --yes pnpm@11.25.0 test:mlb-docker
+```
+
+No Supabase URL, Fantrax cookie or CA certificate is needed. The runner starts a
+uniquely named PostgreSQL 17 container with an automatically generated password,
+a loopback-only random port, and no host directory mounts. It creates only empty
+disposable databases, installs local migrations there, then runs the rollback-only
+rehearsal and four real independent-session scenarios:
+
+- Renewal first: waiting old-roster import rejected, pending trade preserved.
+- Roster first: completed transfer and owner identity survive the waiting renewal.
+- Two renewals: one handoff, second request an idempotent retry.
+- Player-source write first: waiting renewal includes the newly committed alias.
+
+Each race must observe the second backend blocked by the first in PostgreSQL.
+All scenarios also verify retained historical snapshots, stable player UUIDs and
+successful completion using a new-league synthetic roster. The player-source
+scenario exercises the importer's lock/identity-write section, not a full live
+player-pool export. No hosted Auth, HTTP, live Fantrax or production activation
+is tested. `mlb-race-offline.test.mjs` runs those scenarios sequentially for local
+development; it cannot prove concurrency.
+
+The container and fixtures remain for inspection. The runner prints the exact
+container name, inspection command and optional removal command. Race fixtures
+are in `multisport_mlb_race_1` through `multisport_mlb_race_4`; the rollback-only
+rehearsal uses `multisport_mlb_test`. Remove only the printed disposable container
+when finished. If Docker is unavailable, run the command in Codespaces with Docker.
+Do not point the concurrency script at Supabase; its guard rejects remote hosts.
+
 ## Rollback-only hosted rehearsal
 
 After the migration and read-only preview pass in the test project, run from
