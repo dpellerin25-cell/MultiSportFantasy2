@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 
+export class RehearsalSetupError extends Error {}
+const requireSetup=(ok,message)=>{if(!ok)throw new RehearsalSetupError(message);};
+
 // Caller owns a transaction and MUST roll it back, including on success.
 export async function rehearseMLB(db,report=console.log){
  const q=async(s,p=[])=>(await db.query(s,p)).rows;
@@ -9,14 +12,17 @@ export async function rehearseMLB(db,report=console.log){
  await q('select pg_advisory_xact_lock(731943,1)');
  await q('select pg_advisory_xact_lock(20260925,1)');
  const preview=await scalar('select trading.prepare_mlb_renewal(false)');
- assert.equal(preview.already_applied,undefined,'Renewal already activated; stop');
- assert.deepEqual(preview.blockers,[],'Resolve preview blockers first');
- assert.equal(preview.trade_players,0,'Rehearsal requires no existing MLB trade players');
+ requireSetup(preview.already_applied===undefined,'MLB renewal is already activated. This rehearsal requires an unapplied transition.');
+ requireSetup(Array.isArray(preview.blockers)&&preview.blockers.length===0,'Renewal preview has blockers. Run preview-mlb-renewal.mjs and share its output.');
+ requireSetup(preview.trade_players===0,'Existing MLB trade players were found. Use a separate disposable project; do not delete roster data to run this rehearsal.');
  // Avoid reconciling unrelated real offers, even temporarily.
- assert.equal(Number(await scalar("select count(*) from trading.trades where status in('proposed','accepted')")),0,'Close or use an isolated project for existing active trades');
+ const active=Number(await scalar("select count(*) from trading.trades where status in('proposed','accepted')"));
+ report(`Prerequisite check: active proposed/accepted trades = ${active}`);
+ requireSetup(active===0,'Active proposals or accepted trades exist in this project. Use a separate disposable project; do not cancel or delete real trades just to run this test.');
  const owners=await q('select id,slug from draft.owners where active');
  const doug=owners.find(o=>o.slug==='doug'),chris=owners.find(o=>o.slug==='chris');
- assert.ok(doug&&chris,'Active Doug and Chris required');
+ requireSetup(doug&&chris,'Both Doug and Chris must be active league owners.');
+ report('PASS rehearsal prerequisites; beginning temporary fixture checks');
  const historical=await q('select * from trading.roster_snapshots order by id');
  const sources=await q("select * from draft.player_source_ids where provider='fantrax' and league_id=$1 order by id",[old]);
  const poolCount=await scalar('select count(*) from draft.player_pool_entries');
