@@ -8,7 +8,7 @@ import re
 import sys
 
 BASE = 'https://www.fantrax.com/fxea/general/'
-CONFIG = Path(__file__).with_name('fantrax-renewal-preview.json')
+CONFIG = Path(__file__).with_name('fantrax-connections.json')
 ID = re.compile(r'^[a-z0-9]{16}$')
 
 

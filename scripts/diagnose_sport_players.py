@@ -11,13 +11,8 @@ from nfl_player_pool import collect_pool
 
 from diagnose_nfl_players import URL, build_payload, validate_envelope
 
-# Matches scripts/fetch_fantrax.py; kept separate from production execution.
-LEAGUES = {
-    "MLB": "60ri2nbhmtj4b0km",
-    "NBA": "u1byx3qkmtj47ogg",
-    "EPL": "j08ymyupmtj415q3",
-    "PGA": "xa7tza2hmthqz8bo",
-}
+from fantrax_connections import CONNECTIONS
+LEAGUES = {s: v['current_league_id'] for s, v in CONNECTIONS['sports'].items() if s != 'NFL'}
 
 
 FILTERS = {"MLB": "ALL", "NBA": "BASKETBALL_PLAYER", "EPL": "ALL", "PGA": "POS_500"}

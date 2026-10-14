@@ -10,28 +10,10 @@ from datetime import datetime, timezone
 # CONFIGURATION
 # ---------------------------------------------------------
 
-LEAGUES = {
-    "NFL": {
-        "league_id": "yg0olhfrmtj45dd6",
-        "filename": "nfl.json"
-    },
-    "MLB": {
-        "league_id": "60ri2nbhmtj4b0km",
-        "filename": "mlb.json"
-    },
-    "NBA": {
-        "league_id": "u1byx3qkmtj47ogg",
-        "filename": "nba.json"
-    },
-    "Premier League": {
-        "league_id": "j08ymyupmtj415q3",
-        "filename": "premier-league.json"
-    },
-    "PGA": {
-        "league_id": "xa7tza2hmthqz8bo",
-        "filename": "pga.json"
-    }
-}
+from fantrax_connections import CONNECTIONS
+LEAGUES = {('Premier League' if s == 'EPL' else s):
+          {'league_id': v['current_league_id'], 'filename': v['filename'] + '.json'}
+          for s, v in CONNECTIONS['sports'].items()}
 
 FANTRAX_URL = "https://www.fantrax.com/fxpa/req"
 

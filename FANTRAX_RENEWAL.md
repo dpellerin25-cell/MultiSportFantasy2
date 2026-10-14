@@ -45,8 +45,8 @@ python -m unittest discover -s scripts -p test_diagnose_league_renewal.py
 ## Connection discovery preview (next step)
 
 New files: scripts/preview_fantrax_connections.py,
-scripts/fantrax-renewal-preview.json, scripts/test_preview_fantrax_connections.py.
-This configuration is ONLY for preview; production connections remain unchanged.
+scripts/fantrax-connections.json, scripts/test_preview_fantrax_connections.py.
+This registry supplies approved connections to Python and Node importers. Discovery never edits it. All approved IDs remain unchanged.
 The duplicate PGA league xtv5ph2gmulolm8g is excluded by ID before metadata
 requests or candidate matching. It is never selected or deleted.
 
@@ -89,8 +89,7 @@ history format, season value types, API error fields, HTTP failures, invalid JSO
 timeouts and network/TLS failures. Numeric and cross-year season strings are
 reported for review but are not coerced into accepted seasons. Arbitrary response
 values and exception messages are omitted to protect credentials. A missing
-history ID never enables switching. The preview registry remains separate from
-production consumers until player identity and pending-trade migration are tested.
+history ID never enables switching. The registry now supplies production consumers, but still retains every original league ID. Target seasons do not activate a new connection.
 
 Offline verification:
 `python -B -m unittest discover -s scripts -p test_preview_fantrax_connections.py`
