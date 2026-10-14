@@ -13,7 +13,8 @@ import sys
 from pathlib import Path
 from nfl_player_pool import collect_pool
 
-NFL_LEAGUE_ID = "yg0olhfrmtj45dd6"
+from fantrax_connections import CONNECTIONS
+NFL_LEAGUE_ID = CONNECTIONS["sports"]["NFL"]["current_league_id"]
 URL = "https://www.fantrax.com/fxpa/req"
 
 

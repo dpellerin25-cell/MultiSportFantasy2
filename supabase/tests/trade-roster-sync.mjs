@@ -2,11 +2,8 @@
 import assert from 'node:assert/strict';
 import {getCACertificates} from 'node:tls';
 
-export const ROSTER_FILES=[
-  ['NFL','nfl','yg0olhfrmtj45dd6'],['MLB','mlb','60ri2nbhmtj4b0km'],
-  ['NBA','nba','u1byx3qkmtj47ogg'],['EPL','premier-league','j08ymyupmtj415q3'],
-  ['PGA','pga','xa7tza2hmthqz8bo'],
-];
+export {ROSTER_FILES} from './fantrax-connections.mjs';
+import {ROSTER_FILES} from './fantrax-connections.mjs';
 
 // These messages are fixed text only: safe to print, never include supplied values.
 export class SyncSettingsError extends Error {}

@@ -1,6 +1,7 @@
 import {createHash} from 'node:crypto';
 
-export const LEAGUES={NFL:'yg0olhfrmtj45dd6',MLB:'60ri2nbhmtj4b0km',NBA:'u1byx3qkmtj47ogg',EPL:'j08ymyupmtj415q3',PGA:'xa7tza2hmthqz8bo'};
+export {LEAGUES} from './fantrax-connections.mjs';
+import {LEAGUES} from './fantrax-connections.mjs';
 const FILTERS={NFL:'FOOTBALL_OFFENSE',MLB:'ALL',NBA:'BASKETBALL_PLAYER',EPL:'ALL',PGA:'POS_500'};
 export class PoolValidationError extends Error {}
 const requireValid=(ok,message)=>{if(!ok)throw new PoolValidationError(message);};

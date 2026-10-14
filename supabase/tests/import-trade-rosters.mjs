@@ -3,7 +3,7 @@ import pg from 'pg';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {PROJECT,connectionConfig} from './hosted-validation.mjs';
-const files=[['NFL','nfl','yg0olhfrmtj45dd6'],['MLB','mlb','60ri2nbhmtj4b0km'],['NBA','nba','u1byx3qkmtj47ogg'],['EPL','premier-league','j08ymyupmtj415q3'],['PGA','pga','xa7tza2hmthqz8bo']];
+import {ROSTER_FILES as files} from './fantrax-connections.mjs';
 let db;
 try{
   const mode=process.argv[2];assert.ok(['--preview','--import'].includes(mode),'Use --preview or --import');
