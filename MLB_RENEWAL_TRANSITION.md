@@ -1,5 +1,38 @@
 # Controlled MLB renewal — not activated
 
+## Fresh live MLB validation
+
+`scripts/validate_mlb_renewal.py` uses the verified getLeagues/getLeagueInfo,
+getStandings, getTeamRosterInfo and getPlayerStats requests for only the approved
+2026 MLB league and verified 2027 candidate. It does not change the registry,
+website files, Supabase or Fantrax. No PGA league is contacted.
+
+In Codespaces, set FANTRAX_COOKIE and FANTRAX_USER_SECRET_ID privately, then:
+
+```bash
+cd /workspaces/MultiSportFantasy2
+python scripts/validate_mlb_renewal.py > /tmp/mlb-renewal-validation.json
+cat /tmp/mlb-renewal-validation.json
+```
+
+The report validates the season/history/sport pair, checks new-league membership
+against local approved settings, reads all available-player pages in both leagues
+(up to 1000 per league), checks live roster overlap, and re-reads rosters afterward
+to detect concurrent changes. Missing John is reported in old-league membership;
+new-league membership must match exactly. Valid empty roster tables are allowed;
+missing tables are not treated as empty. Player-ID/name differences and old rostered
+players absent from the new roster/pool require review. Counts and small samples
+are printed; raw authenticated responses and credentials are not printed.
+
+Exit 0 means capture checks passed, 2 means a report with blockers, and 1 means
+capture failed. Captures are sequential, not an atomic snapshot. Available plus
+rostered players may not cover every Fantrax status; old-only IDs alone do not
+prove deletion. This does not compare all existing Supabase source rows or validate
+a full standings import. Review the report before considering activation. This
+can require over 1,000 page requests combined; progress goes to stderr.
+
+Offline tests: `python -B -m unittest discover -s scripts -p test_validate_mlb_renewal.py`.
+
 ## Disposable Docker rehearsal (safe with active Supabase trades)
 
 From Codespaces, after pulling the updated files:
