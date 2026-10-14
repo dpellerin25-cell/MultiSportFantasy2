@@ -1,5 +1,24 @@
 # Controlled MLB renewal — not activated
 
+## Rollback-only hosted rehearsal
+
+After the migration and read-only preview pass in the test project, run from
+`supabase/tests`, with the existing test database URL and confirmation set:
+
+```bash
+NODE_EXTRA_CA_CERTS="$HOME/.config/multisport-draft/supabase-ca.crt" node rehearse-mlb-renewal.mjs
+```
+
+The runner targets only the configured test project with verified TLS. It requires
+no existing MLB trade players, no active proposed/accepted trades and an unapplied
+renewal. It serializes with importers, exercises the handoff with existing draft
+source identities plus synthetic roster/trade fixtures, checks retired-ID rejection
+and confirmation, then always rolls back. It never issues COMMIT. Historic snapshots
+and old source IDs are checked unchanged. Fixture rows are checked absent afterward.
+Database sequence values can advance even on rollback. This is not a live Fantrax
+capture, HTTP/Auth test or multi-session race test, and does not authorize activation.
+Run `node mlb-rehearsal.test.mjs` for the same scenario offline.
+
 Approved old league: `60ri2nbhmtj4b0km` (2026).
 Verified candidate: `rk8bvnk3mulovx9a` (2027).
 Shared history: `ml3fdlq2mulovxoh`.
