@@ -267,6 +267,10 @@ def save_league_json(
 
     standings = parse_standings_table(table)
     settings = league_settings([row["team"] for row in standings], allow_missing_john=True)
+    canonical = 'EPL' if sport == 'Premier League' else sport
+    saved_year = CONNECTIONS['sports'][canonical].get('standings_championship_year', settings['championship_year'])
+    if saved_year != settings['championship_year']:
+        raise ValueError('Standings remain pinned to the previous championship. Archive and release them before updating the new championship.')
     missing_owners = sorted(set(owner["name"] for owner in settings["owners"]) - set(row["team"] for row in standings))
     if missing_owners:
         print(f"NOTICE: {sport}: no standings for {', '.join(missing_owners)}; displaying blank results.")
@@ -539,6 +543,8 @@ def main(argv=None):
 
             league_id = config["league_id"]
             filename = config["filename"]
+            canonical = 'EPL' if sport == 'Premier League' else sport
+            standings_league = CONNECTIONS['sports'][canonical].get('standings_league_id', league_id)
 
             # ---------------------------------------------
             # STANDINGS
@@ -547,13 +553,15 @@ def main(argv=None):
             standings_data = fetch_league(
                 session,
                 sport,
-                league_id
+                standings_league if args.only != 'rosters' else league_id
             )
 
             if args.only in ("all", "standings"):
-                save_league_json(sport, league_id, filename, standings_data)
+                save_league_json(sport, standings_league, filename, standings_data)
 
             if args.only in ("all", "rosters"):
+                if args.only == 'all' and standings_league != league_id:
+                    standings_data = fetch_league(session, sport, league_id)
                 fetch_started_at = datetime.now(timezone.utc).isoformat()
                 rosters = fetch_all_rosters(session, sport, league_id, standings_data)
                 save_roster_json(sport, league_id, filename, rosters, fetch_started_at)

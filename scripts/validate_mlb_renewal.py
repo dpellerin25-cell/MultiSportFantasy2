@@ -37,7 +37,8 @@ def read_rosters(request, league, expected):
             if not isinstance(pid, str) or not pid or not isinstance(name, str) or not name or pid in players:
                 raise ValueError('Missing or duplicate roster player identity')
             players[pid] = {'player_name': name, 'owner': team_id}
-    return {'membership': membership, 'counts': counts, 'players': players}
+    return {'membership': membership, 'counts': counts, 'players': players,
+            'teams': {tid: t['name'] for tid, t in teams.items() if t['name'] in expected}}
 
 
 def validate(get, request, expected, progress=lambda s: None, *, include_identities=False):

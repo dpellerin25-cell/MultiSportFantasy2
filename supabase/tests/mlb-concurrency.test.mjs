@@ -27,7 +27,8 @@ try{
  try{await rehearseMLB(base);}finally{await base.query('rollback');}
  for(const table of ['trading.league_renewals','trading.trades','trading.players','trading.roster_snapshots'])assert.equal((await base.query(`select count(*)::int n from ${table}`)).rows[0].n,0);
  console.log('PASS PostgreSQL rehearsal rollback; no fixture trade or activation retained');
- for(const [index,name] of scenarioNames.entries()){
+ const scenarios=[...scenarioNames.map(name=>({name,generic:false})),...scenarioNames.map(name=>({name,generic:true})),{name:'retired-pool-after-renewal',generic:true}];
+ for(const [index,{name,generic}] of scenarios.entries()){
    // Fixed generated names; CREATE fails rather than reusing/deleting a database.
    const database=`multisport_mlb_race_${index+1}`;
    await base.query(`create database ${database} template template0`);
@@ -58,10 +59,10 @@ try{
          await a.query('rollback');if(pending)await pending;await b.query('rollback');
        }
      };
-     await mlbRaceScenario(name,{admin,race});
-     console.log(`PASS independent sessions: ${name}; fixtures retained in ${database}`);
+     await mlbRaceScenario(name,{admin,race,generic});
+     console.log(`PASS independent sessions: ${generic?'yearly':'legacy MLB'} ${name}; fixtures retained in ${database}`);
    }finally{for(const c of clients){try{await c.query('rollback');}catch{}try{await c.end();}catch{}}}
  }
- console.log('PASS isolated PostgreSQL rehearsal and four observed-lock races. No Supabase or Fantrax contacted.');
+ console.log('PASS isolated PostgreSQL rehearsal and nine observed-lock races. No Supabase or Fantrax contacted.');
 }catch(e){console.error(`FAIL isolated MLB test: ${e.message}`);process.exitCode=1;}
 finally{try{await base.query('rollback');}catch{}await base.end();}

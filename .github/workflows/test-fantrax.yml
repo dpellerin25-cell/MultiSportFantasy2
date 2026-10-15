@@ -44,6 +44,28 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Set up Node for database-approved connections
+        if: vars.FANTRAX_RENEWALS_ENABLED == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
+      - name: Install runtime connection dependencies
+        if: vars.FANTRAX_RENEWALS_ENABLED == 'true'
+        working-directory: supabase/tests
+        run: npx --yes pnpm@11.25.0 install --frozen-lockfile --ignore-scripts
+
+      - name: Export approved roster and standings connections
+        if: vars.FANTRAX_RENEWALS_ENABLED == 'true'
+        env:
+          TRADE_ROSTER_PROJECT_REF: ${{ vars.TRADE_ROSTER_PROJECT_REF }}
+          TRADE_ROSTER_DATABASE_URL: ${{ secrets.TRADE_ROSTER_DATABASE_URL }}
+          TRADE_ROSTER_CA_CERT: ${{ secrets.TRADE_ROSTER_CA_CERT }}
+          FANTRAX_RENEWAL_CONFIRM: ${{ vars.FANTRAX_RENEWAL_PROJECT_REF }}
+        run: |
+          node supabase/tests/yearly-renewals.mjs export "$RUNNER_TEMP/fantrax-runtime.json"
+          echo "FANTRAX_CONNECTIONS_FILE=$RUNNER_TEMP/fantrax-runtime.json" >> "$GITHUB_ENV"
+
       - name: Fetch scheduled Fantrax data
         env:
           FANTRAX_COOKIE: ${{ secrets.FANTRAX_COOKIE }}
@@ -63,7 +85,7 @@ jobs:
             git push
           fi
 
-      # Public roster refresh remains independent of the database connection.
+      # Trade reconciliation is separate from publishing public roster files.
       # Standings-only runs never import roster files into Supabase.
       - name: Report trade roster sync not configured
         if: env.UPDATE_DATA == 'rosters' && vars.TRADE_ROSTER_SYNC_ENABLED != 'true'

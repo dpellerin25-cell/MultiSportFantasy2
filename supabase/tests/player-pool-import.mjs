@@ -9,6 +9,11 @@ const count=n=>Number.isSafeInteger(n)&&n>=0;
 const nonempty=s=>typeof s==='string'&&s.trim().length>0;
 const date=s=>typeof s==='string'&&/(Z|[+-]\d\d:\d\d)$/.test(s)&&Number.isFinite(Date.parse(s));
 
+export async function assertPoolConnections(q){
+ const renewals=await q('select sport,new_league_id from trading.league_renewals');
+ for(const renewal of renewals)requireValid(LEAGUES[renewal.sport]===renewal.new_league_id,'Retired player-pool connection; export current runtime connections and fetch again');
+}
+
 export function validateExport(bytes){
   const data=JSON.parse(bytes.toString('utf8').replace(/^\uFEFF/,''));
   requireValid(data.schema_version===1&&data.source==='Fantrax getPlayerStats'&&data.complete===true,'Unsupported or incomplete export');
@@ -47,6 +52,7 @@ export async function importPool(db,bytes){
     await q("set local statement_timeout='120s'");await q("set local lock_timeout='15s'");
     // Serialize this trusted importer across files, preserving stable source mappings.
     await q('select pg_advisory_xact_lock(20260925,1)');
+    await assertPoolConnections(q);
     const guard=await q("select 1 from pg_trigger where tgrelid='draft.player_pool_entries'::regclass and tgname='immutable_ready_entries' and tgenabled='O'");
     requireValid(guard.length===1,'Apply import snapshot migration first');
     const existing=(await q('select id,status from draft.player_pool_imports where checksum=$1',[pool.checksum]))[0];

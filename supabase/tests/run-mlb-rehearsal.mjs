@@ -29,9 +29,10 @@ try{
   const info=JSON.parse(docker(['inspect',container]));
   const binding=info[0]?.NetworkSettings?.Ports?.['5432/tcp']?.[0];
   if(binding?.HostIp!=='127.0.0.1'||!/^\d+$/.test(binding.HostPort))throw new Error('Expected a loopback-only database port.');
+  const testEnv=Object.fromEntries(Object.entries(process.env).filter(([key])=>!/^(FANTRAX_|DRAFT_TEST_|TRADE_|SUPABASE_|PG)/.test(key)));
   const result=spawnSync(process.execPath,[fileURLToPath(new URL('./mlb-concurrency.test.mjs',import.meta.url))],{
     stdio:'inherit',timeout:180000,
-    env:{...process.env,LOCAL_MLB_TEST_DB_URL:`postgresql://postgres:${password}@127.0.0.1:${binding.HostPort}/multisport_mlb_test`}
+    env:{...testEnv,LOCAL_MLB_TEST_DB_URL:`postgresql://postgres:${password}@127.0.0.1:${binding.HostPort}/multisport_mlb_test`}
   });
   if(result.error||result.status!==0)throw new Error('MLB rehearsal and concurrency tests did not pass. Keep the output for investigation.');
 }catch(e){console.error(e.message);process.exitCode=1;}
