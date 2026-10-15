@@ -1,0 +1,86 @@
+name: Fantrax Yearly Renewals
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Discover only, capture one sport for preview, or apply eligible automatic policies
+        type: choice
+        default: discover
+        options: [discover, preview, automatic]
+      sport:
+        description: Sport to capture in preview mode
+        type: choice
+        default: MLB
+        options: [NFL, MLB, NBA, EPL, PGA]
+  schedule:
+    - cron: '0 3 * * *'
+      timezone: America/New_York
+permissions:
+  contents: read
+concurrency:
+  group: fantrax-data-update
+  cancel-in-progress: false
+jobs:
+  renewals:
+    if: vars.FANTRAX_RENEWALS_ENABLED == 'true'
+    environment: fantrax-renewals
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      TRADE_ROSTER_PROJECT_REF: ${{ vars.TRADE_ROSTER_PROJECT_REF }}
+      TRADE_ROSTER_DATABASE_URL: ${{ secrets.TRADE_ROSTER_DATABASE_URL }}
+      TRADE_ROSTER_CA_CERT: ${{ secrets.TRADE_ROSTER_CA_CERT }}
+      FANTRAX_RENEWAL_CONFIRM: ${{ vars.FANTRAX_RENEWAL_PROJECT_REF }}
+      FANTRAX_CONNECTIONS_FILE: ${{ runner.temp }}/fantrax-runtime.json
+      RENEWAL_MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'automatic' }}
+      RENEWAL_SPORT: ${{ inputs.sport || 'MLB' }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - run: npx --yes pnpm@11.25.0 install --frozen-lockfile --ignore-scripts
+        working-directory: supabase/tests
+      - name: Resolve database-approved connections
+        run: node supabase/tests/yearly-renewals.mjs export "$FANTRAX_CONNECTIONS_FILE"
+      - name: Discover and capture eligible renewals
+        env:
+          FANTRAX_COOKIE: ${{ secrets.FANTRAX_COOKIE }}
+          FANTRAX_USER_SECRET_ID: ${{ secrets.FANTRAX_USER_SECRET_ID }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/renewals"
+          if [ "$RENEWAL_MODE" = preview ]; then
+            python scripts/yearly_renewals.py --directory "$RUNNER_TEMP/renewals" --capture "$RENEWAL_SPORT"
+          elif [ "$RENEWAL_MODE" = automatic ]; then
+            python scripts/yearly_renewals.py --directory "$RUNNER_TEMP/renewals" --capture automatic
+          else
+            python scripts/yearly_renewals.py --directory "$RUNNER_TEMP/renewals"
+          fi
+      - name: Preview captured plans
+        run: |
+          for sport in NFL MLB NBA EPL PGA; do
+            if [ -f "$RUNNER_TEMP/renewals/$sport-capture.json" ]; then
+              node supabase/tests/yearly-renewals.mjs preview "$RUNNER_TEMP/renewals/$sport-capture.json" > "$RUNNER_TEMP/renewals/$sport-preview.json"
+            fi
+          done
+      - name: Apply only explicitly enabled automatic policies
+        if: env.RENEWAL_MODE == 'automatic'
+        run: node supabase/tests/yearly-renewals.mjs automatic "$RUNNER_TEMP/renewals"
+      - name: Save evidence and preview reports for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fantrax-renewal-evidence
+          path: ${{ runner.temp }}/renewals/
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Run summary
+        if: always()
+        run: |
+          echo "## Fantrax renewal run" >> "$GITHUB_STEP_SUMMARY"
+          echo "Mode: $RENEWAL_MODE. Download the evidence artifact for discovery, captures, and preview blockers. Standings switch only with a separately approved archive hash in policy." >> "$GITHUB_STEP_SUMMARY"
+          echo "An automatic policy needs an explicit annual UTC month/day; all policies start in manual mode. Failed activation leaves that sport unchanged. Inspect job logs before retrying." >> "$GITHUB_STEP_SUMMARY"

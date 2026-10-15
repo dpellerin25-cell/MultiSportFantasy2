@@ -6,7 +6,8 @@ import {mlbTestConfig} from './mlb-test-config.mjs';
 const good='postgresql://postgres:fake@127.0.0.1:5432/multisport_mlb_test';
 assert.equal(mlbTestConfig(good).database,'multisport_mlb_test');
 for(const bad of [undefined,good.replace('127.0.0.1','db.example.com'),good.replace('multisport_mlb_test','postgres'),good+'?sslmode=disable',good.replace(':fake',''),good.replace(':5432','')])assert.throws(()=>mlbTestConfig(bad));
-for(const name of scenarioNames){
+const scenarios=[...scenarioNames.map(name=>({name,generic:false})),...scenarioNames.map(name=>({name,generic:true})),{name:'retired-pool-after-renewal',generic:true}];
+for(const {name,generic} of scenarios){
  const db=await PGlite.create();
  try{
    await db.exec(`create role anon;create role authenticated;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql as $$select null::uuid$$;`);
@@ -19,8 +20,8 @@ for(const name of scenarioNames){
      try{second={value:await secondOp(db)};await db.query('commit');}catch(error){await db.query('rollback');second={error};}
      return {first,second};
    };
-   await mlbRaceScenario(name,{admin:db,race});
-   console.log('PASS sequential rehearsal: '+name);
+   await mlbRaceScenario(name,{admin:db,race,generic});
+   console.log('PASS sequential rehearsal: '+(generic?'yearly ':'legacy MLB ')+name);
  }finally{await db.close();}
 }
-console.log('PASS destination guards and four offline scenarios. NOT multi-session concurrency validation.');
+console.log('PASS destination guards and nine offline scenarios. NOT multi-session concurrency validation.');
