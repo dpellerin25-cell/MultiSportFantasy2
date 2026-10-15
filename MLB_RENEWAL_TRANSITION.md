@@ -1,5 +1,42 @@
 # Controlled MLB renewal — not activated
 
+## Read-only database identity reconciliation
+
+The original summary contains only samples, not the full 10,000+ ID sets. Capture
+again with the optional full identity output (a new file outside the repository):
+
+```bash
+cd /workspaces/MultiSportFantasy2
+python scripts/validate_mlb_renewal.py --identity-output /tmp/mlb-renewal-identities.json > /tmp/mlb-renewal-validation.json
+cat /tmp/mlb-renewal-validation.json
+```
+
+FANTRAX_COOKIE and FANTRAX_USER_SECRET_ID must be privately set as for the previous
+capture. The output file is created only after capture checks pass, and existing
+files are never overwritten. Choose a new filename if one exists. Keep this
+manifest for subsequent comparisons; it has normalized player IDs/names, verified
+league metadata and capture timestamps, but no cookies or raw responses.
+
+With DRAFT_TEST_CONFIRM and DRAFT_TEST_DATABASE_URL set to the test project:
+
+```bash
+cd /workspaces/MultiSportFantasy2/supabase/tests
+NODE_EXTRA_CA_CERTS="$HOME/.config/multisport-draft/supabase-ca.crt" node audit-mlb-identities.mjs /tmp/mlb-renewal-identities.json
+```
+
+The audit uses a read-only repeatable-read transaction and always rolls back.
+It reports old stored sources absent from the new capture, whether those IDs
+were present in the old capture, draft selection counts (active and voided),
+frozen draft-pool references, and pending trade references. Names are included
+for manual review. Existing destination mappings, wrong sports, and stored-name
+differences are also flagged. Lists are capped at 100 with truncation flags for
+stored missing IDs/name differences. No player is deleted, remapped or marked
+ineligible. Captures are not live database state; a clean audit is not activation
+approval. Absence from available/rostered lists is not proof a player was deleted.
+
+Offline checks: `node mlb-identity-audit.test.mjs` in supabase/tests and
+`python -B -m unittest discover -s scripts -p test_validate_mlb_renewal.py` at root.
+
 ## Fresh live MLB validation
 
 `scripts/validate_mlb_renewal.py` uses the verified getLeagues/getLeagueInfo,

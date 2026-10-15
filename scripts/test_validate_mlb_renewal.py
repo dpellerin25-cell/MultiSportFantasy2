@@ -40,6 +40,17 @@ class RenewalCaptureTests(unittest.TestCase):
         self.assertFalse(result['automatic_switch_performed'])
         self.assertEqual(sum(m == 'getTeamRosterInfo' for _, m, _ in self.calls), 4)
 
+    def test_manifest_contains_full_ids_only_when_requested(self):
+        self.assertNotIn('identity_manifest', validate(self.get, self.request, ['Doug']))
+        report = validate(self.get, self.request, ['Doug'], include_identities=True)
+        manifest = report['identity_manifest']
+        self.assertEqual(manifest['kind'], 'mlb-renewal-identities')
+        self.assertTrue(manifest['capture_checks_passed'])
+        self.assertEqual(manifest['completed_at'], report['completed_at'])
+        for league in (OLD, NEW):
+            self.assertEqual(manifest['leagues'][league]['player_count'], 1)
+            self.assertEqual(set(manifest['leagues'][league]['players'][0]), {'player_id', 'player_name'})
+
     def test_wrong_season_rejected_before_roster_fetch(self):
         self.year = 2028
         with self.assertRaises(ValueError):
