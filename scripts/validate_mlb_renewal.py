@@ -1,5 +1,6 @@
 """Read-only live MLB comparison. Prints a report; never updates local data or Supabase."""
 import json
+import argparse
 import os
 from pathlib import Path
 import sys
@@ -39,7 +40,7 @@ def read_rosters(request, league, expected):
     return {'membership': membership, 'counts': counts, 'players': players}
 
 
-def validate(get, request, expected, progress=lambda s: None):
+def validate(get, request, expected, progress=lambda s: None, *, include_identities=False):
     started = datetime.now(timezone.utc).isoformat()
     leagues = get('getLeagues', None).get('leagues')
     if not isinstance(leagues, list):
@@ -89,7 +90,7 @@ def validate(get, request, expected, progress=lambda s: None):
     # Metadata must still describe the same pair after the long paginated fetch.
     if any(metadata(get('getLeagueInfo', lid)) != metas[lid] for lid in (OLD, NEW)):
         raise ValueError('Metadata changed during capture')
-    return {'read_only': True, 'automatic_switch_performed': False,
+    report = {'read_only': True, 'automatic_switch_performed': False,
             'started_at': started, 'completed_at': datetime.now(timezone.utc).isoformat(),
             'leagues': results, 'comparison': {'shared_player_ids': len(shared),
              'old_only_count': len(set(old_ids)-set(new_ids)), 'new_only_count': len(set(new_ids)-set(old_ids)),
@@ -99,9 +100,21 @@ def validate(get, request, expected, progress=lambda s: None):
              'old_rostered_missing_count': len(missing_rostered), 'old_rostered_missing_sample': missing_rostered[:20]},
             'blockers': blockers, 'capture_checks_passed': not blockers,
             'scope': 'Sequential live roster and ALL_AVAILABLE reads, not an atomic snapshot or complete Fantrax player universe. Old-only IDs and database source mappings still require review before activation.'}
+    if include_identities:
+        report['identity_manifest'] = {
+            'schema_version': 1, 'kind': 'mlb-renewal-identities',
+            'started_at': started, 'completed_at': report['completed_at'],
+            'capture_checks_passed': not blockers,
+            'leagues': {lid: {'metadata': metas[lid], 'player_count': len(ids),
+                              'players': [{'player_id': pid, 'player_name': name} for pid, name in sorted(ids.items())]}
+                        for lid, ids in identities.items()}}
+    return report
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--identity-output', help='Save complete ID lists to a new file outside the repository for read-only database comparison')
+    args = parser.parse_args()
     if not os.environ.get('FANTRAX_COOKIE') or not os.environ.get('FANTRAX_USER_SECRET_ID'):
         print('Set FANTRAX_COOKIE and FANTRAX_USER_SECRET_ID privately. No requests made.', file=sys.stderr)
         return 1
@@ -109,6 +122,10 @@ def main():
     stage = 'loading approved membership'
     try:
         root = Path(__file__).resolve().parents[1]
+        output = Path(args.identity_output).resolve() if args.identity_output else None
+        if output and (output.is_relative_to(root) or output.exists() or not output.parent.is_dir()):
+            print('Identity output must be a new file outside the repository, in an existing directory. No requests made.', file=sys.stderr)
+            return 1
         expected = [o['name'] for o in json.loads((root/'web/data/league-settings.json').read_text(encoding='utf-8-sig'))['owners']]
         with create_session() as session:
             def get(endpoint, lid):
@@ -129,7 +146,13 @@ def main():
                     raise ValueError('Fantrax API error')
                 validate_envelope(raw)
                 return raw['responses'][0]['data']
-            report = validate(get, request, expected, lambda s: print(s, file=sys.stderr))
+            report = validate(get, request, expected, lambda s: print(s, file=sys.stderr), include_identities=bool(output))
+        manifest = report.pop('identity_manifest', None)
+        if output and report['capture_checks_passed']:
+            stage = 'saving identity manifest'
+            with output.open('x', encoding='utf-8') as dest:
+                dest.write(json.dumps(manifest, indent=2).replace(secret, '[REDACTED]').replace(os.environ['FANTRAX_COOKIE'], '[REDACTED]'))
+            report['identity_manifest_saved'] = True
         print(json.dumps(report, indent=2).replace(secret, '[REDACTED]').replace(os.environ['FANTRAX_COOKIE'], '[REDACTED]'))
         return 0 if report['capture_checks_passed'] else 2
     except Exception:
