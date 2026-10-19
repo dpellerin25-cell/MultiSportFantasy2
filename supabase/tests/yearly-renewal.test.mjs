@@ -22,6 +22,12 @@ try{
  assert.equal(automaticAllowed(capture,auto,Date.UTC(2026,11,31)),false);
  auto.sports.MLB.automatic_month_day='02-30';assert.equal(automaticAllowed(capture,auto,Date.UTC(2027,3,1)),false);
  assert.deepEqual((await previewRenewal(db,capture,registry,settings,policy)).blockers,[]);
+ const renamed=structuredClone(capture);renamed.players[0].player_name='Different captured name';
+ const diagnostic=await previewRenewal(db,renamed,registry,settings,policy);
+ assert.equal(diagnostic.identity_difference_details[0].stored_records[0].name,'Fixture');
+ assert.equal(diagnostic.identity_difference_details[0].captured_name,'Different captured name');
+ assert.equal(diagnostic.identity_difference_details[0].stored_records[0].active_selections,0);
+ assert.deepEqual(diagnostic.membership.missing_from_database,[]);
  assert.equal(automaticAllowed(capture,policy),false);
  await assert.rejects(()=>applyRenewal(db,capture,baseline,settings,policy,{automatic:true}));
  await assert.rejects(()=>applyRenewal(db,capture,baseline,settings,policy,{approval:'wrong'}));
@@ -34,6 +40,10 @@ try{
  // A second annual renewal retains the original standings until archive release.
  const next={...capture,old_league_id:capture.new_league_id,new_league_id:'abcdefghijklmnop',old_season_year:2027,season_year:2028,started_at:new Date().toISOString(),completed_at:new Date().toISOString()};
  await db.exec("insert into draft.players(sport,name) values('MLB','Historical only');insert into draft.player_source_ids(player_id,provider,league_id,external_player_id) select id,'fantrax','rk8bvnk3mulovx9a','002' from draft.players where name='Historical only';");
+ const missingReport=await previewRenewal(db,next,after,settings,policy);
+ assert.equal(missingReport.missing_player_details[0].player_id,'002');
+ assert.equal(missingReport.missing_player_details[0].stored_records[0].name,'Historical only');
+ assert.equal(missingReport.missing_player_details[0].captured_name,null);
  await assert.rejects(()=>applyRenewal(db,next,baseline,settings,policy,{approval:checksum(next)}));
  const reviewed=structuredClone(policy);reviewed.sports.MLB.reviewed_absent_ids={'002':'Reviewed absent retired identity; retain history'};
  assert.equal((await applyRenewal(db,next,baseline,settings,reviewed,{approval:checksum(reviewedEvidence(next,reviewed))})).applied,true);

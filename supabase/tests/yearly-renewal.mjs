@@ -63,7 +63,10 @@ export async function previewRenewal(db,c,registry,settings,policy){
  const actual=(await db.query('select slug from draft.owners where active order by slug')).rows.map(o=>o.slug);
  if(JSON.stringify(actual)!==JSON.stringify(expected))blockers.push('Database and website membership differ');
  const ids=new Map(c.players.map(p=>[p.player_id,p.player_name.trim().toLowerCase()]));
- const sources=(await db.query(`select src.external_player_id,p.name,p.sport from draft.player_source_ids src join draft.players p on p.id=src.player_id where src.provider='fantrax' and src.league_id=$1`,[c.old_league_id])).rows;
+ const sources=(await db.query(`select src.external_player_id,p.name,p.sport,
+ (select count(*)::int from draft.draft_selections d where d.player_id=p.id and d.voided_at is null) active_selections,
+ (select count(*)::int from draft.draft_pool_players d where d.player_id=p.id) frozen_pool_references
+ from draft.player_source_ids src join draft.players p on p.id=src.player_id where src.provider='fantrax' and src.league_id=$1`,[c.old_league_id])).rows;
  const trades=(await db.query('select fantrax_id external_player_id,name,sport from trading.players where league_id=$1',[c.old_league_id])).rows;
  const ownership=(await db.query(`select p.fantrax_id,o.slug owner,
  (select dest.slug from trading.player_reservations r join trading.assets a on a.trade_id=r.trade_id and a.player_id=p.id join draft.owners dest on dest.id=a.to_owner_id where r.player_id=p.id) expected_transfer
@@ -80,8 +83,11 @@ export async function previewRenewal(db,c,registry,settings,policy){
  const dest=(await db.query("select count(*)::int n from draft.player_source_ids where provider='fantrax' and league_id=$1",[c.new_league_id])).rows[0].n;
  if(dest)blockers.push('Destination source identities already exist');
  const planHash=checksum(c);
+ const details=id=>({player_id:id,stored_records:[...sources.map(p=>({...p,source:'draft'})),...trades.map(p=>({...p,source:'trade'}))].filter(p=>p.external_player_id===id).map(({external_player_id,...p})=>p),captured_name:c.players.find(p=>p.player_id===id)?.player_name??null});
  return {plan_hash:planHash,sport:c.sport,old_league_id:c.old_league_id,new_league_id:c.new_league_id,
    season_year:c.season_year,stored_sources:sources.length,missing_ids:absent,name_or_sport_mismatches:mismatch,
+   membership:{website_owners:expected,database_active_owners:actual,missing_from_database:expected.filter(o=>!actual.includes(o)),database_only:actual.filter(o=>!expected.includes(o))},
+   missing_player_details:absent.map(details),identity_difference_details:mismatch.map(details),
    blockers,standings_unchanged:true,mode:rule.mode};
 }
 
