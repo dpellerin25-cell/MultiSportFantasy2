@@ -16,13 +16,47 @@ from nfl_player_pool import collect_pool
 
 ROOT = Path(__file__).resolve().parents[1]
 
+
+def safe_failure(error):
+    # Never print arbitrary exception text: requests may include secret URLs.
+    messages = {
+        'Authentication rejected': 'Fantrax rejected the session. Copy a fresh Cookie header from a logged-in league request.',
+        'API response failed': 'Fantrax returned an API error; authentication or league access may need attention.',
+        'League response failed': 'Fantrax returned a non-200 league response.',
+        'Metadata response failed': 'Fantrax returned a non-200 metadata response.',
+        'Renewal metadata mismatch': 'The old/new league history or season no longer matches.',
+        'Complete approved membership required': 'The renewed league does not contain exactly the approved owners.',
+        'Missing or unexpected team list': 'The standings response has no usable team list.',
+        'Invalid or duplicate owner names': 'The roster owner names are invalid or duplicated.',
+        'Roster changed during capture': 'Rosters changed during the capture; retry with fresh evidence.',
+        'Metadata changed during capture': 'League metadata changed during the capture.',
+        'Incomplete pool': 'The player pool is incomplete or contains unknown availability.',
+    }
+    return messages.get(str(error), 'Unrecognized response or local failure; raw details withheld to protect credentials.')
+
+
+def check_api_error(raw):
+    if not isinstance(raw, dict):
+        raise ValueError('API response failed')
+    responses = raw.get('responses', [])
+    if not isinstance(responses, list):
+        raise ValueError('API response failed')
+    errors = [item['pageError'] for item in [raw, *responses]
+              if isinstance(item, dict) and 'pageError' in item]
+    if any(isinstance(e, dict) and e.get('code') == 'WARNING_NOT_LOGGED_IN' for e in errors):
+        raise ValueError('Authentication rejected')
+    if errors:
+        raise ValueError('API response failed')
+
 def capture(get, request, sport, candidate, settings, progress):
     old, new = candidate['current_league_id'], candidate['proposed_league_id']
     start = datetime.now(timezone.utc).isoformat()
+    progress(f'Checking {sport} renewal metadata')
     baseline, target = metadata(get('getLeagueInfo', old)), metadata(get('getLeagueInfo', new))
     if not baseline['league_history_id'] or target['league_history_id'] != baseline['league_history_id'] or target['season_year'] != candidate['target_season_year'] or target['season_year'] != baseline['season_year']+1:
         raise ValueError('Renewal metadata mismatch')
     names = {o['name']: o['slug'] for o in settings['owners']}
+    progress(f'Checking {sport} initial standings and rosters')
     before = read_rosters(request, new, list(names))
     if before['membership']['missing_owners'] or before['membership']['unexpected_owner_count']:
         raise ValueError('Complete approved membership required')
@@ -35,6 +69,7 @@ def capture(get, request, sport, candidate, settings, progress):
                         position_filter=FILTERS.get(sport, 'FOOTBALL_OFFENSE'), include_players=True)
     if not pool['summary']['complete'] or pool['summary']['unknown_status_count']:
         raise ValueError('Incomplete pool')
+    progress(f'Rechecking {sport} rosters after player capture')
     if before != read_rosters(request, new, list(names)):
         raise ValueError('Roster changed during capture')
     if metadata(get('getLeagueInfo', old)) != baseline or metadata(get('getLeagueInfo', new)) != target:
@@ -81,8 +116,7 @@ def main():
                 if response.status_code != 200:
                     raise ValueError('League response failed')
                 raw = response.json()
-                if 'pageError' in raw or any('pageError' in r for r in raw.get('responses',[])):
-                    raise ValueError('API response failed')
+                check_api_error(raw)
                 validate_envelope(raw)
                 return raw['responses'][0]['data']
             config = copy.deepcopy(CONNECTIONS)
@@ -114,15 +148,19 @@ def main():
                     if cached.get('new_league_id') == row['proposed_league_id'] and cached.get('old_league_id') == row['current_league_id'] and cached.get('capture_checks_passed') and 0 <= age < 21600:
                         row['capture_reused'] = True
                         continue
-                evidence = capture(get, request, sport, row, settings, lambda msg: print(msg, file=sys.stderr))
+                def progress(msg):
+                    nonlocal stage
+                    stage = msg
+                    print(msg, file=sys.stderr)
+                evidence = capture(get, request, sport, row, settings, progress)
                 path.write_text(json.dumps(evidence, indent=2), encoding='utf-8')
                 row['capture_saved'] = True
             safe = json.dumps(report,indent=2).replace(secret,'[REDACTED]')
             (out/'discovery.json').write_text(safe,encoding='utf-8')
             print(safe)
         return 0
-    except Exception:
-        print(f'Renewal discovery/capture failed while {stage}. No activation performed; details omitted to protect credentials.',file=sys.stderr)
+    except Exception as error:
+        print(f'Renewal discovery/capture failed while {stage}. {safe_failure(error)} No activation performed.',file=sys.stderr)
         return 1
 
 if __name__ == '__main__':
