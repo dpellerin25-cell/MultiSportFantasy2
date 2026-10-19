@@ -8,7 +8,7 @@ import {runtimeRegistry,previewRenewal,applyRenewal,automaticAllowed,SPORTS} fro
 let db,stage='checking explicit project settings';
 try{
  const [mode,path,...extra]=process.argv.slice(2);
- assert.ok(['export','preview','apply','automatic'].includes(mode)&&path&&!extra.length);
+ assert.ok(['export','preview','audit','apply','automatic'].includes(mode)&&path&&!extra.length);
  // The export destination does not exist yet: do not import it as input.
  if(mode==='export')delete process.env.FANTRAX_CONNECTIONS_FILE;
  const {syncConnection}=await import('./trade-roster-sync.mjs');
@@ -52,7 +52,7 @@ try{
    const capture=JSON.parse(await readFile(path,'utf8'));stage='validating capture and stored player identities';
    if(mode==='apply')console.log(JSON.stringify(await applyRenewal(db,capture,baseline,settings,policy,{approval:process.env.FANTRAX_RENEWAL_APPROVE}),null,2));
    else{await db.query('begin isolation level repeatable read read only');
-     const report=await previewRenewal(db,capture,await runtimeRegistry(db,baseline),settings,policy);
+     const report=await previewRenewal(db,capture,await runtimeRegistry(db,baseline),settings,policy,{auditOnly:mode==='audit'});
      await db.query('rollback');console.log(JSON.stringify(report,null,2));}
  }
 }catch(e){console.error(`Renewal operation failed while ${stage} (${typeof e.code==='string'&&/^[A-Z0-9_]{1,40}$/.test(e.code)?e.code:'check inputs/settings'}). No automatic fallback; retry a lost-connection apply with the identical capture.`);process.exitCode=1;}

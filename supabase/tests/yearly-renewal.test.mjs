@@ -14,6 +14,13 @@ try{
  const capture={schema_version:1,capture_checks_passed:true,sport:'MLB',old_league_id:'60ri2nbhmtj4b0km',new_league_id:'rk8bvnk3mulovx9a',standings_league_id:'60ri2nbhmtj4b0km',history_id:'ml3fdlq2mulovxoh',old_season_year:2026,season_year:2027,
  standings_championship_year:2027,started_at:new Date(Date.now()-2000).toISOString(),completed_at:new Date(Date.now()-1000).toISOString(),pool_summary:{complete:true,unknown_status_count:0,unique_available_players:1},players:[{player_id:'001',player_name:'Fixture'}],rosters:settings.owners.map(o=>({owner:o.slug,players:[]}))};
  const registry=await runtimeRegistry(db,baseline);
+ const stale={...capture,started_at:'2026-01-01T00:00:00Z',completed_at:'2026-01-01T00:01:00Z'};
+ const audit=await previewRenewal(db,stale,registry,settings,policy,{auditOnly:true});
+ assert.equal(audit.audit_only,true);assert.equal(audit.activation_authorized,false);assert.equal(audit.plan_hash,undefined);
+ await assert.rejects(()=>previewRenewal(db,stale,registry,settings,policy));
+ await assert.rejects(()=>applyRenewal(db,stale,baseline,settings,policy,{approval:checksum(stale)}));
+ await assert.rejects(()=>previewRenewal(db,{...stale,completed_at:'2999-01-01T00:00:00Z'},registry,settings,policy,{auditOnly:true}));
+ assert.equal((await db.query('select count(*)::int n from trading.fantrax_transition_log')).rows[0].n,0);
  for(const mutate of [c=>c.new_league_id='xtv5ph2gmulolm8g',c=>c.old_league_id='abcdefghijklmnop',c=>c.season_year=2029,c=>c.rosters.pop(),c=>c.players.push(c.players[0]),c=>c.started_at='2000-01-01T00:00:00Z']){
    const bad=structuredClone(capture);mutate(bad);assert.throws(()=>checkCapture(bad,registry,settings));
  }

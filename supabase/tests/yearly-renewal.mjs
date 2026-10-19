@@ -8,7 +8,7 @@ export function reviewedEvidence(c,policy){
  for(const [id,reason] of Object.entries(reviews))assert.ok(/^[a-zA-Z0-9_-]{1,100}$/.test(id)&&typeof reason==='string'&&reason.trim().length>=10);
  return Object.keys(reviews).length?{...c,reviewed_absent_ids:reviews}:c;
 }
-export function checkCapture(c,registry,settings,now=Date.now()){
+export function checkCapture(c,registry,settings,now=Date.now(),{auditOnly=false}={}){
  assert.equal(c.schema_version,1);assert.equal(c.capture_checks_passed,true);assert.ok(SPORTS.includes(c.sport));
  const current=registry.sports[c.sport];
  assert.equal(c.old_league_id,current.current_league_id,'Stale source connection');
@@ -21,7 +21,8 @@ export function checkCapture(c,registry,settings,now=Date.now()){
  assert.equal(c.season_year,c.old_season_year+1);
  assert.ok(Number.isInteger(c.season_year)&&c.season_year<=2200);
  const start=Date.parse(c.started_at),end=Date.parse(c.completed_at);
- assert.ok(Number.isFinite(start)&&Number.isFinite(end)&&start<=end&&end<=now&&start>=now-21600000,'Capture older than six hours or invalid');
+ assert.ok(Number.isFinite(start)&&Number.isFinite(end)&&start<=end&&end<=now,'Invalid capture timestamps');
+ if(!auditOnly)assert.ok(start>=now-21600000,'Capture older than six hours');
  assert.equal(c.pool_summary?.complete,true);assert.equal(c.pool_summary?.unknown_status_count,0);
  assert.ok(Array.isArray(c.players)&&c.players.length>0&&c.players.length<=100000);
  const ids=new Set();
@@ -53,9 +54,9 @@ export async function runtimeRegistry(db,baseline){
  return registry;
 }
 
-export async function previewRenewal(db,c,registry,settings,policy){
+export async function previewRenewal(db,c,registry,settings,policy,{auditOnly=false}={}){
  c=reviewedEvidence(c,policy);
- checkCapture(c,registry,settings);
+ checkCapture(c,registry,settings,Date.now(),{auditOnly});
  const rule=policy.sports[c.sport];assert.ok(['disabled','manual','automatic'].includes(rule.mode));
  const blockers=[];
  if(rule.mode==='disabled')blockers.push('Renewals disabled for this sport');
@@ -84,7 +85,7 @@ export async function previewRenewal(db,c,registry,settings,policy){
  if(dest)blockers.push('Destination source identities already exist');
  const planHash=checksum(c);
  const details=id=>({player_id:id,stored_records:[...sources.map(p=>({...p,source:'draft'})),...trades.map(p=>({...p,source:'trade'}))].filter(p=>p.external_player_id===id).map(({external_player_id,...p})=>p),captured_name:c.players.find(p=>p.player_id===id)?.player_name??null});
- return {plan_hash:planHash,sport:c.sport,old_league_id:c.old_league_id,new_league_id:c.new_league_id,
+ return {...(auditOnly?{audit_only:true,activation_authorized:false,capture_completed_at:c.completed_at,scope:'Saved evidence compared with current database; not a live Fantrax verification. Run a fresh preview before activation.'}:{plan_hash:planHash}),sport:c.sport,old_league_id:c.old_league_id,new_league_id:c.new_league_id,
    season_year:c.season_year,stored_sources:sources.length,missing_ids:absent,name_or_sport_mismatches:mismatch,
    membership:{website_owners:expected,database_active_owners:actual,missing_from_database:expected.filter(o=>!actual.includes(o)),database_only:actual.filter(o=>!expected.includes(o))},
    missing_player_details:absent.map(details),identity_difference_details:mismatch.map(details),

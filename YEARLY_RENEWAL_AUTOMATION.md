@@ -144,6 +144,11 @@ node supabase/tests/yearly-renewals.mjs preview /tmp/yearly-renewals/MLB-capture
 Add `--refresh` to the Python command to discard a reusable capture and fetch
 fresh evidence, for example after resolving a roster-ownership blocker.
 
+To review an older saved capture without fetching players again, run
+`node supabase/tests/yearly-renewals.mjs audit /tmp/yearly-renewals/MLB-capture.json`.
+Audit uses a read-only transaction, permits older evidence, and prints no approval
+hash. Normal preview and activation still enforce the six-hour freshness limit.
+
 Only after preview review, set FANTRAX_RENEWAL_APPROVE to its hash and run:
 
 ```bash
