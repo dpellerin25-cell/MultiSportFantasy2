@@ -42,8 +42,13 @@ class CaptureTests(unittest.TestCase):
         self.assertEqual(len(c['players']),1)
 
     def test_missing_member_blocks_before_pool(self):
+        messages=[]
         with self.assertRaisesRegex(ValueError,'membership'):
-            capture(self.get,self.request,'MLB',self.candidate,{'owners':[{'name':'Doug','slug':'doug'},{'name':'John','slug':'john'}]},lambda _:None)
+            capture(self.get,self.request,'MLB',self.candidate,{'owners':[{'name':'Doug','slug':'doug'},{'name':'John','slug':'john'}]},messages.append)
         self.assertFalse(any(m=='getPlayerStats' for _,m in self.calls))
+        report=json.loads(messages[-1].removeprefix('Membership check: '))
+        self.assertEqual(report['missing_owners'],['John'])
+        self.assertEqual(report['matched_owners'],['Doug'])
+        self.assertEqual(report['unexpected_owner_count'],0)
 
 if __name__=='__main__':unittest.main()

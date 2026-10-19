@@ -10,6 +10,10 @@
       {
         "kind": "paragraph",
         "text": "The Commissioner is responsible for the overall administration of the league. The Deputy Commissioners will assist with league administration and may act on behalf of the Commissioner when necessary."
+      },
+      {
+        "kind": "paragraph",
+        "text": "The league currently consists of 11 owners: Billy, Brendan, Chris, Doug, Hatch, Jack, Jacob, John, Nik, Ryan, and Tucker."
       }
     ]
   },
@@ -371,7 +375,7 @@
       },
       {
         "kind": "paragraph",
-        "text": "The ten-team league awards the following placement points in each sport. Total sport points equal placement points plus the dominance adjustment."
+        "text": "The eleven-team league awards the following placement points in each sport. Total sport points equal placement points plus the dominance adjustment."
       },
       {
         "kind": "table",
@@ -386,38 +390,42 @@
           ],
           [
             "2nd",
-            "82"
+            "83"
           ],
           [
             "3rd",
-            "68"
+            "70"
           ],
           [
             "4th",
-            "56"
+            "59"
           ],
           [
             "5th",
-            "45"
+            "49"
           ],
           [
             "6th",
-            "35"
+            "40"
           ],
           [
             "7th",
-            "26"
+            "32"
           ],
           [
             "8th",
-            "18"
+            "24"
           ],
           [
             "9th",
-            "10"
+            "16"
           ],
           [
             "10th",
+            "8"
+          ],
+          [
+            "11th",
             "0"
           ]
         ]
@@ -436,7 +444,7 @@
       },
       {
         "kind": "paragraph",
-        "text": "A tenth-place team finishing 1.7 standard deviations below average earns:"
+        "text": "An eleventh-place team finishing 1.7 standard deviations below average earns:"
       },
       {
         "kind": "equation",

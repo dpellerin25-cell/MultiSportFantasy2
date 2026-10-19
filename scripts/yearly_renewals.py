@@ -59,6 +59,13 @@ def capture(get, request, sport, candidate, settings, progress):
     progress(f'Checking {sport} initial standings and rosters')
     before = read_rosters(request, new, list(names))
     if before['membership']['missing_owners'] or before['membership']['unexpected_owner_count']:
+        # Only approved local names are printed; never echo unknown response text.
+        progress('Membership check: ' + json.dumps({
+            'approved_owners': sorted(names),
+            'matched_owners': sorted(before['teams'].values()),
+            'missing_owners': before['membership']['missing_owners'],
+            'unexpected_owner_count': before['membership']['unexpected_owner_count'],
+        }))
         raise ValueError('Complete approved membership required')
     def page(number):
         progress(f'Reading {sport} new-season page {number}')

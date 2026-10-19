@@ -2,6 +2,10 @@
   "championship_year": 2027,
   "owners": [
     {
+      "slug": "billy",
+      "name": "Billy"
+    },
+    {
       "slug": "brendan",
       "name": "Brendan"
     },
@@ -44,14 +48,15 @@
   ],
   "placement_points": [
     100,
-    82,
-    68,
-    56,
-    45,
-    35,
-    26,
-    18,
-    10,
+    83,
+    70,
+    59,
+    49,
+    40,
+    32,
+    24,
+    16,
+    8,
     0
   ]
 }
