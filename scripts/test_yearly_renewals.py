@@ -2,9 +2,20 @@ import copy
 import json
 from pathlib import Path
 import unittest
-from yearly_renewals import capture
+from yearly_renewals import capture, check_api_error, safe_failure
 
 class CaptureTests(unittest.TestCase):
+    def test_safe_authentication_diagnostic(self):
+        for body in [{'pageError': {'code': 'WARNING_NOT_LOGGED_IN'}},
+                     {'responses': [{'pageError': {'code': 'WARNING_NOT_LOGGED_IN'}}]}]:
+            with self.assertRaisesRegex(ValueError, 'Authentication rejected'):
+                check_api_error(body)
+        self.assertNotIn('SECRET', safe_failure(ValueError('URL?cookie=SECRET')))
+        self.assertIn('session', safe_failure(ValueError('Authentication rejected')))
+        for body in [[], {'responses': None}, {'pageError': {'text': 'SECRET'}}]:
+            with self.assertRaisesRegex(ValueError, 'API response failed'):
+                check_api_error(body)
+
     def setUp(self):
         self.old='60ri2nbhmtj4b0km'
         self.new='rk8bvnk3mulovx9a'
