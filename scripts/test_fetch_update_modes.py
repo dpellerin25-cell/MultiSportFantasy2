@@ -55,14 +55,17 @@ class UpdateModesTest(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     fetch.league_settings(names)
 
-    def test_john_expansion_configuration(self):
+    def test_billy_expansion_configuration(self):
         import json
         from pathlib import Path
         settings = json.loads(Path("web/data/league-settings.json").read_text(encoding="utf-8"))
         names = [owner["name"] for owner in settings["owners"]]
         self.assertIn("John", names)
-        self.assertEqual(len(names), 10)
-        self.assertEqual(fetch.league_settings(names)["placement_points"], [100,82,68,56,45,35,26,18,10,0])
+        self.assertIn("Billy", names)
+        with self.assertRaisesRegex(ValueError, "Missing:.*Billy"):
+            fetch.league_settings([name for name in names if name != "Billy"])
+        self.assertEqual(len(names), 11)
+        self.assertEqual(fetch.league_settings(names)["placement_points"], [100,83,70,59,49,40,32,24,16,8,0])
         with self.assertRaisesRegex(ValueError, "Missing:.*John"):
             fetch.league_settings([name for name in names if name != "John"])
 
@@ -71,7 +74,7 @@ class UpdateModesTest(unittest.TestCase):
         from pathlib import Path
         names = [o["name"] for o in json.loads(Path("web/data/league-settings.json").read_text())["owners"]]
         without_john = [n for n in names if n != "John"]
-        self.assertEqual(len(fetch.league_settings(without_john, allow_missing_john=True)["placement_points"]), 10)
+        self.assertEqual(len(fetch.league_settings(without_john, allow_missing_john=True)["placement_points"]), 11)
         with self.assertRaises(ValueError):
             fetch.league_settings(without_john)
         for invalid in ([n for n in without_john if n != "Doug"], without_john + ["Unknown"], without_john + [without_john[0]], []):

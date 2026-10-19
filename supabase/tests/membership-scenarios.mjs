@@ -15,6 +15,18 @@ export async function membershipScenarios(db) {
  await assert.rejects(()=>configure(original,[100,90]),/placement table/);
  await assert.rejects(()=>configure(original,Array(9).fill(10)),/placement table/);
  await q(`select trading.import_pick_ledger(' {"version":1,"trades":[]} '::jsonb)`);
+ await q('begin');
+ const eleven=[...original,{slug:'john',name:'John'},{slug:'billy',name:'Billy'}];
+ await configure(eleven,[100,83,70,59,49,40,32,24,16,8,0]);
+ assert.equal((await q('select count(*)::int n from draft.owners where active'))[0].n,11);
+ assert.equal((await q('select count(*)::int n from trading.picks'))[0].n,220);
+ const elevenDraft=(await q("insert into draft.drafts(name,kind,championship_year,rounds,participant_count) values('Eleven owners','startup',2027,65,11) returning id"))[0].id;
+ await q('insert into draft.draft_participants select $1,id,row_number() over(order by slug) from draft.owners where active',[elevenDraft]);
+ assert.equal((await q('select draft.generate_snake_picks($1) n',[elevenDraft]))[0].n,715);
+ const elevenPreview=snakePreview(eleven.map(o=>o.slug));
+ assert.equal(elevenPreview.length,715);assert.equal(elevenPreview[10].owner,elevenPreview[11].owner);
+ await q('rollback');
+ console.log('PASS Billy/John eleven-owner membership, 220 rookie picks and 715 snake slots');
  const ten=[...original,{slug:'expansion',name:'Expansion'}];
  await configure(ten);
  const expansionDraft=(await q("insert into draft.drafts(name,kind,championship_year,rounds,participant_count) values('Expansion','startup',2027,65,10) returning id"))[0].id;
