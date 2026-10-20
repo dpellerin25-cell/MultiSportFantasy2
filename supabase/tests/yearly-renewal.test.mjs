@@ -31,6 +31,31 @@ try{
  assert.deepEqual((await previewRenewal(db,capture,registry,settings,policy)).blockers,[]);
  const renamed=structuredClone(capture);renamed.players[0].player_name='Different captured name';
  const diagnostic=await previewRenewal(db,renamed,registry,settings,policy);
+ assert.deepEqual(diagnostic.blockers,[]);
+ assert.equal(diagnostic.warnings[0].issue,'unowned_name_difference');
+ await db.exec('begin');
+ await db.query('select trading.apply_fantrax_renewal($1,$2)',[JSON.stringify(renamed),checksum(renamed)]);
+ assert.equal((await db.query('select count(*)::int n from draft.player_source_ids where league_id=$1',[capture.new_league_id])).rows[0].n,0);
+ assert.equal((await db.query('select name from draft.players')).rows[0].name,'Fixture');
+ await db.exec('rollback');
+ // Identical mismatch must block if the player is owned, even with an override.
+ await db.exec('begin');
+ const ownedRosters=capture.rosters.map(r=>({...r,players:r.owner==='doug'?[{player_id:'001',name:'Fixture'}]:[]}));
+ await db.query("select trading.ingest_rosters('MLB',$1,clock_timestamp()-interval '1 day',$2)",[capture.old_league_id,JSON.stringify(ownedRosters)]);
+ const ownedReport=await previewRenewal(db,renamed,registry,settings,policy);
+ assert.deepEqual(ownedReport.protected_name_mismatches,['001']);
+ const missingOwned={...capture,players:[{player_id:'different',player_name:'Different player'}]};
+ assert.deepEqual((await previewRenewal(db,missingOwned,registry,settings,policy)).protected_missing_ids,['001']);
+ await assert.rejects(()=>db.query('select trading.apply_fantrax_renewal($1,$2)',[JSON.stringify(renamed),checksum(renamed)]),/Protected/);
+ await db.exec('rollback');
+ // Formerly rostered but now unowned historical trade records do not block.
+ await db.exec('begin');
+ await db.query("select trading.ingest_rosters('MLB',$1,clock_timestamp()-interval '2 days',$2)",[capture.old_league_id,JSON.stringify(ownedRosters)]);
+ await db.query("select trading.ingest_rosters('MLB',$1,clock_timestamp()-interval '1 day',$2)",[capture.old_league_id,JSON.stringify(capture.rosters)]);
+ assert.deepEqual((await previewRenewal(db,renamed,registry,settings,policy)).blockers,[]);
+ await db.query('select trading.apply_fantrax_renewal($1,$2)',[JSON.stringify(renamed),checksum(renamed)]);
+ assert.equal((await db.query('select league_id from trading.players')).rows[0].league_id,capture.old_league_id);
+ await db.exec('rollback');
  assert.equal(diagnostic.identity_difference_details[0].stored_records[0].name,'Fixture');
  assert.equal(diagnostic.identity_difference_details[0].captured_name,'Different captured name');
  assert.equal(diagnostic.identity_difference_details[0].stored_records[0].active_selections,0);
@@ -51,7 +76,8 @@ try{
  assert.equal(missingReport.missing_player_details[0].player_id,'002');
  assert.equal(missingReport.missing_player_details[0].stored_records[0].name,'Historical only');
  assert.equal(missingReport.missing_player_details[0].captured_name,null);
- await assert.rejects(()=>applyRenewal(db,next,baseline,settings,policy,{approval:checksum(next)}));
+ assert.deepEqual(missingReport.blockers,[]);
+ assert.equal(missingReport.warnings[0].issue,'unowned_absent');
  const reviewed=structuredClone(policy);reviewed.sports.MLB.reviewed_absent_ids={'002':'Reviewed absent retired identity; retain history'};
  assert.equal((await applyRenewal(db,next,baseline,settings,reviewed,{approval:checksum(reviewedEvidence(next,reviewed))})).applied,true);
  const final=await runtimeRegistry(db,baseline);assert.equal(final.sports.MLB.current_season_year,2028);assert.equal(final.sports.MLB.standings_league_id,capture.old_league_id);

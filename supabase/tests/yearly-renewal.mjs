@@ -76,11 +76,14 @@ export async function previewRenewal(db,c,registry,settings,policy,{auditOnly=fa
  if(ownership.some(p=>capturedOwners.get(p.fantrax_id)!==p.owner&&(!p.expected_transfer||capturedOwners.get(p.fantrax_id)!==p.expected_transfer)))blockers.push('Owned players are missing or unexpectedly reassigned in renewed rosters; verify Fantrax carryover first');
  const absent=[...new Set([...sources,...trades].filter(p=>!ids.has(p.external_player_id)).map(p=>p.external_player_id))].sort();
  const mismatch=[...new Set([...sources,...trades].filter(p=>p.sport!==c.sport||(ids.has(p.external_player_id)&&ids.get(p.external_player_id)!==p.name.trim().toLowerCase())).map(p=>p.external_player_id))].sort();
- const protectedIds=(await db.query(`select distinct src.external_player_id from draft.player_source_ids src join draft.draft_selections d on d.player_id=src.player_id where src.provider='fantrax' and src.league_id=$1 and d.voided_at is null`,[c.old_league_id])).rows.map(r=>r.external_player_id);
- const unreviewed=absent.filter(id=>!Object.hasOwn(c.reviewed_absent_ids??{},id)||protectedIds.includes(id)||trades.some(p=>p.external_player_id===id));
- if(unreviewed.length)blockers.push('Stored IDs absent from capture require review; active draft selections and trade identities cannot be waived');
- if(rule.mode==='automatic'&&Object.keys(c.reviewed_absent_ids??{}).length)blockers.push('Historical-ID exceptions require manual activation');
- if(mismatch.length)blockers.push('Stored names or sport differ from capture');
+ const protectedIds=(await db.query('select external_id from trading.renewal_protected_ids($1)',[c.old_league_id])).rows.map(r=>r.external_id);
+ const protectedMissing=absent.filter(id=>protectedIds.includes(id));
+ const protectedMismatch=mismatch.filter(id=>protectedIds.includes(id));
+ if(protectedMissing.length)blockers.push('Owned, traded or non-retired drafted player IDs are absent from capture');
+ if(protectedMismatch.length)blockers.push('Owned, traded or non-retired drafted player names differ from capture');
+ if([...sources,...trades].some(p=>p.sport!==c.sport))blockers.push('Stored source sport differs from league');
+ const warnings=[...absent.filter(id=>!protectedIds.includes(id)).map(id=>({player_id:id,issue:'unowned_absent',action:'retain historical identity'})),
+ ...mismatch.filter(id=>!protectedIds.includes(id)).map(id=>({player_id:id,issue:'unowned_name_difference',action:'do not alias; use separate new-season identity'}))];
  const dest=(await db.query("select count(*)::int n from draft.player_source_ids where provider='fantrax' and league_id=$1",[c.new_league_id])).rows[0].n;
  if(dest)blockers.push('Destination source identities already exist');
  const planHash=checksum(c);
@@ -89,6 +92,7 @@ export async function previewRenewal(db,c,registry,settings,policy,{auditOnly=fa
    season_year:c.season_year,stored_sources:sources.length,missing_ids:absent,name_or_sport_mismatches:mismatch,
    membership:{website_owners:expected,database_active_owners:actual,missing_from_database:expected.filter(o=>!actual.includes(o)),database_only:actual.filter(o=>!expected.includes(o))},
    missing_player_details:absent.map(details),identity_difference_details:mismatch.map(details),
+   protected_missing_ids:protectedMissing,protected_name_mismatches:protectedMismatch,warnings,
    blockers,standings_unchanged:true,mode:rule.mode};
 }
 

@@ -46,16 +46,22 @@ a mode/date is an operational approval and should be reviewed in GitHub.
 
 Manual preview prints a SHA-256 approval hash of the complete evidence. Set
 `FANTRAX_RENEWAL_APPROVE` to that exact hash for `apply`. A changed capture needs
-a new approval. Missing IDs never cause automatic deletion. A commissioner may
-record reviewed, historical-only missing source IDs in the sport's policy:
+a new approval.
 
-```json
-{"mode":"manual","automatic_month_day":null,"reviewed_absent_ids":{"EXAMPLE_ID":"Reviewed retired player; retain the historical identity"}}
-```
+After `202610200001_owned_renewal_checks.sql`, missing IDs/name differences for
+unowned players are warnings, not blockers. Only exact ID/name/sport matches get
+new-season aliases. Unmatched unowned identities remain historical; the subsequent
+new-season pool import creates independent identities without modifying old pools.
+No retired/deleted-player inference or name-based merging occurs.
 
-Do not add exceptions without reviewing the audit. Exceptions cannot waive active
-draft selections, name mismatches or trade-player identities and are forbidden
-for automatic activation. The explanation is included in the approved plan/hash.
+Owned players, proposed/accepted trade assets, reserved players and non-voided
+selections in non-retired drafts still require matching evidence. Retired rehearsal
+selections do not block. A player on an owner's roster who disappears, changes name
+or moves unexpectedly still blocks activation. Complete membership, pagination,
+freshness, destination-conflict and sport checks remain in force. These rules are
+rechecked under database locks; an owner acquiring a player after preview cannot
+be silently bypassed. Historical-only exceptions no longer need a manual review
+list; existing reviewed_absent_ids fields never override protected-player checks.
 
 ## Standings and championship history
 
