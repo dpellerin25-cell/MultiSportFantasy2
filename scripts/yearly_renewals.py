@@ -17,6 +17,12 @@ from nfl_player_pool import collect_pool
 ROOT = Path(__file__).resolve().parents[1]
 
 
+class PoolValidationFailure(ValueError):
+    def __init__(self, report):
+        super().__init__('Incomplete pool')
+        self.report = report
+
+
 def safe_failure(error):
     # Never print arbitrary exception text: requests may include secret URLs.
     messages = {
@@ -67,15 +73,36 @@ def capture(get, request, sport, candidate, settings, progress):
             'unexpected_owner_count': before['membership']['unexpected_owner_count'],
         }))
         raise ValueError('Complete approved membership required')
+    seen_ids, duplicate_ids, status_samples = set(), set(), {}
     def page(number):
         progress(f'Reading {sport} new-season page {number}')
         data = build_payload(number)['msgs'][0]['data']
         data['positionOrGroup'] = REQUEST_FILTERS.get(sport, 'FOOTBALL_OFFENSE')
-        return request(new, 'getPlayerStats', data)
+        body = request(new, 'getPlayerStats', data)
+        headers = body.get('tableHeader', {}).get('cells', [])
+        indices = [i for i, h in enumerate(headers) if h.get('key') == 'status']
+        for row in body.get('statsTable', []):
+            pid = row.get('scorer', {}).get('scorerId')
+            if not isinstance(pid, str):
+                continue
+            if pid in seen_ids:
+                duplicate_ids.add(pid)
+            seen_ids.add(pid)
+            cells = row.get('cells', [])
+            cell = cells[indices[0]] if len(indices) == 1 and indices[0] < len(cells) else {}
+            status_samples[pid] = {'page': number, 'status_column_count': len(indices),
+                                  'content': str(cell.get('content', ''))[:200],
+                                  'tooltip': str(cell.get('toolTip', ''))[:200]}
+        return body
     pool = collect_pool(page, new, set(before['players']), 1000, sport=sport,
                         position_filter=FILTERS.get(sport, 'FOOTBALL_OFFENSE'), include_players=True)
     if not pool['summary']['complete'] or pool['summary']['unknown_status_count']:
-        raise ValueError('Incomplete pool')
+        raise PoolValidationFailure({'diagnostic_only': True, 'capture_checks_passed': False,
+            'sport': sport, 'league_id': new, 'summary': pool['summary'],
+            'duplicate_id_sample': sorted(duplicate_ids)[:20],
+            'unknown_status_sample': [{'player_id': p['player_id'], **status_samples.get(p['player_id'], {})}
+                for p in pool['players'] if p['availability_status'] == 'unknown'][:20],
+            'scope': 'Failed pool validation. Not eligible for preview/apply; prior successful capture is unchanged.'})
     progress(f'Rechecking {sport} rosters after player capture')
     if before != read_rosters(request, new, list(names)):
         raise ValueError('Roster changed during capture')
@@ -167,6 +194,17 @@ def main():
             print(safe)
         return 0
     except Exception as error:
+        if isinstance(error, PoolValidationFailure):
+            diagnostic = json.dumps(error.report, indent=2)
+            for key in ('FANTRAX_COOKIE', 'FANTRAX_USER_SECRET_ID'):
+                value = os.environ.get(key)
+                if value:
+                    diagnostic = diagnostic.replace(value, '[REDACTED]')
+            print(diagnostic, file=sys.stderr)
+            try:
+                (out/f'{error.report["sport"]}-failed-pool.json').write_text(diagnostic, encoding='utf-8')
+            except OSError:
+                print('Could not save failure report; use the diagnostic printed above.', file=sys.stderr)
         print(f'Renewal discovery/capture failed while {stage}. {safe_failure(error)} No activation performed.',file=sys.stderr)
         return 1
 

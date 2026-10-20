@@ -2,9 +2,19 @@ import copy
 import json
 from pathlib import Path
 import unittest
-from yearly_renewals import capture, check_api_error, safe_failure
+from yearly_renewals import capture, check_api_error, safe_failure, PoolValidationFailure
+from unittest.mock import patch
 
 class CaptureTests(unittest.TestCase):
+    def test_incomplete_and_unknown_status_report_remains_failed(self):
+        for summary in [{'complete':False,'unknown_status_count':0}, {'complete':True,'unknown_status_count':1}]:
+            result={'summary':summary,'players':[{'player_id':'fixture','availability_status':'unknown'}]}
+            with patch('yearly_renewals.collect_pool',return_value=result):
+                with self.assertRaises(PoolValidationFailure) as raised:
+                    capture(self.get,self.request,'MLB',self.candidate,{'owners':[{'name':'Doug','slug':'doug'}]},lambda _:None)
+            self.assertFalse(raised.exception.report['capture_checks_passed'])
+            self.assertEqual(raised.exception.report['summary'],summary)
+            self.assertEqual(raised.exception.report['unknown_status_sample'][0]['player_id'],'fixture')
     def test_safe_authentication_diagnostic(self):
         for body in [{'pageError': {'code': 'WARNING_NOT_LOGGED_IN'}},
                      {'responses': [{'pageError': {'code': 'WARNING_NOT_LOGGED_IN'}}]}]:
