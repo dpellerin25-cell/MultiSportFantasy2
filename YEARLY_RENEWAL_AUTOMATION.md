@@ -149,6 +149,24 @@ To review an older saved capture without fetching players again, run
 Audit uses a read-only transaction, permits older evidence, and prints no approval
 hash. Normal preview and activation still enforce the six-hour freshness limit.
 
+For the initial MLB identity differences, save the audit and inspect the verified
+league-info response without downloading any player pages:
+
+```bash
+node supabase/tests/yearly-renewals.mjs audit /workspaces/fantrax-renewal-evidence/MLB-capture.json > /workspaces/fantrax-renewal-evidence/MLB-audit.json
+python scripts/audit_mlb_identity_details.py --report /workspaces/fantrax-renewal-evidence/MLB-audit.json > /workspaces/fantrax-renewal-evidence/MLB-identity-details.json
+```
+
+The Python diagnostic uses FANTRAX_COOKIE and only two known getLeagueInfo reads.
+Use `--offline` for saved-name classification with no network requests. Metadata
+playerInfo shape/coverage is not assumed: only matching IDs and allowed scalar
+player fields are retained. Unknown fields, credentials and raw API errors are not
+printed. No mapping is approved, renamed, merged or deleted. Absence never proves
+retirement; a same-name different-ID collision requires player-card evidence.
+If metadata is insufficient, capture the actual player-card Network request and
+response in both leagues, including stable IDs and distinguishing player details,
+with credentials removed. Do not guess a detail/search endpoint.
+
 Only after preview review, set FANTRAX_RENEWAL_APPROVE to its hash and run:
 
 ```bash
