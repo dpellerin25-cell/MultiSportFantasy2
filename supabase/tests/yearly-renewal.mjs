@@ -98,7 +98,10 @@ export async function previewRenewal(db,c,registry,settings,policy,{auditOnly=fa
 
 export function automaticAllowed(c,policy,now=Date.now()){
  const p=policy.sports[c.sport];
- if(p.mode!=='automatic'||typeof p.automatic_month_day!=='string'||!/^\d{2}-\d{2}$/.test(p.automatic_month_day))return false;
+ if(p.mode!=='automatic')return false;
+ const trigger=p.activation??'on_date';
+ if(trigger==='on_detection')return true;
+ if(trigger!=='on_date'||typeof p.automatic_month_day!=='string'||!/^\d{2}-\d{2}$/.test(p.automatic_month_day))return false;
  const date=`${c.season_year}-${p.automatic_month_day}`;
  const due=Date.parse(date+'T00:00:00Z');
  return Number.isFinite(due)&&new Date(due).toISOString().slice(0,10)===date&&now>=due;

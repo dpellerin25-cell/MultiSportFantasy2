@@ -4,6 +4,11 @@ import assert from 'node:assert/strict';
 import {applyRenewal,previewRenewal,runtimeRegistry,checksum,automaticAllowed,reviewedEvidence,checkCapture} from './yearly-renewal.mjs';
 const baseline=JSON.parse(await readFile(new URL('../../scripts/fantrax-connections.json',import.meta.url),'utf8'));
 const policy=JSON.parse(await readFile(new URL('../../scripts/fantrax-renewal-policy.json',import.meta.url),'utf8'));
+for(const sport of ['NFL','MLB','NBA','EPL','PGA']){
+ assert.equal(automaticAllowed({sport,season_year:2099},policy),true);
+ assert.equal(policy.sports[sport].standings_release,undefined);
+ policy.sports[sport].mode='manual'; // Exercise explicit approval independently.
+}
 const db=await PGlite.create();
 try{
  await db.exec(`create role anon;create role authenticated;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql as $$select null::uuid$$;`);
@@ -92,8 +97,10 @@ try{
  for(const [i,sport] of ['NFL','NBA','EPL','PGA'].entries()){
    const old=baseline.sports[sport].current_league_id;
    const c={...capture,sport,old_league_id:old,standings_league_id:old,new_league_id:`abcdefghijklmn0${i}`,history_id:'abcdefghijklmnop',started_at:new Date().toISOString(),completed_at:new Date().toISOString()};
-   assert.equal((await applyRenewal(db,c,baseline,settings,policy,{approval:checksum(c)})).applied,true);
+   const detected=structuredClone(policy);detected.sports[sport]={mode:'automatic',activation:'on_detection'};
+   assert.equal((await applyRenewal(db,c,baseline,settings,detected,{automatic:true})).applied,true);
    assert.equal((await runtimeRegistry(db,baseline)).sports[sport].current_league_id,c.new_league_id);
+   assert.equal((await runtimeRegistry(db,baseline)).sports[sport].standings_league_id,old);
  }
  await db.exec('set role authenticated');await assert.rejects(()=>db.query('select trading.apply_fantrax_renewal($1,$2)',[JSON.stringify(capture),checksum(capture)]),/permission denied/);await db.exec('reset role');
  console.log('PASS generic renewal approval/automatic gates, rollback, two yearly transitions, retained standings, retry and role denial');
