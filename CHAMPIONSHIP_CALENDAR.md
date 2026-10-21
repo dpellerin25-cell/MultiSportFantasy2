@@ -13,11 +13,20 @@ Fantrax `seasonYear` values.
 The user-supplied live MLB metadata reported old league `60ri2nbhmtj4b0km` as
 2026 and renewed league `rk8bvnk3mulovx9a` as 2027, sharing history
 `ml3fdlq2mulovxoh`. MLB's offset is verified as zero.
-The supplied NFL/NBA/EPL/PGA diagnostic reported 2026, but did not include
-start/end dates or identify which cross-year season that value represents.
-Those offsets remain null. Test fixtures are synthetic, not additional evidence.
-Until reviewed, their standings writes, archives and releases fail with an
-explicit unverified-mapping error. Roster-only reads remain available.
+The subsequent user-supplied live date diagnostic confirmed all five sports:
+
+| Sport | Fantrax seasonYear | startDate | endDate |
+|---|---:|---|---|
+| NFL | 2026 | 2026-09-09 | 2027-01-10 |
+| MLB | 2027 | 2027-03-24 | 2027-09-26 |
+| NBA | 2026 | 2026-10-20 | 2027-04-11 |
+| EPL | 2026 | 2026-08-21 | 2027-05-30 |
+| PGA | 2026 | 2026-01-15 | 2026-08-30 |
+
+All offsets are zero: Fantrax names the season by its starting year. These dates
+are evidence for the current leagues, not a prediction of future schedules.
+The current NFL/NBA/EPL/PGA leagues remain pre-launch; do not archive their 2026
+results as Cup 2027. Their future 2027 renewals need an initial-setup release.
 
 ## Changes and safeguards
 
@@ -33,10 +42,10 @@ explicit unverified-mapping error. Roster-only reads remain available.
 - Scoring formulas, placement tables, picks, player IDs and trades are unchanged.
 - Renewal detection and roster policy remain automatic. The automatic workflow
   still requires its per-sport archive to succeed before handoff; unverified
-  calendar mappings intentionally block that workflow until evidence is reviewed.
+  pre-launch seasons intentionally block normal championship archiving; use the explicit initial-setup transition for those leagues.
 - Standings release and marking a sport final remain separate approval steps.
 
-## Next steps in Codespaces — read-only evidence first
+## Next steps in Codespaces — inspect stored state
 
 After transferring the reviewed local changes, use the same configured test
 connection and verified TLS settings as before:
@@ -60,10 +69,13 @@ editor and share its result. This is read-only and reports existing state withou
 correcting or relabeling it. Do not modify the database based solely on a year
 difference: a retained standings league may legitimately be an older season.
 
-After reviewing that evidence, fill in the verified offsets and extend the SQL
-mapping function in the pending migration to match. Only then run the migration
-dry run and approved test-project deployment. Do not enable unattended switching
-or apply `202610210001_championship_calendar.sql` to production yet.
+The date convention is now verified. Migration `202610210002_verified_sport_years.sql`
+updates the guard for all five sports without changing saved data. Keep the prior
+migration unchanged; apply both in order if neither is installed. Before applying,
+review the read-only state report and run a test-project migration dry run. Neither
+migration changes existing league IDs, standings years or results. Any incorrect
+stored mapping still needs a separately reviewed correction. Do not deploy to
+production or enable unattended switching until initial-setup transitions are ready.
 
 ## Local validation
 

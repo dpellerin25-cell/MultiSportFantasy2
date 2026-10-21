@@ -1,10 +1,10 @@
 {
   "first_championship_year": 2027,
   "sports": {
-    "NFL": {"label": "NFL", "spans_calendar_years": true, "fantrax_to_championship_offset": null},
+    "NFL": {"label": "NFL", "spans_calendar_years": true, "fantrax_to_championship_offset": 0},
     "MLB": {"label": "MLB", "spans_calendar_years": false, "fantrax_to_championship_offset": 0},
-    "NBA": {"label": "NBA", "spans_calendar_years": true, "fantrax_to_championship_offset": null},
-    "EPL": {"label": "Premier League", "spans_calendar_years": true, "fantrax_to_championship_offset": null},
-    "PGA": {"label": "PGA", "spans_calendar_years": false, "fantrax_to_championship_offset": null}
+    "NBA": {"label": "NBA", "spans_calendar_years": true, "fantrax_to_championship_offset": 0},
+    "EPL": {"label": "Premier League", "spans_calendar_years": true, "fantrax_to_championship_offset": 0},
+    "PGA": {"label": "PGA", "spans_calendar_years": false, "fantrax_to_championship_offset": 0}
   }
 }

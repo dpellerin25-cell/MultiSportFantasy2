@@ -13,7 +13,9 @@ class CalendarTests(unittest.TestCase):
     def test_no_prelaunch_or_unverified_inference(self):
         with self.assertRaisesRegex(ValueError, 'Pre-launch'): championship_year('MLB', 2026)
         for sport in ['NFL','NBA','EPL','PGA']:
-            with self.assertRaisesRegex(ValueError, 'captured date evidence'): championship_year(sport,2027)
+            self.assertEqual(championship_year(sport,2027),2027)
+            self.assertEqual(championship_year(sport,2028),2028)
+            with self.assertRaisesRegex(ValueError, 'Pre-launch'): championship_year(sport,2026)
 
     def test_fetch_rejects_prelaunch_before_writing(self):
         import fetch_fantrax as fetch
