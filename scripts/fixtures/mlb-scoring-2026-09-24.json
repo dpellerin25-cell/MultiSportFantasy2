@@ -1,0 +1,297 @@
+{
+  "responses": [
+    {
+      "data": {
+        "date": "2026-09-24",
+        "displayedSelections": {
+          "layout": "STANDARD",
+          "date": "2026-09-24",
+          "mobileView": "MATCHUPS",
+          "compact": false,
+          "viewTypeId": "1",
+          "teamId": "ef2fvskgmtj4b1bq",
+          "displayDate": "Thu Sep 24",
+          "viewType": {
+            "id": "1",
+            "name": "Day"
+          },
+          "realOrStatProjProvider": {
+            "id": "-1",
+            "name": "NFL",
+            "shortName": "NFL"
+          },
+          "playerViewType": {
+            "id": "2",
+            "name": "All Players Playing"
+          },
+          "views": {
+            "initialViewMain": {
+              "code": "STANDARD",
+              "name": "Standard",
+              "id": "1",
+              "shortName": "???liveScoringViewType.standard.shortName: en_US???"
+            },
+            "initialViewSmall": {
+              "code": "STANDARD",
+              "name": "Standard",
+              "id": "1",
+              "shortName": "???liveScoringViewType.standard.shortName: en_US???"
+            }
+          },
+          "mainView": "MATCHUP"
+        },
+        "allEventsFinished": true,
+        "fantasyTeamInfo": {
+          "ef2fvskgmtj4b1bq": {
+            "name": "Doug"
+          }
+        },
+        "statsPerTeam": {
+          "allTeamsStats": {
+            "ef2fvskgmtj4b1bq": {
+              "BENCH": {
+                "statsMap": {
+                  "01cgo": {
+                    "object2": [
+                      {
+                        "scipId": "10#0010#-1",
+                        "sv": "4",
+                        "av": 4.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0330#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0170#-1",
+                        "sv": "2",
+                        "av": 2.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0375#-1",
+                        "sv": "2",
+                        "av": 2.0,
+                        "fpts": 2.0
+                      },
+                      {
+                        "scipId": "10#0070#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0420#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0200#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0310#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0430#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0380#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0150#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      }
+                    ],
+                    "object1": 2.0
+                  },
+                  "_10": {
+                    "object2": [
+                      {
+                        "scipId": "10#0010#-1",
+                        "sv": "4",
+                        "av": 4.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0170#-1",
+                        "sv": "2",
+                        "av": 2.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0375#-1",
+                        "sv": "2",
+                        "av": 2.0,
+                        "fpts": 2.0
+                      }
+                    ],
+                    "object1": 2.0
+                  }
+                },
+                "totalFpts": 2.0
+              },
+              "ACTIVE": {
+                "statsMap": {
+                  "02mwm": {
+                    "object2": [
+                      {
+                        "scipId": "10#0010#-1",
+                        "sv": "4",
+                        "av": 4.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0330#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0170#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0375#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0070#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0420#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0200#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0310#-1",
+                        "sv": "1",
+                        "av": 1.0,
+                        "fpts": 1.0
+                      },
+                      {
+                        "scipId": "10#0430#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0380#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0150#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      }
+                    ],
+                    "object1": 1.0
+                  },
+                  "_10": {
+                    "object2": [
+                      {
+                        "scipId": "10#0010#-1",
+                        "sv": "4",
+                        "av": 4.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0375#-1",
+                        "sv": "0",
+                        "av": 0.0,
+                        "fpts": 0.0
+                      },
+                      {
+                        "scipId": "10#0310#-1",
+                        "sv": "1",
+                        "av": 1.0,
+                        "fpts": 1.0
+                      }
+                    ],
+                    "object1": 1.0
+                  }
+                },
+                "totalFpts": 1.0
+              }
+            }
+          }
+        },
+        "scorerMap": {
+          "BENCH": {
+            "ef2fvskgmtj4b1bq": {
+              "10": [
+                {
+                  "scorer": {
+                    "scorerId": "01cgo",
+                    "name": "Freddie Freeman"
+                  }
+                }
+              ]
+            }
+          },
+          "ACTIVE": {
+            "ef2fvskgmtj4b1bq": {
+              "10": [
+                {
+                  "scorer": {
+                    "scorerId": "03oh0",
+                    "name": "Willson Contreras"
+                  }
+                },
+                {
+                  "scorer": {
+                    "scorerId": "062k5",
+                    "name": "Nick Kurtz"
+                  }
+                },
+                {
+                  "scorer": {
+                    "scorerId": "02mwm",
+                    "name": "Matt Olson"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "data": {}
+    }
+  ]
+}
