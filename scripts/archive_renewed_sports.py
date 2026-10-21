@@ -12,6 +12,7 @@ from championship_calendar import championship_year
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = {'NFL': 'nfl', 'MLB': 'mlb', 'NBA': 'nba', 'EPL': 'premier-league', 'PGA': 'pga'}
+INITIAL = json.loads((ROOT / 'scripts/initial-season-exceptions.json').read_text())
 
 
 def validate_preview(preview, capture):
@@ -28,6 +29,13 @@ def archive_capture(capture, registry, settings, read_standings, history):
     age = (datetime.now(timezone.utc) - datetime.fromisoformat(capture['started_at'])).total_seconds()
     if not 0 <= age < 21600:
         raise ValueError('Capture is stale')
+    if (INITIAL['leagues'].get(sport) == old
+            and capture.get('old_season_year') == INITIAL['old_season_year']
+            and capture.get('season_year') == INITIAL['new_season_year']
+            and rule.get('standings_league_id', old) == old):
+        return {'sport': sport, 'archive_exemption': 'initial_2027',
+                'reason': INITIAL['reason'], 'archive_created': False,
+                'standings_release_required': True}
     year = championship_year(sport, capture['old_season_year'])
     if year != rule.get('standings_championship_year', registry['championship_year']) or year != settings['championship_year']:
         raise ValueError('Old season is not the configured championship; review pre-launch or unreleased seasons')
