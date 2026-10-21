@@ -2,3 +2,7 @@
 export function belongsToLiveChampionship(status: string, year: number, snapshotYear?: number) {
   return status === "live" && snapshotYear === year;
 }
+
+export function emptySeasonSnapshot(sport: string) {
+  return {sport, standings: [], placement_points: []};
+}

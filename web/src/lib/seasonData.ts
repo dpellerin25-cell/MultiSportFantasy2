@@ -1,5 +1,5 @@
 import {currentLeague} from "./current-membership";
-import {belongsToLiveChampionship} from "./seasonSnapshot";
+import {belongsToLiveChampionship, emptySeasonSnapshot} from "./seasonSnapshot";
 import fs from "fs";
 import path from "path";
 
@@ -112,7 +112,7 @@ export function getSeasonLeagueData(
   const data = liveData[sport];
   // A single latest snapshot must never leak into an overlapping championship.
   if (!belongsToLiveChampionship(sportSeason.status, year, data.championship_year)) {
-    return {sport: data.sport, standings: []};
+    return emptySeasonSnapshot(data.sport);
   }
   return currentLeague(data);
 }
