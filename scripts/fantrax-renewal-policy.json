@@ -1,10 +1,30 @@
 {
   "schema_version": 1,
   "sports": {
-    "NFL": {"mode": "manual", "automatic_month_day": null},
-    "MLB": {"mode": "manual", "automatic_month_day": null},
-    "NBA": {"mode": "manual", "automatic_month_day": null},
-    "EPL": {"mode": "manual", "automatic_month_day": null},
-    "PGA": {"mode": "manual", "automatic_month_day": null}
+    "NFL": {
+      "mode": "automatic",
+      "automatic_month_day": null,
+      "activation": "on_detection"
+    },
+    "MLB": {
+      "mode": "automatic",
+      "automatic_month_day": null,
+      "activation": "on_detection"
+    },
+    "NBA": {
+      "mode": "automatic",
+      "automatic_month_day": null,
+      "activation": "on_detection"
+    },
+    "EPL": {
+      "mode": "automatic",
+      "automatic_month_day": null,
+      "activation": "on_detection"
+    },
+    "PGA": {
+      "mode": "automatic",
+      "automatic_month_day": null,
+      "activation": "on_detection"
+    }
   }
 }

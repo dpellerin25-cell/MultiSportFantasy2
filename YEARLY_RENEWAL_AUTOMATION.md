@@ -1,7 +1,7 @@
 # Yearly Fantrax transitions — implementation and test plan
 
 All changes are local until reviewed, pushed and installed. No active connection
-changes during migration installation. All sports start in **manual** mode and
+changes during migration installation. All sports are configured for **automatic roster activation on detection** and
 the GitHub workflow is disabled unless `FANTRAX_RENEWALS_ENABLED=true` is set.
 Fantrax league renewal itself is still performed in Fantrax, never by this code.
 
@@ -36,13 +36,47 @@ Fantrax league renewal itself is still performed in Fantrax, never by this code.
 `scripts/fantrax-renewal-policy.json` has a rule per sport:
 
 ```json
-{"mode":"automatic","automatic_month_day":"03-01"}
+{"mode":"automatic","activation":"on_detection","automatic_month_day":null}
 ```
 
-This is an **example**, not an approved MLB date. Choose each sport's date before
-enabling automatic mode. The date is in UTC and in the candidate's Fantrax season
-year; it repeats for later years. Modes are disabled, manual, automatic. Changing
-a mode/date is an operational approval and should be reviewed in GitHub.
+This is the approved timing for all five sports: activate rosters on the first
+successful scheduled discovery and validation of a renewed league. Fantrax renewal
+is still performed manually by Doug. There is no calendar-date delay. The daily
+workflow is polling, not an instant Fantrax notification. Membership, owned-player
+identity and complete-capture checks must still pass before activation.
+Standings remain on their previous connection until separate archive approval
+and release. No automatic standings-release policy is configured.
+
+### Automatic per-sport archives
+
+The automatic workflow now runs `scripts/archive_renewed_sports.py` after successful
+renewal previews and before roster activation. It fetches fresh `getStandings`
+results from the old league, validates complete membership, scores and placement
+points, and writes that sport to `web/data/history/<championship year>/` with the
+existing archive metadata format. NFL/NBA/EPL use the following calendar year;
+MLB/PGA use their season year. The year must match the configured championship,
+preventing a pre-launch league from being archived as championship results.
+
+Only the detected sport is saved. Other sports are not marked final. Existing
+matching archives are reused without modification; conflicting archives stop the
+run. The workflow commits and pushes only `web/data/history` before any roster
+handoff. Archive or push failures prevent that run's handoffs. Branch protection
+must permit this workflow's archive publication; it does not bypass protections.
+Automatic runs must use the default branch. Preview/discovery runs do not archive.
+
+Archiving does not release the live standings connection or change the season
+configuration's final flags. The existing championship-finalization and standings
+release process remains separate, including Trophy Case eligibility. A successful
+archive followed by a failed handoff is safe: the next run reuses the archive.
+No database migration is needed for automatic archive creation.
+
+Offline validation: `PYTHONPATH=scripts python -m unittest test_archive_renewed_sports
+test_yearly_renewals test_fetch_update_modes` (enter on one line).
+
+The GitHub enable variable remains required. If it is already enabled, deploying
+this policy permits automatic roster activation on the next eligible run. Modes
+are disabled, manual, automatic. Legacy date policies remain supported using
+`activation: "on_date"` and an annual UTC `automatic_month_day`.
 
 Manual preview prints a SHA-256 approval hash of the complete evidence. Set
 `FANTRAX_RENEWAL_APPROVE` to that exact hash for `apply`. A changed capture needs

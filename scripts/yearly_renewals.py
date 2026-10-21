@@ -17,6 +17,21 @@ from nfl_player_pool import collect_pool
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def automatic_due(rule, season_year, now=None):
+    if rule.get('mode') != 'automatic':
+        return False
+    trigger = rule.get('activation', 'on_date')
+    if trigger == 'on_detection':
+        return True
+    if trigger != 'on_date' or not isinstance(rule.get('automatic_month_day'), str):
+        return False
+    try:
+        due = datetime.fromisoformat(f"{season_year}-{rule['automatic_month_day']}T00:00:00+00:00")
+    except ValueError:
+        return False
+    return (now or datetime.now(timezone.utc)) >= due
+
+
 class PoolValidationFailure(ValueError):
     def __init__(self, report):
         super().__init__('Incomplete pool')
@@ -166,10 +181,7 @@ def main():
                     continue
                 p = policy['sports'][sport]
                 if args.capture == 'automatic':
-                    if p['mode'] != 'automatic' or not p['automatic_month_day']:
-                        continue
-                    due = datetime.fromisoformat(f"{row['target_season_year']}-{p['automatic_month_day']}T00:00:00+00:00")
-                    if datetime.now(timezone.utc) < due:
+                    if not automatic_due(p, row['target_season_year']):
                         continue
                 elif args.capture != sport:
                     continue

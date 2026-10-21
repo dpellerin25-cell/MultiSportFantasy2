@@ -2,10 +2,20 @@ import copy
 import json
 from pathlib import Path
 import unittest
-from yearly_renewals import capture, check_api_error, safe_failure, PoolValidationFailure
+from yearly_renewals import capture, check_api_error, safe_failure, PoolValidationFailure, automatic_due
 from unittest.mock import patch
 
 class CaptureTests(unittest.TestCase):
+    def test_detection_policy_requires_automatic_mode_and_keeps_date_support(self):
+        from datetime import datetime, timezone
+        now=datetime(2026,1,1,tzinfo=timezone.utc)
+        self.assertTrue(automatic_due({'mode':'automatic','activation':'on_detection'},2099,now))
+        for mode in ['manual','disabled']:
+            self.assertFalse(automatic_due({'mode':mode,'activation':'on_detection'},2027,now))
+        self.assertFalse(automatic_due({'mode':'automatic','activation':'typo'},2027,now))
+        self.assertFalse(automatic_due({'mode':'automatic','automatic_month_day':'02-30'},2027,now))
+        self.assertFalse(automatic_due({'mode':'automatic','automatic_month_day':'01-01'},2027,now))
+        self.assertTrue(automatic_due({'mode':'automatic','automatic_month_day':'01-01'},2026,now))
     def test_incomplete_and_unknown_status_report_remains_failed(self):
         for summary in [{'complete':False,'unknown_status_count':0}, {'complete':True,'unknown_status_count':1}]:
             result={'summary':summary,'players':[{'player_id':'fixture','availability_status':'unknown'}]}
