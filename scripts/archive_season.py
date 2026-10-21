@@ -46,6 +46,12 @@ def archive_sport(year, sport, force=False):
             f"Live data file does not exist: {source}"
         )
 
+    # Manual archives must meet the same no-prelaunch rule as scheduled archives.
+    with open(source, encoding="utf-8") as file:
+        snapshot = json.load(file)
+    if year < 2027 or snapshot.get("championship_year") != year or snapshot.get("sport") != sport or snapshot.get("calendar_mapping_verified") is not True:
+        raise RuntimeError("Archive requires a fresh snapshot with a verified championship mapping; never relabel old test data.")
+
     os.makedirs(
         destination_directory,
         exist_ok=True

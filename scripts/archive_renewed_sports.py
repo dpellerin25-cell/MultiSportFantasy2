@@ -8,6 +8,7 @@ from pathlib import Path
 from fantrax_connections import CONNECTIONS
 from fetch_fantrax import create_session, fantrax_request, find_standings_table, parse_standings_table
 from yearly_renewals import automatic_due
+from championship_calendar import championship_year
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = {'NFL': 'nfl', 'MLB': 'mlb', 'NBA': 'nba', 'EPL': 'premier-league', 'PGA': 'pga'}
@@ -27,7 +28,7 @@ def archive_capture(capture, registry, settings, read_standings, history):
     age = (datetime.now(timezone.utc) - datetime.fromisoformat(capture['started_at'])).total_seconds()
     if not 0 <= age < 21600:
         raise ValueError('Capture is stale')
-    year = capture['old_season_year'] + (1 if sport in ('NFL', 'NBA', 'EPL') else 0)
+    year = championship_year(sport, capture['old_season_year'])
     if year != rule.get('standings_championship_year', registry['championship_year']) or year != settings['championship_year']:
         raise ValueError('Old season is not the configured championship; review pre-launch or unreleased seasons')
     if rule.get('standings_league_id', old) != old:

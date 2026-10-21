@@ -14,6 +14,9 @@ try{
  await db.exec(`create role anon;create role authenticated;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql as $$select null::uuid$$;`);
  const dir=new URL('../migrations/',import.meta.url);
  for(const f of (await readdir(dir)).filter(f=>f.endsWith('.sql')).sort())await db.exec(await readFile(new URL(f,dir),'utf8'));
+ assert.equal((await db.query("select trading.verified_championship_year('MLB',2027) y")).rows[0].y,2027);
+ await assert.rejects(()=>db.query("select trading.verified_championship_year('MLB',2026)"),/Pre-launch/);
+ for(const sport of ['NFL','NBA','EPL','PGA'])await assert.rejects(()=>db.query('select trading.verified_championship_year($1,2027)',[sport]),/Unverified/);
  const settings={owners:(await db.query('select slug from draft.owners where active order by slug')).rows};
  await db.exec("insert into draft.players(sport,name) values('MLB','Fixture');insert into draft.player_source_ids(player_id,provider,league_id,external_player_id) select id,'fantrax','60ri2nbhmtj4b0km','001' from draft.players;");
  const capture={schema_version:1,capture_checks_passed:true,sport:'MLB',old_league_id:'60ri2nbhmtj4b0km',new_league_id:'rk8bvnk3mulovx9a',standings_league_id:'60ri2nbhmtj4b0km',history_id:'ml3fdlq2mulovxoh',old_season_year:2026,season_year:2027,

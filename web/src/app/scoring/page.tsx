@@ -1,4 +1,5 @@
 import MainNavigation from "@/components/MainNavigation";
+import Image from "next/image";
 import constitution from "../../../data/constitution.json";
 
 export const metadata = {title: "League Constitution | Multi-Sport Fantasy League"};
@@ -35,7 +36,19 @@ export default function ConstitutionPage() {
                         </table>
                       </div>
                     );
-                    if (block.kind === "heading") return <h3 key={index} className="pt-2 text-lg font-bold text-blue-900">{block.text}</h3>;
+                    if (block.kind === "heading") return (
+                      <div key={index}>
+                        <h3 className="pt-2 text-lg font-bold text-blue-900">{block.text}</h3>
+                        {block.text === "Championship Calendar" && (
+                          <figure className="mt-4">
+                            <a href="/pentagon-cup-season-schedule.png" target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-lg border border-blue-100 focus-visible:outline-2 focus-visible:outline-blue-700" aria-label="Open the Pentagon Cup season schedule at full size (new tab)">
+                              <Image src="/pentagon-cup-season-schedule.png" alt="Pentagon Cup 2027 and 2028 season schedule showing the overlapping PGA, MLB, NFL, Premier League and NBA seasons." width={1774} height={887} sizes="(min-width: 1024px) 840px, 100vw" className="h-auto w-full" />
+                            </a>
+                            <figcaption className="mt-2 text-sm text-slate-500">2027 and 2028 season schedule · Click or tap to view full size.</figcaption>
+                          </figure>
+                        )}
+                      </div>
+                    );
                     if (block.kind === "equation") return <p key={index} className="rounded-lg bg-blue-50 px-4 py-3 font-semibold text-blue-950">{block.text}</p>;
                     return <p key={index} className="whitespace-pre-line">{block.text}</p>;
                   })}

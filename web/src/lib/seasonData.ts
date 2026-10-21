@@ -1,4 +1,5 @@
 import {currentLeague} from "./current-membership";
+import {belongsToLiveChampionship} from "./seasonSnapshot";
 import fs from "fs";
 import path from "path";
 
@@ -24,6 +25,7 @@ type Standing = {
 export type LeagueData = {
   sport: string;
   updated_at?: string;
+  championship_year?: number;
   placement_points?: number[];
   standings: Standing[];
 };
@@ -76,7 +78,9 @@ function getArchivedData(
     "utf-8"
   );
 
-  return JSON.parse(fileContents) as LeagueData;
+  const data = JSON.parse(fileContents) as LeagueData;
+  if (data.championship_year !== year) throw new Error("Archive championship year mismatch");
+  return data;
 }
 
 export function getSeasonLeagueData(
@@ -105,5 +109,10 @@ export function getSeasonLeagueData(
     return getArchivedData(year, sport);
   }
 
-  return currentLeague(liveData[sport]);
+  const data = liveData[sport];
+  // A single latest snapshot must never leak into an overlapping championship.
+  if (!belongsToLiveChampionship(sportSeason.status, year, data.championship_year)) {
+    return {sport: data.sport, standings: []};
+  }
+  return currentLeague(data);
 }

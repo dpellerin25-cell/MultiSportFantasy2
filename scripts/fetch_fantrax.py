@@ -258,6 +258,15 @@ def save_league_json(
     filename,
     standings_data
 ):
+    from championship_calendar import championship_year
+    canonical = 'EPL' if sport == 'Premier League' else sport
+    connection = CONNECTIONS['sports'][canonical]
+    # Never write an old pre-launch league into the first championship.
+    if league_id == connection['current_league_id']:
+        verified_year = championship_year(canonical, connection.get('current_season_year', 2026))
+    else:
+        # Retained standings still require a verified sport convention.
+        verified_year = championship_year(canonical, connection.get('standings_championship_year', 2026))
     table = find_standings_table(standings_data)
 
     if table is None:
@@ -269,6 +278,8 @@ def save_league_json(
     settings = league_settings([row["team"] for row in standings], allow_missing_john=True)
     canonical = 'EPL' if sport == 'Premier League' else sport
     saved_year = CONNECTIONS['sports'][canonical].get('standings_championship_year', settings['championship_year'])
+    if saved_year != verified_year:
+        raise ValueError('Stored standings year disagrees with verified Fantrax mapping; review database state')
     if saved_year != settings['championship_year']:
         raise ValueError('Standings remain pinned to the previous championship. Archive and release them before updating the new championship.')
     missing_owners = sorted(set(owner["name"] for owner in settings["owners"]) - set(row["team"] for row in standings))
@@ -294,6 +305,7 @@ def save_league_json(
         "teams": team_info,
         "placement_points": settings["placement_points"],
         "championship_year": settings["championship_year"],
+        "calendar_mapping_verified": True,
         "standings": standings
     }
 
