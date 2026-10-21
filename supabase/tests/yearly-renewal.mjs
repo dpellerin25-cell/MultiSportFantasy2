@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
+import {requireRenewalArchive} from './renewal-archive-gate.mjs';
 export const checksum=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
 export const SPORTS=['NFL','MLB','NBA','EPL','PGA'];
 export function reviewedEvidence(c,policy){
@@ -119,7 +120,10 @@ export async function applyRenewal(db,c,baseline,settings,policy,{automatic=fals
    const registry=await runtimeRegistry(db,baseline);
    const report=await previewRenewal(db,c,registry,settings,policy);
    assert.deepEqual(report.blockers,[],'Resolve preview blockers');
-   if(automatic)assert.ok(automaticAllowed(c,policy),'Automatic activation not enabled or not yet due');
+   if(automatic){
+     assert.ok(automaticAllowed(c,policy),'Automatic activation not enabled or not yet due');
+     await requireRenewalArchive(c);
+   }
    else assert.equal(approval,report.plan_hash,'Exact preview hash approval required');
    const result=(await db.query('select trading.apply_fantrax_renewal($1,$2) result',[JSON.stringify(c),hash])).rows[0].result;
    await db.query('commit');return {...report,...result};

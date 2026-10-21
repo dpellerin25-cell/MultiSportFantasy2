@@ -4,7 +4,7 @@ from pathlib import Path
 import tempfile
 import unittest
 from datetime import datetime, timezone
-from archive_renewed_sports import archive_capture, validate_preview
+from archive_renewed_sports import archive_capture, validate_preview, INITIAL
 
 
 class RenewalArchives(unittest.TestCase):
@@ -76,6 +76,24 @@ class RenewalArchives(unittest.TestCase):
             self.capture.update(sport=sport, old_season_year=2027)
             self.registry['sports'][sport] = {'current_league_id': 'old'}
             self.assertEqual(self.run_archive()['year'], 2027)
+
+    def test_initial_exception_only_for_pinned_four_leagues(self):
+        for sport, old in INITIAL['leagues'].items():
+            self.capture.update(sport=sport, old_league_id=old, old_season_year=2026, season_year=2027)
+            self.registry['sports'][sport] = {'current_league_id': old}
+            for _ in range(2):
+                result = self.run_archive([])
+                self.assertEqual(result['archive_exemption'], 'initial_2027')
+                self.assertFalse(result['archive_created'])
+                self.assertTrue(result['standings_release_required'])
+            self.assertEqual(list(self.root.iterdir()), [])
+            self.capture['season_year'] = 2028
+            with self.assertRaises(ValueError): self.run_archive()
+            self.capture.update(season_year=2027, old_league_id='other')
+            self.registry['sports'][sport]['current_league_id'] = 'other'
+            with self.assertRaises(ValueError): self.run_archive()
+        self.capture.update(sport='MLB',old_league_id='old',old_season_year=2026,season_year=2027)
+        with self.assertRaises(ValueError): self.run_archive()
 
 
 if __name__ == '__main__': unittest.main()

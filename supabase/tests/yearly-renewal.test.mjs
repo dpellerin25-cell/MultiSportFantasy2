@@ -104,10 +104,22 @@ try{
    const old=baseline.sports[sport].current_league_id;
    const c={...capture,sport,old_league_id:old,standings_league_id:old,new_league_id:`abcdefghijklmn0${i}`,history_id:'abcdefghijklmnop',started_at:new Date().toISOString(),completed_at:new Date().toISOString()};
    const detected=structuredClone(policy);detected.sports[sport]={mode:'automatic',activation:'on_detection'};
+   // An aborted transaction must not leave an exemption or connection behind.
+   await db.query('begin');
+   await db.query('select trading.apply_fantrax_renewal($1,$2)',[JSON.stringify(c),checksum(c)]);
+   assert.equal((await db.query('select archive_exemption from trading.fantrax_transition_log where sport=$1',[sport])).rows[0].archive_exemption,'initial_2027');
+   await db.query('rollback');
+   assert.equal((await db.query('select count(*)::int n from trading.fantrax_transition_log where sport=$1',[sport])).rows[0].n,0);
    assert.equal((await applyRenewal(db,c,baseline,settings,detected,{automatic:true})).applied,true);
    assert.equal((await runtimeRegistry(db,baseline)).sports[sport].current_league_id,c.new_league_id);
    assert.equal((await runtimeRegistry(db,baseline)).sports[sport].standings_league_id,old);
+   const log=await db.query('select archive_exemption from trading.fantrax_transition_log where sport=$1',[sport]);
+   assert.deepEqual(log.rows,[{archive_exemption:'initial_2027'}]);
+   assert.equal((await applyRenewal(db,c,baseline,settings,detected,{automatic:true})).already_applied,true);
+   assert.equal((await db.query('select count(*)::int n from trading.fantrax_transition_log where sport=$1',[sport])).rows[0].n,1);
+   assert.equal((await db.query('select count(*)::int n from trading.fantrax_standings_releases where sport=$1',[sport])).rows[0].n,0);
  }
+ assert.equal((await db.query("select count(*)::int n from trading.fantrax_transition_log where sport='MLB' and archive_exemption is not null")).rows[0].n,0);
  await db.exec('set role authenticated');await assert.rejects(()=>db.query('select trading.apply_fantrax_renewal($1,$2)',[JSON.stringify(capture),checksum(capture)]),/permission denied/);await db.exec('reset role');
  console.log('PASS generic renewal approval/automatic gates, rollback, two yearly transitions, retained standings, retry and role denial');
 }finally{await db.close();}

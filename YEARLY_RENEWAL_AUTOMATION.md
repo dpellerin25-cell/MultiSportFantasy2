@@ -49,6 +49,10 @@ and release. No automatic standings-release policy is configured.
 
 ### Automatic per-sport archives
 
+The four pinned 2026 pre-launch leagues have a one-time 2027 roster exception:
+see `INITIAL_SEASON_TRANSITION.md`. They produce an audit label, never a 2026
+championship archive. MLB's already completed initial transition is excluded.
+
 The automatic workflow now runs `scripts/archive_renewed_sports.py` after successful
 renewal previews and before roster activation. It fetches fresh `getStandings`
 results from the old league, validates complete membership, scores and placement
