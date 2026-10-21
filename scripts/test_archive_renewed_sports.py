@@ -75,7 +75,7 @@ class RenewalArchives(unittest.TestCase):
         for sport in ['NFL', 'NBA', 'EPL']:
             self.capture.update(sport=sport, old_season_year=2026)
             self.registry['sports'][sport] = {'current_league_id': 'old'}
-            self.assertEqual(self.run_archive()['year'], 2027)
+            with self.assertRaisesRegex(ValueError, 'captured date evidence'): self.run_archive()
 
 
 if __name__ == '__main__': unittest.main()

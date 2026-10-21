@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import pg from 'pg';
 import {syncConnection} from './trade-roster-sync.mjs';
 import {checksum,SPORTS} from './yearly-renewal.mjs';
+import {championshipYear} from './championship-calendar.mjs';
 let db,stage='validating archive and explicit project';
 try{
  const [mode,sport,year,...extra]=process.argv.slice(2);
@@ -30,7 +31,8 @@ try{
  const state=(await db.query('select * from trading.fantrax_state where sport=$1',[sport])).rows[0];
  assert.ok(state&&state.league_id!==state.standings_league_id);
  assert.equal(archive.league_id,state.standings_league_id,'Archive must belong to the retained standings league');
- assert.equal(settings.championship_year,state.season_year+(['NFL','NBA','EPL'].includes(sport)?1:0),'Configure website championship season before releasing standings');
+ const nextYear=championshipYear(sport,state.season_year);
+ assert.ok(nextYear>=settings.championship_year,'Cannot release into an older championship');
  const reason=initial?process.env.FANTRAX_INITIAL_RELEASE_REASON:'';
  if(initial)assert.ok(typeof reason==='string'&&reason.trim().length>=20,'Explain why these are not championship results');
  const plan={sport,old_league_id:state.standings_league_id,new_league_id:state.league_id,archive_year:initial?0:Number(year),archive_checksum:createHash('sha256').update(bytes).digest('hex'),release_kind:initial?'initial_setup':'archived_season',reason};

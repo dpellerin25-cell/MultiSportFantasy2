@@ -53,8 +53,8 @@ The automatic workflow now runs `scripts/archive_renewed_sports.py` after succes
 renewal previews and before roster activation. It fetches fresh `getStandings`
 results from the old league, validates complete membership, scores and placement
 points, and writes that sport to `web/data/history/<championship year>/` with the
-existing archive metadata format. NFL/NBA/EPL use the following calendar year;
-MLB/PGA use their season year. The year must match the configured championship,
+existing archive metadata format. The Cup is named for its starting year. Fantrax year conversion must be verified
+against captured metadata using the shared championship calendar; unknown sports block archive/release. The year must match the configured championship,
 preventing a pre-launch league from being archived as championship results.
 
 Only the detected sport is saved. Other sports are not marked final. Existing
