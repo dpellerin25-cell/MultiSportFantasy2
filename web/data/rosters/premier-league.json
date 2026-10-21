@@ -1,9 +1,9 @@
 {
   "sport": "Premier League",
   "league_id": "j08ymyupmtj415q3",
-  "fetch_started_at": "2026-10-06T14:47:45.654137+00:00",
-  "updated_at": "2026-10-06T14:47:46.555510+00:00",
-  "team_count": 9,
+  "fetch_started_at": "2026-10-21T13:31:07.130874+00:00",
+  "updated_at": "2026-10-21T13:31:08.106198+00:00",
+  "team_count": 11,
   "total_players": 2,
   "rosters": [
     {
@@ -28,6 +28,12 @@
           "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Manchester_City.png"
         }
       ]
+    },
+    {
+      "owner": "John",
+      "team_id": "b7ryxgmxmux6wud7",
+      "player_count": 0,
+      "players": []
     },
     {
       "owner": "Doug",
@@ -67,6 +73,12 @@
     {
       "owner": "Hatch",
       "team_id": "e98kovyqmtug18ye",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Billy",
+      "team_id": "i81q1t2hmvfvh51m",
       "player_count": 0,
       "players": []
     },

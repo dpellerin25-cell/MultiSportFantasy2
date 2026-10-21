@@ -1,9 +1,9 @@
 {
   "sport": "NBA",
   "league_id": "u1byx3qkmtj47ogg",
-  "fetch_started_at": "2026-10-06T14:47:44.085887+00:00",
-  "updated_at": "2026-10-06T14:47:45.514156+00:00",
-  "team_count": 9,
+  "fetch_started_at": "2026-10-21T13:31:05.849150+00:00",
+  "updated_at": "2026-10-21T13:31:06.903840+00:00",
+  "team_count": 11,
   "total_players": 0,
   "rosters": [
     {
@@ -39,6 +39,18 @@
     {
       "owner": "Jack",
       "team_id": "h3jcfzhtmtug00lx",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "John",
+      "team_id": "qx0r1s22mux6vzbc",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Billy",
+      "team_id": "8u9ncevqmvfvhwbo",
       "player_count": 0,
       "players": []
     },

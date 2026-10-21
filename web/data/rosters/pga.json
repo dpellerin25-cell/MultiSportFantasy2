@@ -1,9 +1,9 @@
 {
   "sport": "PGA",
   "league_id": "xa7tza2hmthqz8bo",
-  "fetch_started_at": "2026-10-06T14:47:46.643081+00:00",
-  "updated_at": "2026-10-06T14:47:47.437156+00:00",
-  "team_count": 9,
+  "fetch_started_at": "2026-10-21T13:31:08.264771+00:00",
+  "updated_at": "2026-10-21T13:31:09.189716+00:00",
+  "team_count": 11,
   "total_players": 0,
   "rosters": [
     {
@@ -55,8 +55,20 @@
       "players": []
     },
     {
+      "owner": "John",
+      "team_id": "zcomnpjymvfvmm09",
+      "player_count": 0,
+      "players": []
+    },
+    {
       "owner": "Tucker",
       "team_id": "y4qgi9k9mtj6q46e",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Billy",
+      "team_id": "b012611tmvfvmm3w",
       "player_count": 0,
       "players": []
     }

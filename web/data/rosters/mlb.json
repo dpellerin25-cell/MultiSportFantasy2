@@ -1,11 +1,17 @@
 {
   "sport": "MLB",
   "league_id": "60ri2nbhmtj4b0km",
-  "fetch_started_at": "2026-10-06T14:47:43.088253+00:00",
-  "updated_at": "2026-10-06T14:47:43.939853+00:00",
-  "team_count": 9,
-  "total_players": 0,
+  "fetch_started_at": "2026-10-21T13:31:04.507758+00:00",
+  "updated_at": "2026-10-21T13:31:05.534210+00:00",
+  "team_count": 11,
+  "total_players": 6,
   "rosters": [
+    {
+      "owner": "Billy",
+      "team_id": "y7t2k7ypmvhgidn7",
+      "player_count": 0,
+      "players": []
+    },
     {
       "owner": "Hatch",
       "team_id": "1uucwggdmtufy7wz",
@@ -31,10 +37,77 @@
       "players": []
     },
     {
-      "owner": "Doug",
-      "team_id": "ef2fvskgmtj4b1bq",
+      "owner": "John",
+      "team_id": "mpk7eohemvhgidxd",
       "player_count": 0,
       "players": []
+    },
+    {
+      "owner": "Doug",
+      "team_id": "ef2fvskgmtj4b1bq",
+      "player_count": 6,
+      "players": [
+        {
+          "player_id": "03oh0",
+          "name": "Willson Contreras",
+          "position": "INF",
+          "pro_team": "BOS",
+          "pro_team_name": "Boston",
+          "status_id": "1",
+          "roster_position_id": "008",
+          "headshot_url": "https://fantraximg.com/si/headshots/MLB/hs03oh0_96_14.png"
+        },
+        {
+          "player_id": "03ojr",
+          "name": "Vladimir Guerrero Jr.",
+          "position": "INF",
+          "pro_team": "TOR",
+          "pro_team_name": "Toronto",
+          "status_id": "1",
+          "roster_position_id": "008",
+          "headshot_url": "https://fantraximg.com/si/headshots/MLB/hs03ojr_96_10.png"
+        },
+        {
+          "player_id": "062k5",
+          "name": "Nick Kurtz",
+          "position": "INF",
+          "pro_team": "ATH",
+          "pro_team_name": "Athletics",
+          "status_id": "1",
+          "roster_position_id": "008",
+          "headshot_url": "https://fantraximg.com/si/headshots/MLB/hs062k5_96_2.png"
+        },
+        {
+          "player_id": "02mwm",
+          "name": "Matt Olson",
+          "position": "INF",
+          "pro_team": "ATL",
+          "pro_team_name": "Atlanta",
+          "status_id": "1",
+          "roster_position_id": "008",
+          "headshot_url": "https://fantraximg.com/si/headshots/MLB/hs02mwm_96_15.png"
+        },
+        {
+          "player_id": "041pz",
+          "name": "Pete Alonso",
+          "position": "INF",
+          "pro_team": "BAL",
+          "pro_team_name": "Baltimore",
+          "status_id": "2",
+          "roster_position_id": "008",
+          "headshot_url": "https://fantraximg.com/si/headshots/MLB/hs041pz_96_12.png"
+        },
+        {
+          "player_id": "01cgo",
+          "name": "Freddie Freeman",
+          "position": "INF",
+          "pro_team": "LAD",
+          "pro_team_name": "LA Dodgers",
+          "status_id": "2",
+          "roster_position_id": "008",
+          "headshot_url": "https://fantraximg.com/si/headshots/MLB/hs01cgo_96_16.png"
+        }
+      ]
     },
     {
       "owner": "Tucker",

@@ -1,11 +1,17 @@
 {
   "sport": "NFL",
   "league_id": "yg0olhfrmtj45dd6",
-  "fetch_started_at": "2026-10-06T14:47:42.143556+00:00",
-  "updated_at": "2026-10-06T14:47:42.995333+00:00",
-  "team_count": 9,
+  "fetch_started_at": "2026-10-21T13:31:03.283269+00:00",
+  "updated_at": "2026-10-21T13:31:04.261353+00:00",
+  "team_count": 11,
   "total_players": 0,
   "rosters": [
+    {
+      "owner": "John",
+      "team_id": "rsm99wdimux6whk2",
+      "player_count": 0,
+      "players": []
+    },
     {
       "owner": "Jack",
       "team_id": "fhsj2l6xmtufxavs",
@@ -15,6 +21,12 @@
     {
       "owner": "Brendan",
       "team_id": "ctwavmkjmtufxavs",
+      "player_count": 0,
+      "players": []
+    },
+    {
+      "owner": "Billy",
+      "team_id": "99f5zqcjmvfvfudj",
       "player_count": 0,
       "players": []
     },
