@@ -31,10 +31,11 @@ jobs:
       TRADE_ROSTER_DATABASE_URL: ${{ secrets.TRADE_ROSTER_DATABASE_URL }}
       TRADE_ROSTER_CA_CERT: ${{ secrets.TRADE_ROSTER_CA_CERT }}
       FANTRAX_RENEWAL_CONFIRM: ${{ vars.FANTRAX_RENEWAL_PROJECT_REF }}
-      FANTRAX_CONNECTIONS_FILE: ${{ runner.temp }}/fantrax-runtime.json
       RENEWAL_MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'automatic' }}
       RENEWAL_SPORT: ${{ inputs.sport || 'MLB' }}
     steps:
+      - name: Set runtime connection file
+        run: echo "FANTRAX_CONNECTIONS_FILE=$RUNNER_TEMP/fantrax-runtime.json" >> "$GITHUB_ENV"
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
