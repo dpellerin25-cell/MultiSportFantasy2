@@ -35,6 +35,34 @@ const archive = (sport) => ({
   })),
 });
 
+test("Trophy Case uses approved membership including Billy and the shared final-results loader", () => {
+  const settings = JSON.parse(readFileSync(new URL("../data/league-settings.json", import.meta.url), "utf8"));
+  const config = season(2027, "upcoming");
+  let calls = 0;
+  const {getTrophyCase} = loadModule("../src/lib/trophyData.ts", {
+    "@/config/seasons": {seasons:[config]},
+    "@/lib/seasonData": {getSeasonLeagueData:(year, sport) => {
+      calls++;
+      assert.equal(year, 2027);
+      assert.equal(sport, "MLB");
+      return archive(sport);
+    }},
+    "@/lib/trophies": {deriveTrophyCase},
+    "../../data/league-settings.json": {default:settings},
+  });
+  const current = getTrophyCase();
+  assert.deepEqual(Array.from(current.owners, o => o.owner).sort(), settings.owners.map(o => o.name).sort());
+  assert.ok(current.owners.some(o => o.owner === "Billy" && o.total === 0));
+  assert.equal(current.totalTrophies, 0);
+  assert.equal(calls, 0);
+  config.sports.find(s => s.sport === "MLB").status = "final";
+  const finalized = getTrophyCase();
+  assert.equal(calls, 1);
+  assert.equal(finalized.totalTrophies, 1);
+  assert.equal(finalized.owners.find(o => o.owner === owners[0]).counts.MLB, 1);
+  assert.ok(finalized.owners.some(o => o.owner === "Billy" && o.total === 0));
+});
+
 test("live and upcoming seasons award nothing and never load archives", () => {
   const result = deriveTrophyCase([season(2027, "live"), season(2028, "upcoming")], () => { throw new Error("Must not load"); }, owners);
   assert.equal(result.totalTrophies, 0);
