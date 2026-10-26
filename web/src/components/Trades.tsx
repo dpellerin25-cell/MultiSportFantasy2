@@ -1,6 +1,7 @@
 "use client";
 import {createContext,useContext,useEffect,useRef,useState,type ReactNode} from "react";
-import {createClient,type SupabaseClient,type Session} from "@supabase/supabase-js";
+import {type SupabaseClient,type Session} from "@supabase/supabase-js";
+import {leagueSettingsClient} from "@/lib/league-settings-client";
 import {canCorrect,correctionCommand,proposal,tradeAssets,tradeWarnings,activeOffers,archivedOffers,leagueCompletedTrades,completedTradeHours,canRespond,offerResponse,counterSelection,counterProposal,type Offer,type TradeCommand,type TradeAsset,type TradeRoster} from "@/lib/trade-model";
 
 type LocalRoster={owner:string;sports:{sport:string;league_id?:string;players:{player_id:string|null;name:string|null;position:string|null;pro_team:string|null}[]}[]};
@@ -25,7 +26,7 @@ export function Trades({children,rosters}:{children:ReactNode;rosters:LocalRoste
   const [client,setClient]=useState<SupabaseClient|null>(null),[session,setSession]=useState<Session|null>(null),[ready,setReady]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState("");
   useEffect(()=>{
     if(!configured)return;
-    const c=createClient(url!,key!,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storageKey:"multisport-draft-test-auth"}});
+    const c=leagueSettingsClient();if(!c)return;
     let active=true;
     const {data}=c.auth.onAuthStateChange((_event,s)=>{if(active){setClient(c);setSession(s);setReady(true);}});
     c.auth.getSession().then(({data,error})=>{if(active){setClient(c);setSession(data.session);setReady(true);if(error)setError("Could not check your sign-in. Please refresh.");}});
