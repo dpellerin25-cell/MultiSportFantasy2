@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import {
-  createClient,
   type SupabaseClient,
   type Session,
 } from "@supabase/supabase-js";
+import {leagueSettingsClient} from "@/lib/league-settings-client";
 import {
   currentPick,
   draftConfig,
@@ -71,14 +71,8 @@ export default function DraftRoom() {
   const [authBusy, setAuthBusy] = useState(false);
   useEffect(() => {
     if (!config) return;
-    const c = createClient(config.url, config.key, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: false,
-        storageKey: "multisport-draft-test-auth",
-      },
-    });
+    const c = leagueSettingsClient();
+    if (!c) return;
     let alive = true;
     c.auth.getSession().then(({ data, error }) => {
       if (alive) {
