@@ -1,10 +1,10 @@
 {
   "sport": "NFL",
   "league_id": "yg0olhfrmtj45dd6",
-  "fetch_started_at": "2026-10-26T14:54:18.888172+00:00",
-  "updated_at": "2026-10-26T14:54:19.835306+00:00",
+  "fetch_started_at": "2026-10-26T23:06:03.853499+00:00",
+  "updated_at": "2026-10-26T23:06:04.766450+00:00",
   "team_count": 11,
-  "total_players": 0,
+  "total_players": 2,
   "rosters": [
     {
       "owner": "John",
@@ -33,8 +33,29 @@
     {
       "owner": "Ryan",
       "team_id": "rjrxjrgomtufxavs",
-      "player_count": 0,
-      "players": []
+      "player_count": 2,
+      "players": [
+        {
+          "player_id": "01cdj",
+          "name": "Matthew Stafford",
+          "position": "QB",
+          "pro_team": "LAR",
+          "pro_team_name": "Los Angeles Rams",
+          "status_id": "1",
+          "roster_position_id": "100",
+          "headshot_url": "https://fantraximg.com/si/headshots/NFL/hs01cdj_96_10.png"
+        },
+        {
+          "player_id": "06jdy",
+          "name": "Drake Maye",
+          "position": "QB",
+          "pro_team": "NE",
+          "pro_team_name": "New England Patriots",
+          "status_id": "1",
+          "roster_position_id": "123",
+          "headshot_url": "https://fantraximg.com/si/headshots/NFL/hs06jdy_96_3.png"
+        }
+      ]
     },
     {
       "owner": "Jacob",

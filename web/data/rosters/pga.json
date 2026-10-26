@@ -1,10 +1,10 @@
 {
   "sport": "PGA",
   "league_id": "xa7tza2hmthqz8bo",
-  "fetch_started_at": "2026-10-26T14:54:23.702915+00:00",
-  "updated_at": "2026-10-26T14:54:24.551514+00:00",
+  "fetch_started_at": "2026-10-26T23:06:08.000185+00:00",
+  "updated_at": "2026-10-26T23:06:08.635354+00:00",
   "team_count": 11,
-  "total_players": 0,
+  "total_players": 7,
   "rosters": [
     {
       "owner": "Chris",
@@ -27,8 +27,79 @@
     {
       "owner": "Brendan",
       "team_id": "427i3hphmtj6q46k",
-      "player_count": 0,
-      "players": []
+      "player_count": 7,
+      "players": [
+        {
+          "player_id": "05lo8",
+          "name": "Ludvig Aberg",
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "1",
+          "roster_position_id": "500",
+          "headshot_url": "https://fantraximg.com/si/headshots/PGA/hs05lo8_96_1.png"
+        },
+        {
+          "player_id": "04xua",
+          "name": "Viktor Hovland",
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "1",
+          "roster_position_id": "500",
+          "headshot_url": "https://fantraximg.com/si/headshots/PGA/hs04xua_96_1.png"
+        },
+        {
+          "player_id": "01q3f",
+          "name": "Dustin Johnson",
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "1",
+          "roster_position_id": "500",
+          "headshot_url": "https://fantraximg.com/si/headshots/PGA/hs01q3f_96_1.png"
+        },
+        {
+          "player_id": "01uh8",
+          "name": "Jordan Spieth",
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "1",
+          "roster_position_id": "500",
+          "headshot_url": "https://fantraximg.com/si/headshots/PGA/hs01uh8_96_1.png"
+        },
+        {
+          "player_id": "04054",
+          "name": "Anders Albertson",
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "2",
+          "roster_position_id": "500",
+          "headshot_url": "https://fantraximg.com/si/headshots/PGA/hs04054_96_1.png"
+        },
+        {
+          "player_id": "01szi",
+          "name": "Byeong Hun An",
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "2",
+          "roster_position_id": "500",
+          "headshot_url": "https://fantraximg.com/si/headshots/PGA/hs01szi_96_1.png"
+        },
+        {
+          "player_id": "0452x",
+          "name": "Sungjae Im",
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "2",
+          "roster_position_id": "500",
+          "headshot_url": "https://fantraximg.com/si/headshots/PGA/hs0452x_96_1.png"
+        }
+      ]
     },
     {
       "owner": "Hatch",

@@ -1,10 +1,10 @@
 {
   "sport": "Premier League",
   "league_id": "j08ymyupmtj415q3",
-  "fetch_started_at": "2026-10-26T14:54:22.708940+00:00",
-  "updated_at": "2026-10-26T14:54:23.555038+00:00",
+  "fetch_started_at": "2026-10-26T23:06:07.165842+00:00",
+  "updated_at": "2026-10-26T23:06:07.851779+00:00",
   "team_count": 11,
-  "total_players": 2,
+  "total_players": 5,
   "rosters": [
     {
       "owner": "Jack",
@@ -38,8 +38,38 @@
     {
       "owner": "Doug",
       "team_id": "y00vzeaumtj4175c",
-      "player_count": 1,
+      "player_count": 4,
       "players": [
+        {
+          "player_id": "04sjt",
+          "name": "Alisson Becker",
+          "position": "G",
+          "pro_team": "LIV",
+          "pro_team_name": "Liverpool",
+          "status_id": "1",
+          "roster_position_id": "704",
+          "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Liverpool.png"
+        },
+        {
+          "player_id": "07a45",
+          "name": "Mack Allan",
+          "position": "G",
+          "pro_team": "BOU",
+          "pro_team_name": "Bournemouth",
+          "status_id": "2",
+          "roster_position_id": "704",
+          "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Bournemouth.png"
+        },
+        {
+          "player_id": "078fx",
+          "name": "Owen Asemota",
+          "position": "G",
+          "pro_team": "AVL",
+          "pro_team_name": "Aston Villa",
+          "status_id": "2",
+          "roster_position_id": "704",
+          "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Aston_Villa.png"
+        },
         {
           "player_id": "05r9b",
           "name": "Martin Odegaard",

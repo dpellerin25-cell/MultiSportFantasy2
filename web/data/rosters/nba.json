@@ -1,10 +1,10 @@
 {
   "sport": "NBA",
   "league_id": "u1byx3qkmtj47ogg",
-  "fetch_started_at": "2026-10-26T14:54:21.359345+00:00",
-  "updated_at": "2026-10-26T14:54:22.490366+00:00",
+  "fetch_started_at": "2026-10-26T23:06:05.872419+00:00",
+  "updated_at": "2026-10-26T23:06:06.936332+00:00",
   "team_count": 11,
-  "total_players": 0,
+  "total_players": 10,
   "rosters": [
     {
       "owner": "Brendan",
@@ -69,8 +69,109 @@
     {
       "owner": "Hatch",
       "team_id": "dghm6tvbmtug00lx",
-      "player_count": 0,
-      "players": []
+      "player_count": 10,
+      "players": [
+        {
+          "player_id": "03lls",
+          "name": "Jaylen Brown",
+          "position": "G,F/C",
+          "pro_team": "PHI",
+          "pro_team_name": "Philadelphia 76ers",
+          "status_id": "1",
+          "roster_position_id": "302",
+          "headshot_url": "https://fantraximg.com/si/headshots/NBA/hs03lls_96_9.png"
+        },
+        {
+          "player_id": "05qsq",
+          "name": "Tyrese Maxey",
+          "position": "G",
+          "pro_team": "PHI",
+          "pro_team_name": "Philadelphia 76ers",
+          "status_id": "1",
+          "roster_position_id": "302",
+          "headshot_url": "https://fantraximg.com/si/headshots/NBA/hs05qsq_96_6.png"
+        },
+        {
+          "player_id": "0011e",
+          "name": "LeBron James",
+          "position": "F/C",
+          "pro_team": "PHI",
+          "pro_team_name": "Philadelphia 76ers",
+          "status_id": "1",
+          "roster_position_id": "310",
+          "headshot_url": "https://fantraximg.com/si/headshots/NBA/hs0011e_96_11.png"
+        },
+        {
+          "player_id": "03xmv",
+          "name": "Jayson Tatum",
+          "position": "F/C",
+          "pro_team": "BOS",
+          "pro_team_name": "Boston Celtics",
+          "status_id": "1",
+          "roster_position_id": "310",
+          "headshot_url": "https://fantraximg.com/si/headshots/NBA/hs03xmv_96_9.png"
+        },
+        {
+          "player_id": "03al2",
+          "name": "Joel Embiid",
+          "position": "F/C",
+          "pro_team": "PHI",
+          "pro_team_name": "Philadelphia 76ers",
+          "status_id": "1",
+          "roster_position_id": "307",
+          "headshot_url": "https://fantraximg.com/si/headshots/NBA/hs03al2_96_10.png"
+        },
+        {
+          "player_id": "06mm1",
+          "name": "Bronny James",
+          "position": "G",
+          "pro_team": "LAL",
+          "pro_team_name": "Los Angeles Lakers",
+          "status_id": "1",
+          "roster_position_id": "307",
+          "headshot_url": "https://fantraximg.com/si/headshots/NBA/hs06mm1_96_3.png"
+        },
+        {
+          "player_id": "051p4",
+          "name": "Ty Jerome",
+          "position": "G,F/C",
+          "pro_team": "MEM",
+          "pro_team_name": "Memphis Grizzlies",
+          "status_id": "1",
+          "roster_position_id": "307",
+          "headshot_url": "https://fantraximg.com/si/headshots/NBA/hs051p4_96_8.png"
+        },
+        {
+          "player_id": "051oi",
+          "name": "Ja Morant",
+          "position": "G",
+          "pro_team": "POR",
+          "pro_team_name": "Portland Trail Blazers",
+          "status_id": "1",
+          "roster_position_id": "307",
+          "headshot_url": "https://fantraximg.com/si/headshots/NBA/hs051oi_96_8.png"
+        },
+        {
+          "player_id": "0621d",
+          "name": "Ochai Agbaji",
+          "position": "G,F/C",
+          "pro_team": "(N/A)",
+          "pro_team_name": "Not on a team",
+          "status_id": "2",
+          "roster_position_id": "302",
+          "headshot_url": "https://fantraximg.com/si/headshots/NBA/hs0621d_96_6.png"
+        },
+        {
+          "player_id": "031lz",
+          "name": "Steven Adams",
+          "position": "F/C",
+          "pro_team": "HOU",
+          "pro_team_name": "Houston Rockets",
+          "status_id": "2",
+          "roster_position_id": "310",
+          "headshot_url": "https://fantraximg.com/si/headshots/NBA/hs031lz_96_10.png"
+        }
+      ]
     }
   ]
 }

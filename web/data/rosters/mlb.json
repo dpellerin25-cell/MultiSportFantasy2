@@ -1,16 +1,37 @@
 {
   "sport": "MLB",
   "league_id": "60ri2nbhmtj4b0km",
-  "fetch_started_at": "2026-10-26T14:54:20.373623+00:00",
-  "updated_at": "2026-10-26T14:54:21.145679+00:00",
+  "fetch_started_at": "2026-10-26T23:06:04.997710+00:00",
+  "updated_at": "2026-10-26T23:06:05.704760+00:00",
   "team_count": 11,
-  "total_players": 6,
+  "total_players": 8,
   "rosters": [
     {
       "owner": "Billy",
       "team_id": "y7t2k7ypmvhgidn7",
-      "player_count": 0,
-      "players": []
+      "player_count": 2,
+      "players": [
+        {
+          "player_id": "05rb1",
+          "name": "Sal Frelick",
+          "position": "OF",
+          "pro_team": "MIL",
+          "pro_team_name": "Milwaukee",
+          "status_id": "1",
+          "roster_position_id": "012",
+          "headshot_url": "https://fantraximg.com/si/headshots/MLB/hs05rb1_96_5.png"
+        },
+        {
+          "player_id": "025dn",
+          "name": "Christian Yelich",
+          "position": "UT",
+          "pro_team": "MIL",
+          "pro_team_name": "Milwaukee",
+          "status_id": "1",
+          "roster_position_id": "014",
+          "headshot_url": "https://fantraximg.com/si/headshots/MLB/hs025dn_96_14.png"
+        }
+      ]
     },
     {
       "owner": "Hatch",
