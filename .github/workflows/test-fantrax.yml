@@ -45,18 +45,18 @@ jobs:
           pip install -r requirements.txt
 
       - name: Set up Node for database-approved connections
-        if: vars.FANTRAX_RENEWALS_ENABLED == 'true'
+        if: vars.FANTRAX_RENEWALS_ENABLED == 'true' || vars.TRADE_ROSTER_SYNC_ENABLED == 'true'
         uses: actions/setup-node@v6
         with:
           node-version: "24"
 
       - name: Install runtime connection dependencies
-        if: vars.FANTRAX_RENEWALS_ENABLED == 'true'
+        if: vars.FANTRAX_RENEWALS_ENABLED == 'true' || vars.TRADE_ROSTER_SYNC_ENABLED == 'true'
         working-directory: supabase/tests
         run: npx --yes pnpm@11.25.0 install --frozen-lockfile --ignore-scripts
 
       - name: Export approved roster and standings connections
-        if: vars.FANTRAX_RENEWALS_ENABLED == 'true'
+        if: vars.FANTRAX_RENEWALS_ENABLED == 'true' || vars.TRADE_ROSTER_SYNC_ENABLED == 'true'
         env:
           TRADE_ROSTER_PROJECT_REF: ${{ vars.TRADE_ROSTER_PROJECT_REF }}
           TRADE_ROSTER_DATABASE_URL: ${{ secrets.TRADE_ROSTER_DATABASE_URL }}
