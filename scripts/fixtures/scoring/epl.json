@@ -1,0 +1,78 @@
+{
+  "responses": [
+    {
+      "data": {
+        "date": "2026-10-25",
+        "allEventsFinished": true,
+        "displayedSelections": {
+          "date": "2026-10-25",
+          "teamId": "y00vzeaumtj4175c",
+          "viewType": {
+            "id": "1",
+            "name": "Day"
+          },
+          "playerViewType": {
+            "id": "2",
+            "name": "All Players Playing"
+          }
+        },
+        "fantasyTeamInfo": {
+          "y00vzeaumtj4175c": {
+            "name": "Doug"
+          }
+        },
+        "statsPerTeam": {
+          "allTeamsStats": {
+            "y00vzeaumtj4175c": {
+              "BENCH": {
+                "totalFpts": 0.0,
+                "statsMap": {}
+              },
+              "ACTIVE": {
+                "totalFpts": 8.0,
+                "statsMap": {
+                  "04sjt": {
+                    "object1": 8.0
+                  },
+                  "_5020": {
+                    "object1": 8.0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "scorerMap": {
+          "BENCH": {
+            "y00vzeaumtj4175c": {
+              "5020": [
+                {
+                  "scorer": {
+                    "scorerId": "07a45",
+                    "name": "Mack Allan"
+                  }
+                }
+              ]
+            }
+          },
+          "ACTIVE": {
+            "y00vzeaumtj4175c": {
+              "5020": [
+                {
+                  "scorer": {
+                    "scorerId": "04sjt",
+                    "name": "Alisson Becker"
+                  }
+                }
+              ],
+              "5010": []
+            }
+          }
+        }
+      }
+    },
+    {
+      "data": {}
+    }
+  ]
+}

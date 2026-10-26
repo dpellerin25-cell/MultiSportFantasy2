@@ -1,0 +1,116 @@
+{
+  "responses": [
+    {
+      "data": {
+        "period": 21,
+        "displayedSelections": {
+          "period": 21,
+          "teamId": "427i3hphmtj6q46k",
+          "viewType": {
+            "id": "2",
+            "name": "Period"
+          },
+          "playerViewType": {
+            "id": "2",
+            "name": "All Players Playing"
+          }
+        },
+        "fantasyTeamInfo": {
+          "427i3hphmtj6q46k": {
+            "name": "Brendan"
+          }
+        },
+        "statsPerTeam": {
+          "allTeamsStats": {
+            "427i3hphmtj6q46k": {
+              "BENCH": {
+                "totalFpts": 0.0,
+                "statsMap": {
+                  "_6010": {
+                    "object1": 0.0
+                  }
+                }
+              },
+              "ACTIVE": {
+                "totalFpts": 127.0,
+                "statsMap": {
+                  "_6010": {
+                    "object1": 127.0
+                  },
+                  "04xua": {
+                    "object1": 127.0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "scorerMap": {
+          "BENCH": {
+            "427i3hphmtj6q46k": {
+              "6010": [
+                {
+                  "scorer": {
+                    "scorerId": "04054",
+                    "name": "Anders Albertson"
+                  }
+                },
+                {
+                  "scorer": {
+                    "scorerId": "01szi",
+                    "name": "Byeong Hun An"
+                  }
+                },
+                {
+                  "scorer": {
+                    "scorerId": "0452x",
+                    "name": "Sungjae Im"
+                  }
+                }
+              ]
+            }
+          },
+          "ACTIVE": {
+            "427i3hphmtj6q46k": {
+              "6010": [
+                {
+                  "scorer": {
+                    "scorerId": "05lo8",
+                    "name": "Ludvig Aberg"
+                  }
+                },
+                {
+                  "scorer": {
+                    "scorerId": "04xua",
+                    "name": "Viktor Hovland"
+                  }
+                },
+                {
+                  "scorer": {
+                    "scorerId": "01q3f",
+                    "name": "Dustin Johnson"
+                  }
+                },
+                {
+                  "scorer": {
+                    "scorerId": "01uh8",
+                    "name": "Jordan Spieth"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "periods": [
+          {
+            "object2": "21 (Thu Jun 11) RBC Canadian Open",
+            "object1": 21
+          }
+        ]
+      }
+    },
+    {
+      "data": {}
+    }
+  ]
+}

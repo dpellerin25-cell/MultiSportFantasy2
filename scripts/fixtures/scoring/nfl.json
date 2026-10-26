@@ -1,0 +1,84 @@
+{
+  "responses": [
+    {
+      "data": {
+        "date": "2026-10-25",
+        "allEventsFinished": true,
+        "displayedSelections": {
+          "date": "2026-10-25",
+          "teamId": "rjrxjrgomtufxavs",
+          "viewType": {
+            "id": "1",
+            "name": "Day"
+          },
+          "playerViewType": {
+            "id": "2",
+            "name": "All Players Playing"
+          }
+        },
+        "fantasyTeamInfo": {
+          "rjrxjrgomtufxavs": {
+            "name": "Ryan"
+          }
+        },
+        "statsPerTeam": {
+          "allTeamsStats": {
+            "rjrxjrgomtufxavs": {
+              "BENCH": {
+                "totalFpts": 25.35,
+                "statsMap": {
+                  "02zss": {
+                    "object1": 25.35
+                  },
+                  "_1010": {
+                    "object1": 25.35
+                  }
+                }
+              },
+              "ACTIVE": {
+                "totalFpts": 20.45,
+                "statsMap": {
+                  "01cdj": {
+                    "object1": 20.45
+                  },
+                  "_1010": {
+                    "object1": 20.45
+                  }
+                }
+              }
+            }
+          }
+        },
+        "scorerMap": {
+          "BENCH": {
+            "rjrxjrgomtufxavs": {
+              "1010": [
+                {
+                  "scorer": {
+                    "scorerId": "02zss",
+                    "name": "Geno Smith"
+                  }
+                }
+              ]
+            }
+          },
+          "ACTIVE": {
+            "rjrxjrgomtufxavs": {
+              "1010": [
+                {
+                  "scorer": {
+                    "scorerId": "01cdj",
+                    "name": "Matthew Stafford"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "data": {}
+    }
+  ]
+}
