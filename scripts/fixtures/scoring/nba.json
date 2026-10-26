@@ -1,0 +1,108 @@
+{
+  "responses": [
+    {
+      "data": {
+        "date": "2026-10-23",
+        "allEventsFinished": true,
+        "displayedSelections": {
+          "date": "2026-10-23",
+          "teamId": "dghm6tvbmtug00lx",
+          "viewType": {
+            "id": "1",
+            "name": "Day"
+          },
+          "playerViewType": {
+            "id": "2",
+            "name": "All Players Playing"
+          }
+        },
+        "fantasyTeamInfo": {
+          "dghm6tvbmtug00lx": {
+            "name": "Hatch"
+          }
+        },
+        "statsPerTeam": {
+          "allTeamsStats": {
+            "dghm6tvbmtug00lx": {
+              "BENCH": {
+                "totalFpts": 8.0,
+                "statsMap": {
+                  "031lz": {
+                    "object1": 8.0
+                  },
+                  "_3010": {
+                    "object1": 8.0
+                  }
+                }
+              },
+              "ACTIVE": {
+                "totalFpts": 124.0,
+                "statsMap": {
+                  "03xmv": {
+                    "object1": 61.75
+                  },
+                  "_3010": {
+                    "object1": 124.0
+                  },
+                  "051oi": {
+                    "object1": 26.25
+                  },
+                  "051p4": {
+                    "object1": 36.0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "scorerMap": {
+          "BENCH": {
+            "dghm6tvbmtug00lx": {
+              "3010": [
+                {
+                  "scorer": {
+                    "scorerId": "031lz",
+                    "name": "Steven Adams"
+                  }
+                }
+              ]
+            }
+          },
+          "ACTIVE": {
+            "dghm6tvbmtug00lx": {
+              "3010": [
+                {
+                  "scorer": {
+                    "scorerId": "03xmv",
+                    "name": "Jayson Tatum"
+                  }
+                },
+                {
+                  "scorer": {
+                    "scorerId": "06mm1",
+                    "name": "Bronny James"
+                  }
+                },
+                {
+                  "scorer": {
+                    "scorerId": "051p4",
+                    "name": "Ty Jerome"
+                  }
+                },
+                {
+                  "scorer": {
+                    "scorerId": "051oi",
+                    "name": "Ja Morant"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "data": {}
+    }
+  ]
+}
