@@ -3,10 +3,18 @@ import mlb from "../../data/rosters/mlb.json";
 import nba from "../../data/rosters/nba.json";
 import epl from "../../data/rosters/premier-league.json";
 import pga from "../../data/rosters/pga.json";
+import type { RosterPlayer } from "@/components/RosterCard";
 
-const rosters = { NFL: nfl, MLB: mlb, NBA: nba, EPL: epl, PGA: pga };
+type RosterSport = "NFL" | "MLB" | "NBA" | "EPL" | "PGA";
+type OwnerRosterFile = {
+  rosters: { owner: string; players: RosterPlayer[] }[];
+};
 
-export function getOwnerRosterPlayers(owner: string, sport: keyof typeof rosters) {
+const rosters: Record<RosterSport, OwnerRosterFile> = {
+  NFL: nfl, MLB: mlb, NBA: nba, EPL: epl, PGA: pga,
+};
+
+export function getOwnerRosterPlayers(owner: string, sport: RosterSport): RosterPlayer[] {
   return rosters[sport].rosters
     .filter((roster) => roster.owner === owner)
     .flatMap((roster) => roster.players);

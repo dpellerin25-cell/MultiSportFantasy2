@@ -6,6 +6,37 @@ import fetch_fantrax as fetch
 
 
 class UpdateModesTest(unittest.TestCase):
+    def test_prelaunch_skips_standings_but_continues_rosters(self):
+        from championship_calendar import PrelaunchSeason
+        def save(sport, *args):
+            if sport != 'MLB':
+                raise PrelaunchSeason('Pre-launch season is not a Pentagon Cup championship')
+        for mode in ('standings', 'all'):
+            output = io.StringIO()
+            with patch.object(fetch, 'create_session'), patch.object(fetch, 'fetch_league', return_value={}), patch.object(fetch, 'save_league_json', side_effect=save) as standings, patch.object(fetch, 'fetch_all_rosters', return_value=[]), patch.object(fetch, 'save_roster_json') as rosters, contextlib.redirect_stdout(output):
+                fetch.main(['--only', mode])
+            self.assertEqual(standings.call_count, 5)
+            self.assertEqual(rosters.call_count, 5 if mode == 'all' else 0)
+            self.assertIn('Pre-launch standings skipped: 4', output.getvalue())
+            self.assertIn('Failed: 0', output.getvalue())
+
+    def test_prelaunch_writes_nothing_and_missing_year_is_error(self):
+        from championship_calendar import PrelaunchSeason
+        connection = {'current_league_id': 'test', 'current_season_year': 2026}
+        with patch.object(fetch, 'CONNECTIONS', {'sports': {'NFL': connection}}), patch('builtins.open') as write:
+            with self.assertRaises(PrelaunchSeason):
+                fetch.save_league_json('NFL', 'test', 'nfl.json', {})
+            write.assert_not_called()
+            del connection['current_season_year']
+            with self.assertRaisesRegex(ValueError, 'Integer Fantrax'):
+                fetch.save_league_json('NFL', 'test', 'nfl.json', {})
+            write.assert_not_called()
+
+    def test_other_validation_errors_still_fail(self):
+        with patch.object(fetch, 'create_session'), patch.object(fetch, 'fetch_league', return_value={}), patch.object(fetch, 'save_league_json', side_effect=ValueError('Invalid membership')), contextlib.redirect_stdout(io.StringIO()):
+            with self.assertRaisesRegex(RuntimeError, '5 league'):
+                fetch.main(['--only', 'standings'])
+
     def test_unexpected_roster_response_is_not_an_empty_roster(self):
         for data in ({}, {"tables": []}, {"tables": [{}]}, {"tables": "bad"}):
             with self.assertRaises(ValueError):
