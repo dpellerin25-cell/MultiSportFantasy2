@@ -263,10 +263,10 @@ def save_league_json(
     connection = CONNECTIONS['sports'][canonical]
     # Never write an old pre-launch league into the first championship.
     if league_id == connection['current_league_id']:
-        verified_year = championship_year(canonical, connection.get('current_season_year', 2026))
+        verified_year = championship_year(canonical, connection.get('current_season_year'))
     else:
         # Retained standings still require a verified sport convention.
-        verified_year = championship_year(canonical, connection.get('standings_championship_year', 2026))
+        verified_year = championship_year(canonical, connection.get('standings_championship_year'))
     table = find_standings_table(standings_data)
 
     if table is None:
@@ -532,6 +532,7 @@ def save_roster_json(
 # ---------------------------------------------------------
 
 def main(argv=None):
+    from championship_calendar import PrelaunchSeason
     parser = argparse.ArgumentParser(description="Update Fantrax saved data")
     parser.add_argument("--only", choices=("all", "standings", "rosters"), default="all")
     args = parser.parse_args(argv)
@@ -548,6 +549,7 @@ def main(argv=None):
 
     successful = []
     failed = []
+    skipped_standings = []
 
     for sport, config in LEAGUES.items():
 
@@ -569,7 +571,11 @@ def main(argv=None):
             )
 
             if args.only in ("all", "standings"):
-                save_league_json(sport, standings_league, filename, standings_data)
+                try:
+                    save_league_json(sport, standings_league, filename, standings_data)
+                except PrelaunchSeason:
+                    skipped_standings.append(sport)
+                    print(f"SKIPPED standings for {sport}: pre-launch season; no championship scores written.")
 
             if args.only in ("all", "rosters"):
                 if args.only == 'all' and standings_league != league_id:
@@ -578,7 +584,8 @@ def main(argv=None):
                 rosters = fetch_all_rosters(session, sport, league_id, standings_data)
                 save_roster_json(sport, league_id, filename, rosters, fetch_started_at)
 
-            successful.append(sport)
+            if args.only != 'standings' or sport not in skipped_standings:
+                successful.append(sport)
 
         except Exception as error:
 
@@ -600,6 +607,9 @@ def main(argv=None):
     print("=" * 60)
     print("UPDATE SUMMARY")
     print("=" * 60)
+    print(f"Pre-launch standings skipped: {len(skipped_standings)}")
+    for sport in skipped_standings:
+        print(f"  - {sport} (saved standings unchanged; roster updates remain independent)")
 
     print(
         f"Successful: {len(successful)}"
@@ -627,8 +637,8 @@ def main(argv=None):
 
     print()
     print(
-        f"All five Fantrax leagues ({args.only}) "
-        "updated successfully!"
+        f"Fantrax update ({args.only}) completed without errors; "
+        f"{len(skipped_standings)} pre-launch standings skipped."
     )
 
 

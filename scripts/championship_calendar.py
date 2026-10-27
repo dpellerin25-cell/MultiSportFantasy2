@@ -5,6 +5,10 @@ from pathlib import Path
 CALENDAR = json.loads((Path(__file__).resolve().parents[1] / 'web/data/championship-calendar.json').read_text())
 
 
+class PrelaunchSeason(ValueError):
+    """Verified year precedes the first Cup; no championship result to publish."""
+
+
 def championship_year(sport, fantrax_year):
     offset = CALENDAR['sports'][sport]['fantrax_to_championship_offset']
     if offset is None:
@@ -13,5 +17,5 @@ def championship_year(sport, fantrax_year):
         raise ValueError('Integer Fantrax season year required')
     year = fantrax_year + offset
     if year < CALENDAR['first_championship_year']:
-        raise ValueError('Pre-launch season is not a Pentagon Cup championship')
+        raise PrelaunchSeason('Pre-launch season is not a Pentagon Cup championship')
     return year
