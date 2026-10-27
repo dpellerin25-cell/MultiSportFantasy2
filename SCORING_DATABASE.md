@@ -1,0 +1,111 @@
+# Scoring ledger — local foundation
+
+Migration: `supabase/migrations/202610270001_scoring_ledger.sql`.
+This adds the private `scoring` schema. It does not import Fantrax data, schedule
+jobs, change published totals, or enable a website pause control.
+
+## Stored evidence
+
+- `seasons`: sport, Fantrax league, starting season year, explicit test/production
+  scope and championship year. Production starts at Cup 2027. Each sport has
+  one production season per Cup; test seasons have no championship assignment.
+- `periods`: daily dates for NFL/MLB/NBA/EPL; Thursday–Sunday tournament periods
+  for PGA, retaining its source period number and label.
+- `results` and `contributions`: immutable revisions of one owner's team result,
+  retaining external player IDs, names, starter/bench status, raw scores, missing
+  record status, source observation time and reconciliation totals.
+- `roster_checks`: immutable per-owner count revisions with five-sport counts,
+  source references and observation times. Counts must include IR and minors.
+- `pause_events`: commissioner identity, reason, database effective time and
+  append-only pause/resume history. The browser cannot backdate an event.
+- `decisions`: immutable evaluation records referencing the scoring result and
+  the exact roster-check/pause evidence used.
+
+All data and importer functions are private to trusted database maintenance.
+RLS is enabled, with no browser read/write policies. Only authenticated
+commissioner pause and PGA decision commands have execute grants; no public HTTP wrapper is
+added. Database administrators remain trusted and can insert historical fixtures.
+Existing draft/player/trade records are referenced, not rewritten.
+
+## Rules and corrections
+
+Daily eligibility uses the following day's Eastern roster check. PGA uses both
+Thursday and Sunday checks, and remains pending until Tuesday 8 a.m. Eastern.
+Daily results also require finished events. PGA's deadline is the agreed
+finalization policy, not a claim that Fantrax exposes a final flag.
+
+The cap is 65. Overages remove each positive **starter** contribution and retain
+negative starter contributions; all bench contributions are excluded. Missing
+checks, incomplete checks and unknown starter scoring remain pending. A missing
+score is not zero: `no_activity` needs explicit supporting evidence, while an
+explicit zero uses `known` with numeric zero.
+
+Complete roster evidence currently requires all five observations in the 4 a.m.
+Eastern hour on the check date. A delayed or partial run must be recorded as
+incomplete rather than used to assess a penalty. This is a conservative evidence
+guard, not a new roster grace period. The scheduled importer and its late-run
+policy still need implementation and validation.
+
+Pausing is evaluated at the scheduled check time and does not erase prior
+penalties. If PGA is paused at only one of its two checks, the outcome is pending:
+Doug must review that result and choose to enforce the standard two-check cap rule or waive the penalty. Missing counts remain pending
+even when penalties were paused.
+
+Import commands require a request UUID and expected revision. Identical retries
+return the original record; changed payloads or stale revisions fail. Corrections
+append new evidence with a reason, never update history. Scoring corrections
+must have a later observation time. Imports reconcile starter and bench totals
+and fail atomically on invalid or duplicate player rows.
+
+All mutation commands share a transaction advisory lock, with unique constraints
+as an additional guard. This favors correctness over throughput for this small
+league. Multi-session lock behavior has not yet been tested for these functions.
+
+`latest_results` and `latest_roster_checks` select revisions rather than summing
+them. `current_outcomes` re-evaluates current evidence, so old stored decisions
+cannot become a stale published-score cache. Future season totals must group by
+championship, sport and owner, exclude `is_test`, and keep pending outcomes
+distinct from zero. An old decision request retries its original audit result;
+use a new request UUID to record a correction's decision.
+
+## Local validation and next steps
+
+### Commissioner resolution for mixed PGA pauses
+
+This control is implemented at the database-command layer; the website control
+and HTTP wrapper remain part of the future scoring interface.
+`scoring.review_pga_resolution(result_id)` returns the current outcome, exact
+check evidence and last resolution ID. After confirmation,
+`scoring.resolve_pga_pause(request_id, result_id, choice, reason, expected_checks,
+expected_resolution)` accepts `enforce` or `waive`.
+
+- **Enforce** applies the normal PGA rule: positive starter points are removed
+  only if both checks exceeded 65; negative scores remain.
+- **Waive** keeps all starter points for that tournament.
+- Both commands require a commissioner. Decisions require a reason, preserve
+  the actor and history in `pga_resolutions`, and support exact retries.
+- A stale preview fails. Corrected scores or revised roster/pause evidence
+  invalidate the prior resolution and require another review. Decisions can be
+  corrected by appending a new resolution with the previous resolution ID.
+- This is limited to mixed-pause PGA results after the deadline with complete
+  counts and known starter scoring. It cannot bypass other pending conditions.
+
+All fixtures in `scoring.test.mjs` are synthetic database edge cases, not claimed
+Fantrax captures. The shared read-only diagnostic remains the source of captured
+request/response validation. Tests initialize an isolated in-memory PostgreSQL
+instance and apply all local migrations there; no credentials are needed.
+
+After transferring the reviewed files to Codespaces:
+
+```bash
+cd /workspaces/MultiSportFantasy2/supabase/tests
+npx --yes pnpm@11.25.0 install --frozen-lockfile --ignore-scripts
+npx --yes pnpm@11.25.0 test:scoring
+npx --yes pnpm@11.25.0 test
+```
+
+Next, validate scoring imports/check corrections/pause changes in independent
+PostgreSQL sessions before hosted rollout. Hosted Auth, HTTP authorization and
+scheduled job integration are not covered by this offline suite. Do not apply
+this migration to production yet. No Supabase action is required for local tests.
+
