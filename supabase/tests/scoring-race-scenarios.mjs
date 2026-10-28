@@ -63,7 +63,9 @@ export async function scoringRaceScenarios({admin,race,report}) {
  const pgBody=body(await period('PGA')), pg=await imp(admin,pgBody);
  assert.equal((await outcome(pg)).status,'pending');
  const evidence=(await outcome(pg)).checks;
- const resolve=async(c,choice,checks=evidence,previous=null,request=uuid())=>{await asCommissioner(c);return one(c,"select scoring.resolve_pga_pause($1,$2,$3,'Synthetic commissioner decision',$4,$5)",[request,pg,choice,checks,previous]);};
+ // node-postgres encodes JS arrays as PostgreSQL arrays, not JSON. Serialize
+ // this JSONB argument explicitly so the real driver matches the offline run.
+ const resolve=async(c,choice,checks=evidence,previous=null,request=uuid())=>{await asCommissioner(c);return one(c,"select scoring.resolve_pga_pause($1,$2,$3,'Synthetic commissioner decision',$4::jsonb,$5)",[request,pg,choice,JSON.stringify(checks),previous]);};
  r=await race(c=>resolve(c,'enforce'),c=>resolve(c,'waive'));rejects(r,/Decision changed/);
  const resolution=r.first;assert.equal((await outcome(pg)).adjusted_total,-3);
  report('conflicting PGA decisions serialize; only the first confirmation succeeds');
