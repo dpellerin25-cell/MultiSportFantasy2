@@ -49,7 +49,7 @@ export function counterProposal(data:TradeRoster,offer:Offer,selected:TradeAsset
 }
 export function tradeAssets(data:TradeRoster):TradeAsset[]{
   return [...data.players.map(p=>({key:`player:${p.id}`,id:p.id,kind:"player" as const,owner_id:p.owner_id,label:p.name,sport:p.sport,unavailable:p.reserved?"Awaiting Fantrax transfer":undefined})),
-    ...data.picks.map(p=>({key:`pick:${p.id}`,id:p.id,kind:"pick" as const,owner_id:p.owner_id,label:`${p.year} Â· Round ${p.round} Â· ${data.owners.find(o=>o.id===p.original_owner_id)?.name ?? "Original owner"}'s pick`}))];
+    ...data.picks.map(p=>({key:`pick:${p.id}`,id:p.id,kind:"pick" as const,owner_id:p.owner_id,label:`${p.year} Round ${p.round} (${data.owners.find(o=>o.id===p.original_owner_id)?.name ?? "Original owner"}'s pick)`}))];
 }
 export function proposal(data:TradeRoster,recipient:string,selected:TradeAsset[],requestId:string){
   if(!data.ledger_ready)throw new Error("Trade picks have not been set up yet.");
