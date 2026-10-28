@@ -145,3 +145,54 @@ Use that printed removal command when finished; do not remove unrelated containe
 If a test fails, keep its output and container for diagnosis. Do not apply the
 scoring migration to hosted Supabase based solely on the offline rehearsal.
 
+### Hosted scoring validation (TEST project only)
+
+`scoring-hosted.test.mjs` only permits `tgvuntuhdqucazpoxrrg`. It performs real
+Auth sign-in, then tests SQL `authenticated`/`anon` role authorization using the
+verified user IDs. This is not an HTTP RPC, website or Realtime test. It needs
+existing confirmed Doug and Chris test accounts linked to their active owners,
+with Doug already commissioner and Chris not commissioner. It grants no roles.
+
+After transferring/pushing the runner and after disposable concurrency passes:
+
+```bash
+cd /workspaces/MultiSportFantasy2
+git pull --ff-only origin main
+cd supabase/tests
+npx --yes pnpm@11.25.0 install --frozen-lockfile --ignore-scripts
+node scoring-hosted-offline.test.mjs
+cd /workspaces/MultiSportFantasy2
+npx supabase link --project-ref tgvuntuhdqucazpoxrrg
+npx supabase db push --linked --dry-run
+```
+
+Review the list. For this task the only new migration should be
+`202610270001_scoring_ledger.sql` (or none if already applied). Stop and inspect
+unexpected migrations. Apply only to that confirmed test project:
+
+```bash
+npx supabase db push --linked
+cd /workspaces/MultiSportFantasy2/supabase/tests
+export DRAFT_TEST_CONFIRM=tgvuntuhdqucazpoxrrg
+NODE_EXTRA_CA_CERTS="$HOME/.config/multisport-draft/supabase-ca.crt" \
+  node scoring-hosted.test.mjs
+```
+
+The shell also needs `DRAFT_TEST_DATABASE_URL`, `DRAFT_TEST_PUBLISHABLE_KEY`,
+`DRAFT_TEST_DOUG_EMAIL`, `DRAFT_TEST_DOUG_PASSWORD`, `DRAFT_TEST_OWNER_EMAIL`,
+and `DRAFT_TEST_OWNER_PASSWORD` from the previous hosted tests. OWNER means Chris.
+Passwords for these accounts are Auth passwords; the URI contains the separate
+database password. The CA file must exist. Never disable TLS verification.
+
+All synthetic scoring rows and pause/resolution commands run inside a single
+rollback-only transaction with bounded timeouts. Existing scores and account
+links are not modified. The runner briefly holds the scoring mutation lock;
+run it when the test project is idle. Reserved Doug check dates June 11/14, 2020
+must be unused; it refuses existing data rather than deleting it. No notifications,
+Fantrax requests or production connections are involved.
+
+Rollback removes fixture rows even on failure; identity sequences may retain
+gaps, and Auth sign-in sessions may remain until expiry. A dropped connection
+also aborts the open transaction. Final success reports rollback and scope;
+do not confuse offline scenario output with an actual hosted run.
+
