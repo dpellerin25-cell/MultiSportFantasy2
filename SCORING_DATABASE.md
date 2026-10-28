@@ -109,3 +109,39 @@ PostgreSQL sessions before hosted rollout. Hosted Auth, HTTP authorization and
 scheduled job integration are not covered by this offline suite. Do not apply
 this migration to production yet. No Supabase action is required for local tests.
 
+### Disposable PostgreSQL concurrency runner
+
+After committing/pushing the reviewed runner files yourself, run in Codespaces:
+
+```bash
+cd /workspaces/MultiSportFantasy2
+git pull --ff-only origin main
+cd supabase/tests
+npx --yes pnpm@11.25.0 install --frozen-lockfile --ignore-scripts
+npx --yes pnpm@11.25.0 test:scoring-race-offline
+docker info
+npx --yes pnpm@11.25.0 test:scoring-concurrency
+```
+
+The runner creates a uniquely named PostgreSQL 17 container, a random temporary
+password and a loopback-only port. No Supabase or Fantrax credentials are needed.
+It refuses a nonempty database and only accepts the named local disposable test
+database. It applies migrations inside that disposable database, not Supabase.
+
+Ten scenarios cover duplicate imports, conflicting retries, competing score
+corrections, count/decision races in both orders, concurrent pause changes,
+conflicting PGA decisions, stale count evidence, PGA retries, and superseded
+scoring evidence. Three independent connections are used: two competitors and
+one lock observer. Every scenario must observe the second backend blocked by
+the first through `pg_blocking_pids`; merely running in sequence cannot pass.
+Statements and lock observation have bounded timeouts.
+
+Expected final line: `10 scoring concurrency scenarios passed. No hosted database
+contacted. Fixture data remains in the disposable database.`
+
+The container and synthetic records are retained, including on failure. The
+runner prints exact inspection and removal commands for that specific container.
+Use that printed removal command when finished; do not remove unrelated containers.
+If a test fails, keep its output and container for diagnosis. Do not apply the
+scoring migration to hosted Supabase based solely on the offline rehearsal.
+
