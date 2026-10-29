@@ -1,4 +1,5 @@
 import {createHash} from 'node:crypto';
+import {CONFIRMATION_ID,confirmedCase} from './scoring-nonparticipation.mjs';
 export class ScoringImportError extends Error {}
 const demand=(ok,message)=>{if(!ok)throw new ScoringImportError(message);};
 const text=v=>typeof v==='string'&&v.trim().length>0;
@@ -42,9 +43,24 @@ export function validateScoringImport(envelope){
    return {player_id:p.player_id,player_name:p.player_name,lineup:p.lineup_group,points:p.fantasy_points,state:p.stat_record_present?'known':'unknown'};
  });
  demand(Math.abs(active-d.active_total)<1e-8&&Math.abs(bench-d.bench_total)<1e-8,'Individual scores do not reconcile.');
+ let original;
+ if(e.non_participation_confirmation){
+   const confirmation=e.non_participation_confirmation,c=confirmedCase(d);
+   demand(confirmation.id===CONFIRMATION_ID&&c,'No commissioner confirmation exists for this exact owner, league and period.');
+   demand(confirmation.original_envelope&&!confirmation.original_envelope.non_participation_confirmation,'Original uncorrected import envelope required.');
+   original=validateScoringImport(confirmation.original_envelope);
+   demand(hash(original.d)===hash(d)&&original.e.season_year===e.season_year&&original.e.tournament_start===e.tournament_start,'A confirmation cannot alter raw Fantrax evidence or season scope.');
+   demand(e.expected_revision===original.e.expected_revision+1&&Date.parse(e.observed_at)>Date.parse(original.e.observed_at),'Confirmation must follow the original revision and capture time.');
+   for(const [id,name] of Object.entries(c.players)){
+     const p=players.find(p=>p.player_id===id);
+     demand(p&&p.player_name===name&&p.lineup==='ACTIVE'&&p.state==='unknown','Only the explicitly confirmed missing starter records may be corrected.');
+     p.state='no_activity';
+     p.evidence=JSON.stringify({confirmation_id:CONFIRMATION_ID,source:'commissioner conversation',confirmed_by:'Doug',confirmed_on:'2026-10-29',recorded_at:e.observed_at,statement:'I can confirm all of those players did not participate in that given day/period',original_capture_observed_at:original.e.observed_at,original_checksum:original.checksum});
+   }
+ }
  const checksum=hash(e), raw=hash({kind:'historical-scoring-import-v1',checksum});
  const request_id=`${raw.slice(0,8)}-${raw.slice(8,12)}-5${raw.slice(13,16)}-a${raw.slice(17,20)}-${raw.slice(20,32)}`;
- return {e,d,start,end,players,checksum,request_id};
+ return {e,d,start,end,players,checksum,request_id,original};
 }
 
 // Both modes execute identical validations in a transaction. Preview rolls back;
@@ -74,10 +90,15 @@ export async function importScoring(db,envelope,{apply=false,approval}={}){
    const plan_hash=hash({checksum:v.checksum,owner:owner[0].id});
    demand(!apply||approval===plan_hash,'Approval does not match current preview; preview again.');
    const payload={period_id:period.id,owner_id:owner[0].id,team_id:d.team_id,observed_at:e.observed_at,starter_total:d.active_total,bench_total:d.bench_total,events_finished:d.all_events_finished===true,reason:e.reason,players:v.players};
+   if(v.original){
+     const base=(await db.query('select id,revision from scoring.results where request_id=$1',[v.original.request_id])).rows[0];
+     demand(base&&Number(base.revision)===e.expected_revision,'The exact original capture must already be imported at the expected revision.');
+     payload.correction_evidence={confirmation_id:CONFIRMATION_ID,original_result_id:base.id,original_checksum:v.original.checksum,original_observed_at:v.original.e.observed_at,evidence_recorded_at:e.observed_at};
+   }
    const result=await one('select scoring.import_result($1,$2,$3)',[v.request_id,JSON.stringify(payload),e.expected_revision]);
    const superseded=Number(await one('select revision from scoring.results where id=$1',[result]))<latest;
    const outcome=superseded?{status:'superseded'}:await one('select scoring.evaluate($1,clock_timestamp())',[result]);
-   const summary={mode:apply?'import':'preview',is_test:true,championship_year:null,plan_hash,checksum:v.checksum,already_imported:!!prior,sport:d.sport,owner:d.owner,league_id:d.league_id,start_date:start,end_date:end,player_records:v.players.length,starter_total:d.active_total,bench_total:d.bench_total,missing_records:v.players.filter(p=>p.state==='unknown').length,revision:Number(await one('select revision from scoring.results where id=$1',[result])),outcome};
+   const summary={mode:apply?'import':'preview',is_test:true,championship_year:null,plan_hash,checksum:v.checksum,already_imported:!!prior,sport:d.sport,owner:d.owner,league_id:d.league_id,start_date:start,end_date:end,player_records:v.players.length,starter_total:d.active_total,bench_total:d.bench_total,missing_records:v.players.filter(p=>p.state==='unknown').length,confirmed_non_participants:v.players.filter(p=>p.state==='no_activity').map(p=>({player_id:p.player_id,player_name:p.player_name,contribution:0})),revision:Number(await one('select revision from scoring.results where id=$1',[result])),outcome};
    await db.query(apply?'commit':'rollback');return summary;
  }catch(e){await db.query('rollback');throw e;}
 }

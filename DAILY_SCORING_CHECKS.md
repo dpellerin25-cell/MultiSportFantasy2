@@ -61,6 +61,12 @@ check history remains. This does not publish points or apply website penalties.
 
 ## Missing scoring records: required evidence before publishing
 
+Update, 2026-10-29: Doug confirmed non-participation for all six missing starters
+listed below, on these exact dates/period. The audited correction is implemented
+and tested locally; see the non-participation section of `SCORING_IMPORT.md` for
+preview/import commands. Original raw blanks remain preserved. Bench omissions
+remain unknown, and historical roster-cap eligibility remains pending.
+
 These are omissions in the actual captured per-player stats, not parser-invented
 zeros. The captured team totals reconcile, but missing starter contributions
 cannot be finalized merely from that fact.
