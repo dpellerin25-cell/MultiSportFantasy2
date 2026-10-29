@@ -1,6 +1,7 @@
 """Read-only five-sport scoring diagnostic. Historical examples only; no production writes."""
 import argparse
 from datetime import date as calendar_date
+from datetime import datetime, timezone
 import re
 from urllib.parse import urlencode
 import json
@@ -183,6 +184,9 @@ def main():
         stage = 'validating response identity, scope, lineup and totals'
         result = normalize(raw, t)
         result['source'] = 'live' if args.live else 'saved_response'
+        # A saved raw response has no trustworthy acquisition time here. Never
+        # label its normalization time as a fresh Fantrax observation.
+        result['observed_at'] = datetime.now(timezone.utc).isoformat() if args.live else None
         print(json.dumps(result, indent=2, allow_nan=False))
         return 0
     except Exception as exc:

@@ -1,5 +1,8 @@
 # Scoring ledger — local foundation
 
+For the manual diagnostic importer, historical roster checks, and exact Codespaces
+preview/import commands, see [SCORING_IMPORT.md](SCORING_IMPORT.md).
+
 Migration: `supabase/migrations/202610270001_scoring_ledger.sql`.
 This adds the private `scoring` schema. It does not import Fantrax data, schedule
 jobs, change published totals, or enable a website pause control.
