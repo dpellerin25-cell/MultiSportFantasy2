@@ -96,6 +96,67 @@ capture remains harmless and reports `superseded` after a correction.
 
 ## Historical roster checks
 
+### Audited non-participation confirmation (2026-10-29)
+
+Doug explicitly confirmed that Contreras/Kurtz (Doug MLB Sep 24), Bronny James
+(Hatch NBA Oct 23), and Aberg/Johnson/Spieth (Brendan PGA period 21) did not
+participate. `scoring-nonparticipation.mjs` limits this evidence to those exact
+six IDs, names, owners, leagues, dates/period. It is not a global missing-to-zero
+rule. EPL and PGA bench omissions are not covered.
+
+The correction preserves the entire original envelope and requires that exact
+capture to have been imported. It creates revision 2 with `no_activity` state,
+null raw points, human evidence, original capture checksum and source result ID.
+Zero contribution is inferred from confirmed non-participation, not presented
+as a numeric Fantrax score. The correction's `observed_at` is the time human
+evidence is recorded; `original_observed_at` remains the real capture timestamp.
+These remain test-only records with no championship assignment. No new migration
+is required and no database change occurs until an approved import is executed.
+
+After pushing the reviewed code, run in Codespaces:
+
+```bash
+cd /workspaces/MultiSportFantasy2
+git pull --ff-only origin main
+cd supabase/tests
+npx --yes pnpm@11.25.0 test:scoring-confirmations
+cd /workspaces/MultiSportFantasy2
+export DRAFT_TEST_CONFIRM=tgvuntuhdqucazpoxrrg
+export NODE_EXTRA_CA_CERTS="$HOME/.config/multisport-draft/supabase-ca.crt"
+
+for sport in MLB NBA PGA; do
+  node supabase/tests/prepare-nonparticipation.mjs \
+    "/workspaces/scoring-evidence/$sport-import.json" \
+    "/workspaces/scoring-evidence/$sport-no-activity.json" || break
+  node supabase/tests/import-scoring.mjs --preview \
+    "/workspaces/scoring-evidence/$sport-no-activity.json" \
+    > "/workspaces/scoring-evidence/$sport-no-activity-preview.tmp.json" || break
+  mv "/workspaces/scoring-evidence/$sport-no-activity-preview.tmp.json" \
+    "/workspaces/scoring-evidence/$sport-no-activity-preview.json"
+  cat "/workspaces/scoring-evidence/$sport-no-activity-preview.json"
+done
+```
+
+Reuse the ORIGINAL imported files, not new captures. Keep the existing database
+URI environment variable. Expect revision 2, unchanged totals, respectively
+2/1/3 confirmed non-participants, and pending roster eligibility. After reviewing:
+
+```bash
+for sport in MLB NBA PGA; do
+  approval=$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["plan_hash"])' \
+    "/workspaces/scoring-evidence/$sport-no-activity-preview.json") || break
+  node supabase/tests/import-scoring.mjs --import \
+    "/workspaces/scoring-evidence/$sport-no-activity.json" "$approval" || break
+  node supabase/tests/import-scoring.mjs --import \
+    "/workspaces/scoring-evidence/$sport-no-activity.json" "$approval" || break
+done
+```
+
+Retry reports `already_imported: true` at revision 2. The preparer refuses to
+overwrite a file; reuse it on retries. A stale revision or known numeric score
+is rejected rather than overwritten. Tests use real captured examples with
+synthetic import timestamps and no hosted writes.
+
 `import-scoring-rosters.mjs --preview FILE` and `--import FILE APPROVAL_HASH`
 use the same guarded connection. The input envelope is:
 
