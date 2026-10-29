@@ -16,7 +16,9 @@ try{
     const config=syncConnection(process.env);
     stage='connecting with verified TLS';db=new pg.Client(config);await db.connect();
     stage='importing all five sports atomically';
-    const result=await syncRosters(db,snapshots);
+    const scoringChecks=process.env.SCORING_ROSTER_CHECKS_ENABLED==='true'&&process.env.GITHUB_EVENT_NAME==='schedule';
+    const finishedAt=new Date(Math.max(...files.map(f=>Date.parse(f.updated_at)))).toISOString();
+    const result=await syncRosters(db,snapshots,{scoringChecks,finishedAt});
     console.log(JSON.stringify({project:process.env.TRADE_ROSTER_PROJECT_REF,...result},null,2));
   }
 }catch(error){

@@ -58,6 +58,11 @@ try{
   assert.equal((await q('select count(*)::int n from trading.roster_snapshots'))[0].n,5);
   assert.equal((await q('select count(*)::int n from trading.players'))[0].n,2);
   console.log('PASS five-sport import, legitimate empty rosters, cross-sport IDs and idempotent retry');
+  const withCounts=await syncRosters(db,initial,{scoringChecks:true,finishedAt:iso(-59000)});
+  assert.equal(withCounts.scoring_checks.owners.length,owners.length);
+  await syncRosters(db,initial,{scoringChecks:true,finishedAt:iso(-59000)});
+  assert.equal((await q('select count(*)::int n from scoring.roster_checks'))[0].n,owners.length);
+  console.log('PASS optional scoring checkpoints share atomic roster sync and retry without duplicate counts');
 
   const trade=(await q("insert into trading.trades(proposer_id,recipient_id,status,accepted_at) values($1,$2,'accepted',$3) returning id",[bySlug.doug,bySlug.chris,iso(-5000)]))[0].id;
   const players=await q('select * from trading.players');
