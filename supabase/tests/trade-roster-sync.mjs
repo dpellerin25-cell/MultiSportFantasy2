@@ -67,7 +67,7 @@ export function validateRosters(settings,files,now=Date.now()){
   });
 }
 
-export async function syncRosters(db,snapshots){
+export async function syncRosters(db,snapshots,{scoringChecks=false,finishedAt}={}){
   assert.equal(snapshots.length,5);
   await db.query('begin');
   try{
@@ -78,7 +78,12 @@ export async function syncRosters(db,snapshots){
     const before=(await db.query("select count(*)::int n from trading.trades where status='completed'")).rows[0].n;
     await db.query('select trading.ingest_roster_batch($1)',[JSON.stringify(snapshots)]);
     const after=(await db.query("select count(*)::int n from trading.trades where status='completed'")).rows[0].n;
+    let scoring;
+    if(scoringChecks){
+      const {storeDailyChecks}=await import('./daily-scoring-checks.mjs');
+      scoring=await storeDailyChecks(db,snapshots,finishedAt);
+    }
     await db.query('commit');
-    return {sports:snapshots.map(s=>({sport:s.sport,players:s.count,observed_at:s.observed})),completed_trades:after-before};
+    return {sports:snapshots.map(s=>({sport:s.sport,players:s.count,observed_at:s.observed})),completed_trades:after-before,...(scoring?{scoring_checks:scoring}:{})};
   }catch(error){await db.query('rollback');throw error;}
 }

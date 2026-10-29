@@ -106,6 +106,7 @@ jobs:
         if: env.UPDATE_DATA == 'rosters' && vars.TRADE_ROSTER_SYNC_ENABLED == 'true'
         working-directory: supabase/tests
         env:
+          SCORING_ROSTER_CHECKS_ENABLED: ${{ vars.SCORING_ROSTER_CHECKS_ENABLED }}
           TRADE_ROSTER_PROJECT_REF: ${{ vars.TRADE_ROSTER_PROJECT_REF }}
           TRADE_ROSTER_DATABASE_URL: ${{ secrets.TRADE_ROSTER_DATABASE_URL }}
           TRADE_ROSTER_CA_CERT: ${{ secrets.TRADE_ROSTER_CA_CERT }}
