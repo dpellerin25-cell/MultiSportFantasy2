@@ -3,7 +3,7 @@ import {randomUUID as uuid} from 'node:crypto';
 
 // Synthetic historical fixtures. Shared with offline rehearsal; only the real
 // PostgreSQL runner proves that the second backend actually waits on a lock.
-export async function scoringRaceScenarios({admin,race,report}) {
+export async function scoringRaceScenarios({admin,race,report,cap=65}) {
  const one=async(c,s,p=[])=>Object.values((await c.query(s,p)).rows[0])[0];
  const owner=await one(admin,"select id from draft.owners where slug='doug'");
  const actor=uuid();await admin.query('insert into auth.users values($1)',[actor]);
@@ -39,14 +39,14 @@ export async function scoringRaceScenarios({admin,race,report}) {
  assert.equal(Number(await one(admin,'select count(*) from scoring.results where period_id=$1',[b.period_id])),2);
  report('simultaneous corrections preserve one next revision and original history');
 
- await check(admin,'2020-06-12',65);
- r=await race(c=>check(c,'2020-06-12',66,1),c=>decision(c,result));assert.ifError(r.second.error);
+ await check(admin,'2020-06-12',cap);
+ r=await race(c=>check(c,'2020-06-12',cap+1,1),c=>decision(c,result));assert.ifError(r.second.error);
  assert.equal(await one(admin,'select status from scoring.decisions where id=$1',[r.second.value]),'penalized');
  assert.equal((await outcome(result)).adjusted_total,-3);
  report('count correction first: queued penalty uses corrected count and retains negatives');
 
  const decisionReq=uuid();
- r=await race(c=>decision(c,result,decisionReq),c=>check(c,'2020-06-12',65,2));assert.ifError(r.second.error);
+ r=await race(c=>decision(c,result,decisionReq),c=>check(c,'2020-06-12',cap,2));assert.ifError(r.second.error);
  assert.equal(await one(admin,'select status from scoring.decisions where id=$1',[r.first]),'penalized');
  assert.equal((await outcome(result)).status,'eligible');
  assert.equal(await decision(admin,result,decisionReq),r.first);
@@ -59,7 +59,7 @@ export async function scoringRaceScenarios({admin,race,report}) {
  // Privileged test fixtures establish a past mixed-pause tournament, never a
  // backdated browser command. Present-day pause events cannot alter this period.
  await admin.query("insert into scoring.pause_events(request_id,paused,effective_at,actor_id,reason) values($1,true,'2020-06-10Z',$3,'Synthetic historical pause'),($2,false,'2020-06-13Z',$3,'Synthetic historical resume')",[uuid(),uuid(),actor]);
- await check(admin,'2020-06-11',66);await check(admin,'2020-06-14',66);
+ await check(admin,'2020-06-11',cap+1);await check(admin,'2020-06-14',cap+1);
  const pgBody=body(await period('PGA')), pg=await imp(admin,pgBody);
  assert.equal((await outcome(pg)).status,'pending');
  const evidence=(await outcome(pg)).checks;
@@ -70,7 +70,7 @@ export async function scoringRaceScenarios({admin,race,report}) {
  const resolution=r.first;assert.equal((await outcome(pg)).adjusted_total,-3);
  report('conflicting PGA decisions serialize; only the first confirmation succeeds');
 
- r=await race(c=>check(c,'2020-06-14',65,1),c=>resolve(c,'waive',evidence,resolution));rejects(r,/evidence changed/);
+ r=await race(c=>check(c,'2020-06-14',cap,1),c=>resolve(c,'waive',evidence,resolution));rejects(r,/evidence changed/);
  assert.equal((await outcome(pg)).status,'pending');
  report('count correction invalidates queued PGA confirmation and returns outcome to pending');
 

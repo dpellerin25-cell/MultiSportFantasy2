@@ -43,7 +43,7 @@ confirm at different times; all must confirm before completion.
 
 After migration 202610040001, no per-sport minimum warnings are generated.
 Historical warnings remain in the audit history. The website warns when a
-projected roster exceeds 65 players without blocking the offer; it is not a live
+projected roster exceeds 80 players without blocking the offer; it is not a live
 Fantrax roster check. No roster maximums are enforced by trade commands.
 
 ## Command/read boundary

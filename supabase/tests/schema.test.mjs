@@ -27,17 +27,17 @@ try {
     assert.equal((await sql('select count(*)::int n from draft.owner_accounts'))[0].n,0);
   });
   const d=(await sql(`insert into draft.drafts(name,kind,championship_year,rounds)
-    values('Test startup','startup',2027,65) returning id`))[0].id;
+    values('Test startup','startup',2027,80) returning id`))[0].id;
   await test('startup minimums total zero, no sport maximums',async()=>{
     assert.deepEqual((await sql(`select sum(minimum)::int n,count(maximum)::int m from draft.draft_sport_rules where draft_id='${d}'`))[0],{n:0,m:0});
   });
   await test('requires complete order',()=>rejects(`select draft.generate_snake_picks('${d}')`,/complete contiguous/));
   await db.exec(`insert into draft.draft_participants select '${d}',id,row_number() over(order by slug) from draft.owners;`);
-  await test('generates 585 snake slots',async()=>{
-    assert.equal((await sql(`select draft.generate_snake_picks('${d}') n`))[0].n,585);
+  await test('generates 720 snake slots',async()=>{
+    assert.equal((await sql(`select draft.generate_snake_picks('${d}') n`))[0].n,720);
     const rows=await sql(`select p.overall_pick_number n,o.slug from draft.draft_picks p join draft.owners o on o.id=p.original_owner_id
-      where draft_id='${d}' and overall_pick_number in(1,9,10,18,19,585) order by n`);
-    assert.deepEqual(rows.map(r=>r.slug),['brendan','tucker','tucker','brendan','brendan','tucker']);
+      where draft_id='${d}' and overall_pick_number in(1,9,10,18,19,720) order by n`);
+    assert.deepEqual(rows.map(r=>r.slug),['brendan','tucker','tucker','brendan','brendan','brendan']);
   });
   await test('cannot regenerate or reorder existing slots',async()=>{
     await rejects(`select draft.generate_snake_picks('${d}')`,/already generated/);
@@ -85,7 +85,7 @@ try {
   });
   await test('skipped slot remains available for later assignment',async()=>{
     await db.exec(`update draft.draft_picks set skipped_at=now() where id='${picks[0].id}';`);
-    assert.equal((await sql(`select count(*)::int n from draft.draft_picks where draft_id='${d}'`))[0].n,585);
+    assert.equal((await sql(`select count(*)::int n from draft.draft_picks where draft_id='${d}'`))[0].n,720);
     await db.exec(`update draft.draft_selections set voided_at=clock_timestamp(),void_reason='Reassign to skipped slot' where voided_at is null;`);
     await db.exec(selectPlayer(picks[0]));
     assert.equal((await sql(`select count(*)::int n from draft.draft_selections where pick_id='${picks[0].id}' and voided_at is null`))[0].n,1);

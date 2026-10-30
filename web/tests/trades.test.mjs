@@ -63,9 +63,15 @@ test('private archive excludes league completions and other owner negotiations',
   assert.ok(archivedOffers(rows,'doug',now).every(o=>!activeIds.has(o.id)));
 });
 
-test('65-player limit warns without imposing a sport minimum',()=>{
-  const full={...data,players:Array.from({length:65},(_,i)=>({id:'c'+i,owner_id:'chris',name:'Player',sport:'NFL',reserved:false})).concat(data.players)};
-  assert.deepEqual(tradeWarnings(full,'chris',[tradeAssets(full).find(a=>a.id==='p')]),['Chris: roster would have 66 players (65-player limit).']);
+test('80-player limit warns without imposing a sport minimum',()=>{
+  const full={...data,players:Array.from({length:80},(_,i)=>({id:'c'+i,owner_id:'chris',name:'Player',sport:'NFL',reserved:false})).concat(data.players)};
+  assert.deepEqual(tradeWarnings(full,'chris',[tradeAssets(full).find(a=>a.id==='p')]),['Chris: roster would have 81 players (80-player limit).']);
+  for(const before of [78,79]){
+    const below={...data,players:Array.from({length:before},(_,i)=>({id:'c'+i,owner_id:'chris',name:'Player',sport:'NFL',reserved:false})).concat(data.players)};
+    assert.deepEqual(tradeWarnings(below,'chris',[tradeAssets(below).find(a=>a.id==='p')]),[]);
+  }
+  // A pick is not a player and cannot push an 80-player roster over the cap.
+  assert.deepEqual(tradeWarnings(full,'doug',[tradeAssets(full).find(a=>a.kind==='pick')].filter(Boolean)),[]);
 });
 
 

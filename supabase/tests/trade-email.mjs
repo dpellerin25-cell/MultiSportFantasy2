@@ -1,6 +1,7 @@
+import {ROSTER_LIMIT} from './roster-policy.mjs';
 import assert from 'node:assert/strict';
 export const FROM='Pentagon Cup <notifications@multisportfantasy.com>';
-const subjects={proposal:'New trade proposal',counter:'New counteroffer',acceptance:'A trade is now pending',decline:'Trade declined',roster_limit:'Your roster exceeds the 65-player limit'};
+const subjects={proposal:'New trade proposal',counter:'New counteroffer',acceptance:'A trade is now pending',decline:'Trade declined',roster_limit:`Your roster exceeds the ${ROSTER_LIMIT}-player limit`};
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function emailConfig(env){
   assert.ok(['test','live'].includes(env.TRADE_EMAIL_MODE),'Set TRADE_EMAIL_MODE to test or live');
@@ -18,13 +19,13 @@ export function notificationPayload(row,config){
   const subject=subjects[row.kind];assert.ok(subject,'Unsupported notification');
   assert.ok(row.email_confirmed_at&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row.email??''),'Verified recipient required');
   const intro=row.kind==='roster_limit'
-    ? `Your roster has ${row.player_count} players, exceeding the 65-player limit.`
+    ? `Your roster has ${row.player_count} players, exceeding the ${ROSTER_LIMIT}-player limit.`
     : row.kind==='acceptance' ? `${row.proposer} and ${row.recipient} have accepted a trade. A trade is now pending in the league.`
     : `${row.proposer} and ${row.recipient}: ${subject.toLowerCase()}.`;
   const lines=(row.assets??[]).map(a=>`${a.from_name} sends ${a.label} to ${a.to_name}.`);
   if(row.kind==='roster_limit')lines.push(
-    'Points accumulated while your roster is over the limit will not count toward the Pentagon Cup.',
-    'Please reduce your roster to 65 players or fewer in Fantrax. Once corrected, contact Doug if the website needs to be updated before tomorrow at 4 am Eastern. Otherwise, the next daily roster update will reflect the correction.');
+    'Positive starting-lineup contributions subject to an overage penalty will not count toward the Pentagon Cup. Negative contributions remain. Daily eligibility uses the next morning’s 4 am Eastern check; PGA requires an overage at both Thursday and Sunday checks. Missing evidence or commissioner pauses may leave a penalty pending or waived.',
+    `Please reduce your roster to ${ROSTER_LIMIT} players or fewer in Fantrax. Once corrected, contact Doug if the website needs to be updated before tomorrow at 4 am Eastern. Otherwise, the next daily roster update will reflect the correction.`);
   if(row.kind==='acceptance')lines.push('View Accepted Trades on the website for the current status. Player transfers must be made in Fantrax; draft-pick-only trades complete immediately.');
   const link=`${config.site}/rosters`;
   const footer='This is an automated notification. Please do not reply. Open the website to view or respond to the trade.';
@@ -48,6 +49,7 @@ export async function deliverQueue(db,config,{send=false,key,fetcher=fetch}={}){
   const lock=(await q('select pg_try_advisory_lock(731943,2) locked'))[0].locked;
   if(!lock){summary.locked=true;return summary;}
   try{
+    assert.equal((await q('select draft.roster_cap_at(clock_timestamp()) cap'))[0].cap,ROSTER_LIMIT,'Email/database roster policy mismatch; complete rollout before delivery');
     const rows=await q(`select n.*,coalesce(e.occurred_at,ra.opened_at) occurred_at,ra.player_count,ra.resolved_at,t.status trade_status,t.expires_at,t.message,
       u.email,u.email_confirmed_at,op.display_name proposer,ot.display_name recipient,
       exists(select 1 from draft.owner_accounts m join draft.owners o on o.id=m.owner_id
@@ -72,7 +74,7 @@ export async function deliverQueue(db,config,{send=false,key,fetcher=fetch}={}){
       let reason;
       if(!row.linked||!row.email_confirmed_at)reason='recipient_not_verified_or_linked';
       else if(row.message?.startsWith('HTTP trade test '))reason='test_fixture';
-      else if(row.kind==='roster_limit'&&row.resolved_at)reason='roster_corrected';
+      else if(row.kind==='roster_limit'&&(row.resolved_at||row.player_count<=ROSTER_LIMIT))reason='roster_corrected';
       else if(row.retry_expired||row.attempts>=8)reason='review_required';
       else if(['proposal','counter'].includes(row.kind)&&(row.trade_status!=='proposed'||row.offer_expired))reason='superseded_offer';
       else if(row.delivery_payload&&row.delivery_payload.to[0]!==row.email)reason='recipient_changed';

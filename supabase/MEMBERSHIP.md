@@ -2,7 +2,7 @@
 
 The current nine owners and scoring remain unchanged. Migration
 `202610020001_league_membership.sql` removes the startup count restriction but
-retains 65 rounds and all existing duplicate-pick/player and authorization rules.
+uses 80 rounds for new startups and all existing duplicate-pick/player and authorization rules.
 
 ## Commissioner workflow
 
@@ -75,7 +75,7 @@ password, and loopback-only port with no host directory mounts. It applies all
 migrations to an empty database and runs the same membership scenarios used by
 the offline tests. No production or hosted test project is contacted.
 
-Coverage: 10-owner expansion and 650 generated startup picks, 8-owner contraction,
+Coverage: 10-owner expansion and 800 generated startup picks, 8-owner contraction,
 rookie-pick counts, retained identities, incomplete roster rejection, invalid
 placement-table rejection, commissioner checks, blocked browser roles, removal
 of traded assets denied, and started/cancelled draft protection.

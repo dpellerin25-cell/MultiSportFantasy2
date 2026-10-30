@@ -13,7 +13,7 @@ try{
  await q("insert into draft.league_roles values($1,'commissioner')",[actor]);
  const members=await q('select slug,display_name name from draft.owners order by slug');
  const validate=()=>q('select draft.validate_membership(2027,$1,$2,$3)',[JSON.stringify(members),[100,80,65,52,40,30,20,10,0],actor]);
- const d=(await q("insert into draft.drafts(name,kind,championship_year,rounds,participant_count) values('Test rehearsal','startup',2027,65,9) returning *"))[0];
+ const d=(await q("insert into draft.drafts(name,kind,championship_year,rounds,participant_count) values('Test rehearsal','startup',2027,80,9) returning *"))[0];
  await q('insert into draft.draft_participants select $1,id,row_number() over(order by slug) from draft.owners where active',[d.id]);
  await q('select draft.generate_snake_picks($1)',[d.id]);
  await q("update draft.drafts set status='paused',current_pick_number=3,paused_remaining_seconds=45 where id=$1",[d.id]);
@@ -32,7 +32,7 @@ try{
  assert.equal((await q('select count(*)::int n from draft.retired_rehearsals'))[0].n,1);
  await assert.rejects(()=>q("update draft.drafts set status='paused' where id=$1",[d.id]),/immutable/);
  await assert.rejects(()=>q('delete from draft.retired_rehearsals'),/immutable/i);
- await q("insert into draft.drafts(name,kind,championship_year,rounds,participant_count,status,current_pick_number) values('Real draft','startup',2027,65,9,'paused',null)");
+ await q("insert into draft.drafts(name,kind,championship_year,rounds,participant_count,status,current_pick_number) values('Real draft','startup',2027,80,9,'paused',null)");
  await assert.rejects(validate,/started or completed/);
  console.log('PASS explicit retirement, stale revision/role denial, history and current pick preserved, retry, immutable retirement and other draft blockers');
 }finally{await db.close();}

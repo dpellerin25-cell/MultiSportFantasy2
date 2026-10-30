@@ -100,7 +100,7 @@ No background refresh flags or speculative methods are introduced.
 
 ## Agreed rules for later implementation (NOT enforced here)
 
-- Cap: 65 players combined across all five sports, including IR and minors.
+- Cap: 80 players (historical checks before policy activation retain 65) combined across all five sports, including IR and minors.
 - Existing 4 a.m. America/New_York roster pulls determine counts.
 - NFL/MLB/NBA/EPL: that check determines the previous calendar day's eligibility.
 - PGA: finalize tournament scoring Tuesday at 8 a.m. America/New_York.

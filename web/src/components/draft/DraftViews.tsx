@@ -1,4 +1,6 @@
 "use client";
+
+import { STARTUP_ROUNDS } from "@/lib/roster-policy";
 import { useState } from "react";
 import { type DraftState } from "@/lib/draft-model";
 import { proposedLineup, STARTING_SLOTS } from "@/lib/draft-lineups";
@@ -136,7 +138,7 @@ export default function DraftViews({
           change your signed-in identity.
         </p>
         <p className="mt-3 text-sm text-slate-600">
-          All 65 selections may be distributed freely across sports. Starting
+          All {STARTUP_ROUNDS} selections may be distributed freely across sports. Starting
           lineups below are suggestions, not roster minimums.
         </p>
         <h3 className="mt-3 font-bold">Proposed starting lineup</h3>

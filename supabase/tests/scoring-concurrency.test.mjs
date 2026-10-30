@@ -1,3 +1,5 @@
+// --policy80 uses a synthetic activation date only in the disposable test database.
+const policy80=process.argv.includes('--policy80');
 // Only an EMPTY, explicitly named, local disposable PostgreSQL database.
 // Never reads Supabase settings. Leaves fixtures for inspection; no cleanup deletes.
 import pg from 'pg';
@@ -24,7 +26,7 @@ try{
   create function auth.uid() returns uuid language sql as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;
   grant usage on schema auth,public to anon,authenticated;`);
   const dir=new URL('../migrations/',import.meta.url);
-  for(const f of (await readdir(dir)).filter(f=>f.endsWith('.sql')).sort())await admin.query(await readFile(new URL(f,dir),'utf8'));
+  for(const f of (await readdir(dir)).filter(f=>f.endsWith('.sql')).sort())await admin.query((await readFile(new URL(f,dir),'utf8')).replace("'2026-10-29-80',clock_timestamp()",policy80?"'2026-10-29-80','2020-01-01T00:00:00Z'":"'2026-10-29-80',clock_timestamp()"));
   const pidA=(await a.query('select pg_backend_pid() pid')).rows[0].pid;
   const pidB=(await b.query('select pg_backend_pid() pid')).rows[0].pid;
   async function race(firstOp,secondOp,beforeRelease=async()=>{}){
@@ -48,7 +50,7 @@ try{
       await b.query('rollback');
     }
   }
-  await scoringRaceScenarios({admin,race,report:message=>{passed++;console.log('PASS independent PostgreSQL sessions: '+message);}});
+  await scoringRaceScenarios({admin,race,cap:policy80?80:65,report:message=>{passed++;console.log('PASS independent PostgreSQL sessions: '+message);}});
   console.log(`${passed} scoring concurrency scenarios passed. No hosted database contacted. Fixture data remains in the disposable database.`);
 }catch(e){console.error(`FAIL scoring concurrency: ${e.message}`);process.exitCode=1;}
 finally{for(const c of clients){try{await c.query('rollback');}catch{}try{await c.end();}catch{}}}

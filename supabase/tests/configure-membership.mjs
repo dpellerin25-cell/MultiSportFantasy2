@@ -1,3 +1,4 @@
+import {STARTUP_ROUNDS} from './roster-policy.mjs';
 // TEST-project commissioner tooling. Never targets production.
 import pg from 'pg';
 import {readFile,writeFile} from 'node:fs/promises';
@@ -16,7 +17,7 @@ try {
  const settings=(await db.query('select * from draft.season_settings where championship_year=$1',[c.championship_year])).rows[0];
  const owners=(await db.query('select slug,display_name name from draft.owners where active order by slug')).rows;
  await db.query(mode==='--apply'?'commit':'rollback');
- console.log(JSON.stringify({applied:mode==='--apply',project:PROJECT,owner_count:owners.length,startup_picks:65*owners.length,rookie_picks_per_year:10*owners.length,settings:{championship_year:c.championship_year,owners,placement_points:settings.placement_points.map(Number)}},null,2));
+ console.log(JSON.stringify({applied:mode==='--apply',project:PROJECT,owner_count:owners.length,startup_picks:STARTUP_ROUNDS*owners.length,rookie_picks_per_year:10*owners.length,settings:{championship_year:c.championship_year,owners,placement_points:settings.placement_points.map(Number)}},null,2));
  if(mode==='--apply'){
    stage='saving approved website configuration (database already committed)';
    await writeFile(new URL('../../web/data/league-settings.json',import.meta.url),JSON.stringify({championship_year:c.championship_year,owners,placement_points:settings.placement_points.map(Number)},null,2)+'\n');

@@ -1,3 +1,4 @@
+import {STARTUP_ROUNDS} from './roster-policy.mjs';
 import assert from 'node:assert/strict';
 
 export const OWNER_SLUGS=['brendan','chris','doug','hatch','jack','jacob','nik','ryan','tucker'];
@@ -15,7 +16,7 @@ export function validateSetup(c){
   return {...c,draft_id:c.draft_id.toLowerCase(),import_id:c.import_id.toLowerCase(),owner_order:[...c.owner_order]};
 }
 export function snakePreview(order){
-  return Array.from({length:65*order.length},(_,i)=>{const round=Math.floor(i/order.length)+1,position=i%order.length;return {round,pick_number:i+1,owner:order[round%2?position:order.length-1-position]};});
+  return Array.from({length:STARTUP_ROUNDS*order.length},(_,i)=>{const round=Math.floor(i/order.length)+1,position=i%order.length;return {round,pick_number:i+1,owner:order[round%2?position:order.length-1-position]};});
 }
 
 // Trusted administrator setup only; no impersonation, auth grants or start action.
@@ -25,6 +26,8 @@ export async function prepareDraft(db,input,{create=false}={}){
   const c=validateSetup(input),q=async(s,p=[])=>(await db.query(s,p)).rows;
   await q(create?'begin':'begin read only');
   try{
+    const policy=(await q('select startup_rounds from draft.roster_policy_versions order by effective_at desc limit 1'))[0];
+    check(policy?.startup_rounds===STARTUP_ROUNDS,'Database startup policy differs; apply and verify the approved policy migration first');
     await q("set local statement_timeout='60s'");await q("set local lock_timeout='10s'");
     if(create)await q('select pg_advisory_xact_lock(20260925,2)');
     const owners=await q('select id,slug from draft.owners where active order by slug');
@@ -41,11 +44,11 @@ export async function prepareDraft(db,input,{create=false}={}){
       check(row&&row.invalid===0&&row.total===imp.metadata.sports?.[sport]?.total&&row.total>=count*min,`${sport}: snapshot count/eligibility/minimum check failed`);
     }
     const total=counts.reduce((n,r)=>n+r.total,0);
-    check(total===imp.metadata.total_players&&total>=65*count,'Snapshot total mismatch or too few eligible players for the configured draft');
+    check(total===imp.metadata.total_players&&total>=STARTUP_ROUNDS*count,'Snapshot total mismatch or too few eligible players for the configured draft');
     const existing=(await q('select * from draft.drafts where id=$1'+(create?' for update':''),[c.draft_id]))[0];
     if(existing){
       check(existing.status==='setup'&&existing.current_pick_number===null&&existing.deadline_at===null,'Draft has already started or has clock state');
-      check(existing.name===c.name&&existing.import_id===c.import_id&&existing.championship_year===c.championship_year&&existing.pick_duration_seconds===c.timer_seconds&&existing.kind==='startup'&&existing.rounds===65&&existing.participant_count===count,'Draft ID already exists with different settings');
+      check(existing.name===c.name&&existing.import_id===c.import_id&&existing.championship_year===c.championship_year&&existing.pick_duration_seconds===c.timer_seconds&&existing.kind==='startup'&&existing.rounds===STARTUP_ROUNDS&&existing.participant_count===count,'Draft ID already exists with different settings');
       const order=await q('select o.slug from draft.draft_participants p join draft.owners o on o.id=p.owner_id where p.draft_id=$1 order by p.order_position',[c.draft_id]);
       check(order.map(o=>o.slug).join()===c.owner_order.join(),'Existing draft order differs');
       check(Number((await q('select count(*) n from draft.draft_picks where draft_id=$1',[c.draft_id]))[0].n)===0,'Existing draft already has pick slots');
@@ -56,7 +59,7 @@ export async function prepareDraft(db,input,{create=false}={}){
       ) mismatch limit 1`,[c.draft_id,c.import_id]);
       check(differences.length===0,'Existing draft pool differs from snapshot');
     }else if(create){
-      await q("insert into draft.drafts(id,name,kind,championship_year,rounds,participant_count,import_id,pick_duration_seconds) values($1,$2,'startup',$3,65,$6,$4,$5)",[c.draft_id,c.name,c.championship_year,c.import_id,c.timer_seconds,count]);
+      await q("insert into draft.drafts(id,name,kind,championship_year,rounds,participant_count,import_id,pick_duration_seconds) values($1,$2,'startup',$3,$7,$6,$4,$5)",[c.draft_id,c.name,c.championship_year,c.import_id,c.timer_seconds,count,STARTUP_ROUNDS]);
       for(let i=0;i<count;i++)await q('insert into draft.draft_participants values($1,$2,$3)',[c.draft_id,owners.find(o=>o.slug===c.owner_order[i]).id,i+1]);
       await q('insert into draft.draft_pool_players(draft_id,import_id,player_id,sport,name,position,professional_team,availability,eligible) select $1,import_id,player_id,sport,name,position,professional_team,availability,true from draft.player_pool_entries where import_id=$2',[c.draft_id,c.import_id]);
       await q("insert into draft.draft_events(draft_id,event_type,payload) values($1,'admin_setup',$2)",[c.draft_id,JSON.stringify({tool:'test-project-draft-setup',configuration:c,actor_scope:'Privileged SQL administrator; no authenticated owner asserted'})]);
@@ -66,8 +69,8 @@ export async function prepareDraft(db,input,{create=false}={}){
       check(rules.length===5&&rules.every(r=>r.minimum===MINIMUMS[r.sport]&&r.maximum===null),'Startup roster rules differ');
     }
     const preview=snakePreview(c.owner_order);
-    assert.equal(preview.length,65*count);
+    assert.equal(preview.length,STARTUP_ROUNDS*count);
     await q(create?'commit':'rollback');
-    return {draft_id:c.draft_id,import_id:c.import_id,mode:create?'create':'read-only preview',already_exists:!!existing,status:'setup',started:false,rounds:65,scheduled_picks:65*count,persisted_pick_slots:0,timer_seconds:c.timer_seconds,owner_order:c.owner_order,minimums:MINIMUMS,sport_maximums:null,pool_players:total,pool_completed_at:imp.metadata.completed_at,sports:counts.map(({sport,total})=>({sport,total})),first_two_rounds:preview.slice(0,2*count),last_round:preview.slice(-count)};
+    return {draft_id:c.draft_id,import_id:c.import_id,mode:create?'create':'read-only preview',already_exists:!!existing,status:'setup',started:false,rounds:STARTUP_ROUNDS,scheduled_picks:STARTUP_ROUNDS*count,persisted_pick_slots:0,timer_seconds:c.timer_seconds,owner_order:c.owner_order,minimums:MINIMUMS,sport_maximums:null,pool_players:total,pool_completed_at:imp.metadata.completed_at,sports:counts.map(({sport,total})=>({sport,total})),first_two_rounds:preview.slice(0,2*count),last_round:preview.slice(-count)};
   }catch(e){await q('rollback');throw e;}
 }

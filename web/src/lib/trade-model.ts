@@ -1,3 +1,6 @@
+
+import policy from "../../data/roster-policy.json" with {type:"json"};
+const ROSTER_LIMIT=policy.roster_limit;
 export type TradeAsset = {key:string;id:string;kind:"player"|"pick";owner_id:string;label:string;sport?:string;unavailable?:string};
 export type TradeRoster = {
   viewer_owner_id:string;ledger_ready:boolean;
@@ -63,7 +66,7 @@ export function proposal(data:TradeRoster,recipient:string,selected:TradeAsset[]
 export function tradeWarnings(data:TradeRoster,recipient:string,selected:TradeAsset[]){
   return [data.viewer_owner_id,recipient].flatMap(owner=>{
     const count=data.players.filter(p=>p.owner_id===owner).length-selected.filter(a=>a.kind==="player"&&a.owner_id===owner).length+selected.filter(a=>a.kind==="player"&&a.owner_id!==owner).length;
-    return count>65?[`${data.owners.find(o=>o.id===owner)?.name}: roster would have ${count} players (65-player limit).`]:[];
+    return count>ROSTER_LIMIT?[`${data.owners.find(o=>o.id===owner)?.name}: roster would have ${count} players (${ROSTER_LIMIT}-player limit).`]:[];
   });
 }
 
