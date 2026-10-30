@@ -12,7 +12,7 @@ export function dailyCheckPlan(snapshots,finishedAt){
  assert.ok(observations.every(s=>Date.parse(s.observed)<=Date.parse(finishedAt)),'Completion cannot precede observation');
  // Cross-midnight reads cannot establish a single dated checkpoint.
  if(observations.some(s=>s.day!==day))return {skipped:'Roster reads cross Eastern dates; eligibility stays pending'};
- const complete=ends.hour==='04'&&observations.every(s=>s.hour==='04');
+ const complete=true;
  const owners=snapshots[0].rosters.map(r=>r.owner).sort();
  for(const s of snapshots)assert.deepEqual(s.rosters.map(r=>r.owner).sort(),owners);
  return {day,complete,owners,observations};
@@ -28,13 +28,13 @@ export async function storeDailyChecks(db,snapshots,finishedAt){
    const owners=(await db.query('select id from draft.owners where slug=$1 and active',[slug])).rows;
    assert.equal(owners.length,1,'Active scoring owner mapping required');const owner=owners[0].id;
    const sports=snapshots.map(s=>({sport:s.sport,count:s.rosters.find(r=>r.owner===slug).players.length,source_ref:`sha256:${hash(s)}`,observed_at:s.observed}));
-   const body={owner_id:owner,check_date:plan.day,complete:plan.complete,reason:plan.complete?'Scheduled 4am Eastern roster observation':'Scheduled roster observation outside 4am hour; eligibility pending',sports};
-   const req=requestId(hash({kind:'daily-scoring-count-v1',body}));
-   const existing=(await db.query('select request_id from scoring.roster_checks where owner_id=$1 and check_date=$2 order by revision desc limit 1',[owner,plan.day])).rows[0];
+   const body={owner_id:owner,check_date:plan.day,complete:plan.complete,timing_policy:'scheduled-observation-v2',observed_at:finishedAt,reason:'Scheduled daily roster observation at actual fetch completion time',sports};
+   const req=requestId(hash({kind:'daily-scoring-count-v2',body}));
+   const existing=(await db.query('select request_id,complete from scoring.roster_checks where owner_id=$1 and check_date=$2 order by revision desc limit 1',[owner,plan.day])).rows[0];
    // A rerun must never replace the original checkpoint with a later roster.
-   if(existing&&existing.request_id!==req){result.push({owner:slug,status:'existing_check_preserved'});continue;}
+   if(existing&&existing.request_id!==req){result.push({owner:slug,status:'existing_check_preserved',complete:existing.complete});continue;}
    await db.query('select scoring.record_roster_check($1,$2,0)',[req,JSON.stringify(body)]);
-   result.push({owner:slug,status:existing?'already_recorded':plan.complete?'recorded':'pending_incomplete'});
+   result.push({owner:slug,status:existing?'already_recorded':'recorded',complete:true});
  }
- return {check_date:plan.day,complete:plan.complete,owners:result};
+ return {check_date:plan.day,complete:result.every(r=>r.complete),owners:result};
 }

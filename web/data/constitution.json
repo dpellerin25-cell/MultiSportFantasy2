@@ -239,11 +239,11 @@
       },
       {
         "kind": "paragraph",
-        "text": "The website checks combined rosters at 4:00 a.m. Eastern, counting all rostered players including IR and minors, but not draft picks. Exactly 80 players is compliant. For NFL, MLB, NBA and Premier League, an overage removes the previous day's positive starting-lineup contributions; negative contributions still count."
+        "text": "The website schedules a daily roster update for 4:00 a.m. Eastern. Eligibility uses the actual scheduled update time if it is delayed, counting all rostered players including IR and minors, but not draft picks. Exactly 80 players is compliant. For NFL, MLB, NBA and Premier League, an overage removes the previous day's positive starting-lineup contributions; negative contributions still count."
       },
       {
         "kind": "paragraph",
-        "text": "PGA tournament results finalize Tuesday at 8:00 a.m. Eastern. PGA loses positive starter contributions only when the owner is over the cap at both Thursday's and Sunday's 4:00 a.m. checks. Missing evidence leaves eligibility pending. The commissioner may pause overage penalties and make an audited decision when a PGA tournament spans a pause boundary. Historical checks retain the cap effective at their check time."
+        "text": "PGA tournament results finalize Tuesday at 8:00 a.m. Eastern. PGA loses positive starter contributions only when the owner is over the cap at both Thursday's and Sunday's scheduled roster checks. Missing evidence leaves eligibility pending. The commissioner may pause overage penalties and make an audited decision when a PGA tournament spans a pause boundary. Historical checks retain the cap effective at their check time."
       }
     ]
   },

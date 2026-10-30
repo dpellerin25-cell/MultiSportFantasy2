@@ -19,7 +19,7 @@ check before deployment keeps 65; a check after deployment uses 80. This impleme
 immediate activation without retroactively changing historical scoring. A later correction
 to an old count still uses that check's historical policy, not the correction date.
 
-Scoring uses the cap at each check's **4 a.m. America/New_York** instant. PGA can span
+Historical checks use the cap at their **4 a.m. America/New_York** instant. After migration 202610300001, new scheduled observations use actual fetch completion time. PGA can span
 the effective date: each Thursday/Sunday check uses its own applicable cap, and both
 must be over to penalize. Only positive starters are removed; negative starters remain.
 Count evidence, score revisions, decisions, pause events and PGA resolutions are not rewritten.
@@ -159,7 +159,7 @@ Run the website against the test project. Check roster count displays, trade pro
 (80: no warning; 81: warning without blocking), constitution, settings preview and an
 80-round startup preview (880 for eleven owners). Confirm the annual draft remains 10.
 Check the next actual scheduled roster count preserves observed counts and uses the
-policy appropriate to its 4 a.m. check. Do not fabricate historical checks.
+policy appropriate to its actual scheduled observation time (legacy checkpoints retain 4 a.m.). Do not fabricate historical checks.
 
 Preview the email queue using the existing email workflow's **preview** mode. This
 does not send messages. Confirm obsolete warnings are held and current warnings say 80.

@@ -43,13 +43,13 @@ checks, incomplete checks and unknown starter scoring remain pending. A missing
 score is not zero: `no_activity` needs explicit supporting evidence, while an
 explicit zero uses `known` with numeric zero.
 
-Complete roster evidence currently requires all five observations in the 4 a.m.
-Eastern hour on the check date. A delayed or partial run must be recorded as
-incomplete rather than used to assess a penalty. This is a conservative evidence
-guard, not a new roster grace period. The scheduled importer and its late-run
-policy still need implementation and validation.
+New scheduled checkpoints use actual fetch completion time, with all five sport
+observations on the same Eastern calendar date. Delayed scheduled runs remain valid;
+partial, missing or cross-date evidence remains pending. The payload's explicit
+`scheduled-observation-v2` marker distinguishes this rule from historical 4 a.m.
+checks. Existing rows and decisions are not reclassified. See DAILY_SCORING_CHECKS.md.
 
-Pausing is evaluated at the scheduled check time and does not erase prior
+Pausing is evaluated at the actual checkpoint time for new scheduled observations and does not erase prior
 penalties. If PGA is paused at only one of its two checks, the outcome is pending:
 Doug must review that result and choose to enforce the standard two-check cap rule or waive the penalty. Missing counts remain pending
 even when penalties were paused.

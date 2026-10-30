@@ -2,8 +2,61 @@
 
 The existing `Update Fantrax Data` scheduled roster run can now store checkpoint
 counts in `scoring.roster_checks` in the same transaction as trade roster sync.
-Enable only in a project where `202610270001_scoring_ledger.sql` is installed.
-No new migration or secret is required.
+Requires the scoring ledger, 80-player policy, and `202610300001_scheduled_check_timing.sql` migrations. No new secret is required.
+
+## October 30 timing change: rollout
+
+The scheduled job still targets 4 a.m. Eastern. A delayed run now measures
+eligibility at actual five-sport fetch completion, rather than failing solely
+because it ran after 4:59. Its actual Eastern date determines the checkpoint:
+daily sports apply it to the previous date, and PGA uses Thursday and Sunday.
+There is no backdating if a run slips into another calendar day. Cross-midnight
+captures remain pending/skipped because they do not provide a single dated snapshot.
+PGA still finalizes no earlier than Tuesday 8 a.m. Eastern.
+
+After transferring these local changes through your normal reviewed Git workflow:
+
+```bash
+cd /workspaces/MultiSportFantasy2
+git pull --ff-only origin main
+cd supabase/tests
+npx --yes pnpm@11.25.0 test:daily-scoring-checks
+node scoring.test.mjs
+node scoring-race-offline.test.mjs
+node trade-roster-sync.test.mjs
+cd ../..
+npx supabase link --project-ref tgvuntuhdqucazpoxrrg
+npx supabase db push --linked --dry-run
+```
+
+Expect `202610300001_scheduled_check_timing.sql`. Review any other pending migrations
+separately. Once approved for the test project:
+
+```bash
+npx supabase db push --linked
+```
+
+No existing rows are updated by this migration. October 30 records already saved
+as incomplete remain incomplete. A rerun preserves them and reports
+`existing_check_preserved`; the summary also remains `complete: false`.
+The next day's scheduled update can create complete records at its actual run time.
+Manual refreshes remain excluded, and exact retries do not duplicate rows.
+
+Use this read-only SQL in the same project as `TRADE_ROSTER_PROJECT_REF`:
+
+```sql
+select c.check_date, o.display_name, c.complete, c.total_players,
+       c.payload->>'timing_policy' as timing_policy,
+       scoring.roster_check_time(c) at time zone 'America/New_York' as checked_eastern
+from scoring.latest_roster_checks c
+join draft.owners o on o.id=c.owner_id
+order by c.check_date desc, o.display_name;
+```
+
+New complete observations show `scheduled-observation-v2` and their actual completion
+time. Legacy observations retain the fixed 4 a.m. interpretation, including existing
+pause evidence and historical cap rules. An explicit later correction must preserve
+the observation timing policy belonging to its original evidence.
 
 ## Enable after reviewing and pushing the code
 
@@ -23,7 +76,7 @@ No new migration or secret is required.
 3. In GitHub → repository Settings → Secrets and variables → Actions → Variables,
    add `SCORING_ROSTER_CHECKS_ENABLED` = `true`. Existing
    `TRADE_ROSTER_SYNC_ENABLED` must also be `true` with working connection secrets.
-4. Wait for the next scheduled 4 a.m. Eastern **roster** run. The sync output now
+4. Wait for the next scheduled **roster** run (requested at 4 a.m. Eastern, but allowed to run late). The sync output now
    contains `scoring_checks`, the check date and each owner's status. A manually
    dispatched refresh intentionally cannot create or replace that checkpoint.
 5. In the test project's SQL editor, inspect:
@@ -44,10 +97,9 @@ check history remains. This does not publish points or apply website penalties.
   minors. Complete five-sport membership, identity, duplicate, freshness and
   database renewal checks are inherited from the existing roster importer.
 - Store each sport's actual fetch-start timestamp and a source checksum. A
-  complete checkpoint requires all starts AND the last file completion to be in
-  the 4 a.m. Eastern hour. DST is handled using `America/New_York`.
-- A same-date late run is recorded incomplete, with no total eligible for penalty
-  evaluation. Cross-date reads are skipped. A missing/failed fetch leaves no
+  complete checkpoint requires all starts AND the last file completion to share
+  the same Eastern calendar date. The completion timestamp determines cap and pause policy. DST is handled using `America/New_York`.
+- A same-date late scheduled run is valid evidence. Cross-date reads are skipped. A missing/failed fetch leaves no
   checkpoint, so eligibility remains pending. Nothing backfills invented counts.
 - Exact retries return the existing check. Different later observations preserve
   the original checkpoint and report `existing_check_preserved`; they never
@@ -56,7 +108,7 @@ check history remains. This does not publish points or apply website penalties.
 - Count writes share the trade/membership lock followed by the scoring lock.
   A failure rolls back the whole database transaction, including reconciliation.
   Existing behavior is unchanged while the feature flag is off.
-- Daily sports use the next morning's date. PGA uses Thursday and Sunday dates.
+- Daily sports use the next day's actual scheduled observation date. PGA uses Thursday and Sunday dates.
   These rows are evidence only; the previously tested evaluator handles policy.
 
 ## Missing scoring records: required evidence before publishing
