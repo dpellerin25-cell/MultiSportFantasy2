@@ -24,7 +24,7 @@ export function notificationPayload(row,config){
     : `${row.proposer} and ${row.recipient}: ${subject.toLowerCase()}.`;
   const lines=(row.assets??[]).map(a=>`${a.from_name} sends ${a.label} to ${a.to_name}.`);
   if(row.kind==='roster_limit')lines.push(
-    'Positive starting-lineup contributions subject to an overage penalty will not count toward the Pentagon Cup. Negative contributions remain. Daily eligibility uses the next morning’s 4 am Eastern check; PGA requires an overage at both Thursday and Sunday checks. Missing evidence or commissioner pauses may leave a penalty pending or waived.',
+    'Positive starting-lineup contributions subject to an overage penalty will not count toward the Pentagon Cup. Negative contributions remain. Daily eligibility uses the next day’s scheduled roster update, even if delayed; PGA requires an overage at both Thursday and Sunday scheduled checks. Missing evidence or commissioner pauses may leave a penalty pending or waived.',
     `Please reduce your roster to ${ROSTER_LIMIT} players or fewer in Fantrax. Once corrected, contact Doug if the website needs to be updated before tomorrow at 4 am Eastern. Otherwise, the next daily roster update will reflect the correction.`);
   if(row.kind==='acceptance')lines.push('View Accepted Trades on the website for the current status. Player transfers must be made in Fantrax; draft-pick-only trades complete immediately.');
   const link=`${config.site}/rosters`;
