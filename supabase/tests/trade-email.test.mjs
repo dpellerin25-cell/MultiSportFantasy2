@@ -86,22 +86,22 @@ try{
   const snapshots=['NFL','MLB','NBA','EPL','PGA'].map(sport=>({sport,league:'email-'+sport,observed:new Date(tick).toISOString(),rosters:slugs.map(owner=>({owner,players:owner==='doug'&&sport==='NFL'?Array.from({length:count},(_,i)=>({player_id:String(i),name:'Player '+i})):[]}))}));
   await q('select trading.ingest_roster_batch($1)',[JSON.stringify(snapshots)]);
  }
- await batch(65);assert.equal((await q('select count(*)::int n from trading.roster_limit_alerts'))[0].n,0);
- await batch(66);await batch(67);
+ await batch(80);assert.equal((await q('select count(*)::int n from trading.roster_limit_alerts'))[0].n,0);
+ await batch(81);await batch(82);
  assert.equal((await q("select count(*)::int n from trading.notifications where kind='roster_limit'"))[0].n,1);
  const alert=(await q("select id from trading.notifications where kind='roster_limit'"))[0].id;
  // Isolate alert delivery from previous test notifications.
  await q("update trading.notifications set next_attempt_at='infinity' where kind<>'roster_limit'");
  assert.equal((await deliverQueue(db,{...config,recipient:'new@example.com'},opts)).sent,1);
- const mail=JSON.parse(calls.at(-1).body);assert.ok(mail.text.includes('67 players'));assert.ok(mail.text.includes('will not count toward the Pentagon Cup'));assert.ok(mail.text.includes('contact Doug'));assert.ok(mail.text.includes('4 am Eastern'));
- await batch(65);await batch(66);
+ const mail=JSON.parse(calls.at(-1).body);assert.ok(mail.text.includes('82 players'));assert.ok(mail.text.includes('will not count toward the Pentagon Cup'));assert.ok(mail.text.includes('contact Doug'));assert.ok(mail.text.includes('4 am Eastern'));
+ await batch(80);await batch(81);
  assert.equal((await q('select count(*)::int n from trading.roster_limit_alerts'))[0].n,2);
- await batch(65);
+ await batch(80);
  assert.equal((await deliverQueue(db,{...config,recipient:'new@example.com'},opts)).held,1);
  await db.exec('set role authenticated');await assert.rejects(()=>q('select * from trading.roster_limit_alerts'));await db.exec('reset role');
 
- await q('begin');await batch(66);await q('rollback');
+ await q('begin');await batch(81);await q('rollback');
  assert.equal((await q('select count(*)::int n from trading.roster_limit_alerts where resolved_at is null'))[0].n,0);
- console.log('PASS 65/66 boundary, one alert per violation, fresh alert after correction, corrected pending alert suppression and private state');
+ console.log('PASS 80/81 boundary, one alert per violation, fresh alert after correction, corrected pending alert suppression and private state');
 
 }finally{await db.close();}

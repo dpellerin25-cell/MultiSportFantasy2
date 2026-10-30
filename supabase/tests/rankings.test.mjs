@@ -16,7 +16,7 @@ try {
   const user=randomUUID(), outsider=randomUUID();
   await q('insert into auth.users values($1),($2)',[user,outsider]);
   await q("insert into draft.owner_accounts(auth_user_id,owner_id) select $1,id from draft.owners where slug='doug'",[user]);
-  const target=(await q("insert into draft.drafts(name,kind,championship_year,rounds) values('Ranking fixture','startup',2027,65) returning id"))[0].id;
+  const target=(await q("insert into draft.drafts(name,kind,championship_year,rounds) values('Ranking fixture','startup',2027,80) returning id"))[0].id;
   await q('insert into draft.draft_participants select $1,id,row_number() over(order by slug) from draft.owners',[target]);
   await q('select draft.generate_snake_picks($1)',[target]);
   const imp=(await q("insert into draft.player_pool_imports(checksum,schema_version) values(repeat('d',64),1) returning id"))[0].id;

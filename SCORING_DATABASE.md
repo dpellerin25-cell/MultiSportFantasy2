@@ -37,7 +37,7 @@ Thursday and Sunday checks, and remains pending until Tuesday 8 a.m. Eastern.
 Daily results also require finished events. PGA's deadline is the agreed
 finalization policy, not a claim that Fantrax exposes a final flag.
 
-The cap is 65. Overages remove each positive **starter** contribution and retain
+The current cap is 80 from migration activation; earlier checks retain 65. Overages remove each positive **starter** contribution and retain
 negative starter contributions; all bench contributions are excluded. Missing
 checks, incomplete checks and unknown starter scoring remain pending. A missing
 score is not zero: `no_activity` needs explicit supporting evidence, while an
@@ -83,7 +83,7 @@ check evidence and last resolution ID. After confirmation,
 expected_resolution)` accepts `enforce` or `waive`.
 
 - **Enforce** applies the normal PGA rule: positive starter points are removed
-  only if both checks exceeded 65; negative scores remain.
+  only if both checks exceeded their effective cap; negative scores remain.
 - **Waive** keeps all starter points for that tournament.
 - Both commands require a commissioner. Decisions require a reason, preserve
   the actor and history in `pga_resolutions`, and support exact retries.

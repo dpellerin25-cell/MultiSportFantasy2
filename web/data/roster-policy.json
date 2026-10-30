@@ -1,0 +1,8 @@
+{
+  "version": "2026-10-29-80",
+  "approved_on": "2026-10-29",
+  "effective_time": "database migration activation; historical checks retain their previous policy",
+  "roster_limit": 80,
+  "startup_rounds": 80,
+  "annual_rounds": 10
+}

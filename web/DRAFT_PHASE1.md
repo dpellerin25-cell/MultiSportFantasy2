@@ -85,7 +85,7 @@ keyboard-only modal navigation. No real Auth credentials were available locally.
 
 Remaining concerns: browser sessions use SDK-managed browser storage, so XSS
 prevention remains important; React renders errors/player strings as text. The
-backend presently returns all pick slots in state (585 is bounded for startup).
+backend presently returns all pick slots in state (880 for the current 11-owner, 80-round startup).
 Search ordering follows existing internal UUID pagination, not rankings. Only
 Doug/Chris test accounts have been linked so far. Remaining owners must be linked
 before the nine-person rehearsal. Password recovery/invites, full draft board,

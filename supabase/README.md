@@ -78,13 +78,13 @@ the draft's chosen snapshot. UUID identities decouple the engine from Fantrax.
 An eligible entry must be free_agent or waivers; unknown is not auto-eligible.
 PGA position/professional-team fields remain nullable.
 
-Startup drafts require the approved participant count and 65 rounds. After
+Startup drafts require the approved participant count and 80 rounds. After
 migration 202610040001, all five sport minimums are zero with no sport maximums.
 No actual draft, order, player, selection, or import is seeded.
 
 The SQL administrator can configure order in draft_participants, then call
 draft.generate_snake_picks(draft_id). It locks the draft row and requires a full
-contiguous order. It creates 585 slots with alternating round direction.
+contiguous order. It creates 80 × participant count slots with alternating round direction.
 Generation should be part of the future start transaction; it freezes order.
 It intentionally cannot be rerun or regenerate existing slots. No placeholder
 commissioner order is assumed.

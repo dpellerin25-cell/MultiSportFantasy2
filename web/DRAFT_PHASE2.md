@@ -15,7 +15,7 @@ Use only the configured test project. Starting and making picks will persist in 
 1. Open `/draft` in a normal browser and sign in as Doug. Open the same page in a separate browser or private browsing session and sign in as Chris. Two ordinary tabs share sign-in storage and do not represent two accounts.
 2. Confirm each page identifies the correct owner. Only Doug should see Commissioner Controls.
 3. Before starting, Doug opens Round-one owner order. Put Doug first and Chris second, with each of the other seven owners appearing exactly once. Save and confirm. Use a comfortable timer such as 300 seconds for the first checks.
-4. Doug starts the test draft. Both pages should show Doug on the clock and 585 slots across 65 rounds. Chris cannot select a player during Doug's turn.
+4. Doug starts the test draft. Both pages should show Doug on the clock and 80 × participant count slots across 80 rounds. Chris cannot select a player during Doug's turn.
 5. Doug selects and confirms a player. Check both pages: the player disappears from availability, appears on the board and Doug's roster, updates the sport count, and Chris is now on the clock.
 6. Chris makes a selection. Check the same results on both pages. Doug pauses promptly so later owners' clocks do not expire while inspecting results.
 7. While paused, refresh Chris's page. Picks and roster counts should survive. Doug can review either owner's roster using the roster dropdown; this never changes the signed-in identity.

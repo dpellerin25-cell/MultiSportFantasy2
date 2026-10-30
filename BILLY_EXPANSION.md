@@ -17,8 +17,8 @@ Current scores use this table; missing Fantrax results remain blank, not invente
    and plan a separate supported cleanup/replacement before applying membership.
 3. Link Billy's confirmed account to his owner identity using the existing account
    setup process. No commissioner grant is needed. His email is still required.
-4. Choose the eleven-owner startup order before creating a new draft: 65 rounds
-   means 715 picks. Existing drafts are not resized. The membership command creates
+4. Choose the eleven-owner startup order before creating a new draft: 80 rounds
+   means 880 picks. Existing drafts are not resized. The membership command creates
    the normal ten picks per owner for each of the two configured rookie years:
    110 picks per year, 220 total, preserving existing traded ownership.
 5. Refresh all five Fantrax roster snapshots after database membership is aligned.

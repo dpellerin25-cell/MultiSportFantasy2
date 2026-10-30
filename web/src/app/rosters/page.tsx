@@ -1,3 +1,5 @@
+
+import { ROSTER_LIMIT } from "@/lib/roster-policy";
 import settings from "../../../data/league-settings.json";
 import MainNavigation from "@/components/MainNavigation";
 import {Trades,ProposeTradeButton} from "@/components/Trades";
@@ -142,7 +144,7 @@ export default async function RostersPage() {
 
           <p className="mt-2 max-w-2xl text-slate-800 sm:text-slate-600">
             Combined rosters across all five sports. Each owner
-            can roster a maximum of 65 players.
+            can roster a maximum of {ROSTER_LIMIT} players.
           </p>
         </div>
 
@@ -154,7 +156,7 @@ export default async function RostersPage() {
               </p>
 
               <p className="mt-1 text-lg font-bold text-slate-900">
-                65 players per owner
+                {ROSTER_LIMIT} players per owner
               </p>
             </div>
 
@@ -173,7 +175,7 @@ export default async function RostersPage() {
               key={owner.owner}
               owner={owner.owner}
               sports={owner.sports}
-              maxRosterSize={65}
+              maxRosterSize={ROSTER_LIMIT}
               action={<ProposeTradeButton owner={owner.owner} />}
             >
               <OwnerRookiePicks owner={owner.owner} />

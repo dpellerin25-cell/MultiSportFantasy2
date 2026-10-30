@@ -109,17 +109,17 @@ status. Recipients must have confirmed account emails. There is no backfill of
 previous acceptance events.
 
 After each successful complete five-sport roster import, an owner with more than
-65 players gets one private warning for that continuous violation. Picks do not
-count. A repeat import or a change from 66 to 67 players does not send another
-warning. A later import at 65 or fewer closes the violation; exceeding 65 again
+80 players gets one private warning for that continuous violation. Picks do not
+count. A repeat import or a change from 81 to 82 players does not send another
+warning. A later import at 80 or fewer closes the violation; exceeding 80 again
 creates a new alert. Pending alerts are suppressed if corrected before sending.
-The email says points accumulated while over the limit do not count toward the
+The email explains that positive starter contributions subject to a penalty do not count toward the
 Pentagon Cup and asks the owner to contact Doug after correcting Fantrax if a
 website refresh is needed before tomorrow at 4 am Eastern. This is notification
 only: it does not automatically remove points or change the scoring importer.
 
-Controlled roster-alert test: use a disposable roster fixture/owner with 66
+Controlled roster-alert test: use a disposable roster fixture/owner with 81
 players, run a complete roster import, then preview/send in test mode. Verify
-one warning; rerun the same import and verify no second warning. Correct to 65,
+one warning; rerun the same import and verify no second warning. Correct to 80,
 import, then exceed again to verify a new episode. Do not manufacture roster data
 in the real league to perform this test. The offline suite covers this flow.

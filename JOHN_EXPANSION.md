@@ -21,7 +21,7 @@ archives keep their original rules and results.
    already stored in GitHub Secrets; schedules remain unchanged.
 5. Confirm all five files report ten teams, John has his actual results/roster,
    Supabase roster synchronization succeeds and John's picks show publicly.
-   New startup drafts have 650 slots; a new draft must use an explicit ten-owner
+   New ten-owner startup drafts have 800 slots; a new draft must use an explicit ten-owner
    order. Existing historical draft slots are not changed.
 
 No remote settings, Fantrax teams, accounts, or saved results were modified by

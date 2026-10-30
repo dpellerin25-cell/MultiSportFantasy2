@@ -1,5 +1,7 @@
 "use client";
 
+import { ROSTER_LIMIT } from "@/lib/roster-policy";
+
 import { useState, type ReactNode } from "react";
 
 export type RosterPlayer = {
@@ -30,7 +32,7 @@ type RosterCardProps = {
 function getCountStyle(count: number, max: number) {
   const percentage = count / max;
 
-  if (percentage >= 1) {
+  if (percentage > 1) {
     return "bg-red-100 text-red-800";
   }
 
@@ -44,7 +46,7 @@ function getCountStyle(count: number, max: number) {
 export default function RosterCard({
   owner,
   sports,
-  maxRosterSize = 65,
+  maxRosterSize = ROSTER_LIMIT,
   children,
   action,
 }: RosterCardProps) {

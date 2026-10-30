@@ -1,3 +1,5 @@
+// --policy80 uses a synthetic activation date only in the disposable test database.
+const policy80=process.argv.includes('--policy80');
 import {PGlite} from '@electric-sql/pglite';
 import {readFile,readdir} from 'node:fs/promises';
 import assert from 'node:assert/strict';
@@ -12,7 +14,7 @@ const db=await PGlite.create();let passed=0;
 try{
  await db.exec(`create role anon;create role authenticated;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth,public to anon,authenticated;`);
  const dir=new URL('../migrations/',import.meta.url);
- for(const f of (await readdir(dir)).filter(f=>f.endsWith('.sql')).sort())await db.exec(await readFile(new URL(f,dir),'utf8'));
+ for(const f of (await readdir(dir)).filter(f=>f.endsWith('.sql')).sort())await db.exec((await readFile(new URL(f,dir),'utf8')).replace("'2026-10-29-80',clock_timestamp()",policy80?"'2026-10-29-80','2020-01-01T00:00:00Z'":"'2026-10-29-80',clock_timestamp()"));
  // Rehearse using the real driver's parameter encoding, including its special
  // handling of arrays. PGlite's native JSON conversion otherwise hides errors.
  const admin={query:(s,p)=>p?db.query(s,p.map(value=>value!==null&&typeof value==='object'?prepareValue(value):value)):db.exec(s).then(results=>results.at(-1))};
@@ -23,6 +25,6 @@ try{
    try{second={value:await secondOp(admin)};await db.exec('commit');}catch(error){await db.exec('rollback');second={error};}
    return {first,second};
  };
- await scoringRaceScenarios({admin,race,report:message=>{passed++;console.log('PASS sequential rehearsal: '+message);}});
+ await scoringRaceScenarios({admin,race,cap:policy80?80:65,report:message=>{passed++;console.log('PASS sequential rehearsal: '+message);}});
  console.log(`PASS target guards and ${passed} scoring scenarios offline. NOT multi-session concurrency proof.`);
 }finally{await db.close();}

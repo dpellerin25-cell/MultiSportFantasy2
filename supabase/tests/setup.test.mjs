@@ -19,11 +19,11 @@ try{
   await q("update draft.player_pool_imports set status='ready',completed_at=now() where id=$1",[imp]);
   const config={draft_id:randomUUID(),import_id:imp,name:'Test startup',championship_year:2027,timer_seconds:90,owner_order:[...OWNER_SLUGS].reverse()};
   for(const patch of [{timer_seconds:null},{timer_seconds:0},{owner_order:[]},{owner_order:Array(9).fill('doug')},{draft_id:'bad'},{rounds:64}])assert.throws(()=>validateSetup({...config,...patch}));
-  const preview=snakePreview(config.owner_order);assert.equal(preview.length,585);
+  const preview=snakePreview(config.owner_order);assert.equal(preview.length,720);
   assert.deepEqual(preview.slice(0,9).map(p=>p.owner),config.owner_order);
   assert.deepEqual(preview.slice(9,18).map(p=>p.owner),[...config.owner_order].reverse());
-  for(const owner of OWNER_SLUGS)assert.equal(preview.filter(p=>p.owner===owner).length,65);
-  console.log('PASS explicit settings, nine unique owners and 585 snake preview slots');
+  for(const owner of OWNER_SLUGS)assert.equal(preview.filter(p=>p.owner===owner).length,80);
+  console.log('PASS explicit settings, nine unique owners and 720 snake preview slots');
   await assert.rejects(()=>prepareDraft(db,{...config,import_id:randomUUID()}),/finalized validated/);
   await q("update draft.owners set active=false where slug='doug'");
   await assert.rejects(()=>prepareDraft(db,config),/Active owners/);

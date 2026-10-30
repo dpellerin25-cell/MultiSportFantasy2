@@ -25,7 +25,7 @@ try {
  await assert.rejects(()=>call(doug,'select draft.settings_snapshot()'),/permission denied/);
  await assert.rejects(()=>call(doug,'select * from draft.settings_requests'),/permission denied/);
  const count=async()=>Number((await q('select count(*) n from draft.membership_events'))[0].n);
- const before=await count(),review=await preview();assert.equal(review.can_apply,true);assert.equal(review.startup_picks,650);assert.deepEqual(review.added,['Alex']);
+ const before=await count(),review=await preview();assert.equal(review.can_apply,true);assert.equal(review.startup_picks,800);assert.deepEqual(review.added,['Alex']);
  assert.deepEqual(await get(),state);assert.equal(await count(),before);
  const invalid=await preview(ten,Array(10).fill(0));assert.equal(invalid.can_apply,false);assert.match(invalid.blockers[0],/placement table/);
  await assert.rejects(()=>apply('wrong'),/Settings changed/);
@@ -35,7 +35,7 @@ try {
  await assert.rejects(()=>apply(review.token),/Settings changed/);
  console.log('PASS commissioner-only reads/preview/apply, no preview mutations, invalid points, stale preview rejection and exact retry');
  const ninePoints=members.map((_,i)=>(8-i)*10),back=await preview(members,ninePoints);
- const id=(await q("insert into draft.drafts(name,kind,championship_year,rounds,participant_count) values('Blocker fixture','startup',2027,65,10) returning id"))[0].id;
+ const id=(await q("insert into draft.drafts(name,kind,championship_year,rounds,participant_count) values('Blocker fixture','startup',2027,80,10) returning id"))[0].id;
  const blocked=await preview(members,ninePoints);assert.equal(blocked.can_apply,false);assert.match(blocked.blockers[0],/Cancel unused/);
  await assert.rejects(()=>apply(back.token,randomUUID(),members,ninePoints),/Cancel unused/);
  assert.equal(await count(),before+1);assert.equal((await get()).season.owner_slugs.length,10);

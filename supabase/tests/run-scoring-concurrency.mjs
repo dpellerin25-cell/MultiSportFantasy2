@@ -29,7 +29,7 @@ try{
   const info=JSON.parse(docker(['inspect',container]));
   const binding=info[0]?.NetworkSettings?.Ports?.['5432/tcp']?.[0];
   if(binding?.HostIp!=='127.0.0.1'||!/^\d+$/.test(binding.HostPort))throw new Error('Expected a loopback-only database port.');
-  const result=spawnSync(process.execPath,[fileURLToPath(new URL('./scoring-concurrency.test.mjs',import.meta.url))],{
+  const result=spawnSync(process.execPath,[fileURLToPath(new URL('./scoring-concurrency.test.mjs',import.meta.url)),...(process.argv.includes('--policy80')?['--policy80']:[])],{
     stdio:'inherit',timeout:180000,
     env:{...process.env,LOCAL_SCORING_TEST_DB_URL:`postgresql://postgres:${password}@127.0.0.1:${binding.HostPort}/multisport_scoring_test`}
   });

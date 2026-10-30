@@ -1,3 +1,5 @@
+
+import { ROSTER_LIMIT } from "@/lib/roster-policy";
 import MainNavigation from "@/components/MainNavigation";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -68,8 +70,8 @@ export default async function TeamPage({
           </div>
           <div className="rounded-xl border border-blue-100 bg-white p-5 shadow-sm sm:p-6">
             <dt className="text-sm font-semibold"><Link href="/rosters" className="inline-flex min-h-11 items-center rounded text-blue-800 underline underline-offset-4 hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-800">Full Roster</Link></dt>
-            <dd className={`mt-2 text-4xl font-bold ${totalPlayers >= 65 ? "text-red-800" : "text-blue-900"}`}>
-              {isCurrentSeason ? totalPlayers : "—"} {isCurrentSeason && <span className="text-base font-semibold">/ 65 players</span>}
+            <dd className={`mt-2 text-4xl font-bold ${totalPlayers > ROSTER_LIMIT ? "text-red-800" : "text-blue-900"}`}>
+              {isCurrentSeason ? totalPlayers : "—"} {isCurrentSeason && <span className="text-base font-semibold">/ {ROSTER_LIMIT} players</span>}
             </dd>
             <dd className="mt-3 text-sm text-slate-600">{isCurrentSeason ? "Across all sports, from the latest roster update." : "Historical roster counts have not been archived."}</dd>
           </div>

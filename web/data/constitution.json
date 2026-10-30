@@ -31,7 +31,7 @@
       },
       {
         "kind": "paragraph",
-        "text": "MultiSportFantasy.com will serve as the central platform for the overall competition. It will track the Pentagon Cup, combined 65-player rosters, multi-sport drafts, cross-sport trades, historical results, and other league-wide information."
+        "text": "MultiSportFantasy.com will serve as the central platform for the overall competition. It will track the Pentagon Cup, combined 80-player rosters, multi-sport drafts, cross-sport trades, historical results, and other league-wide information."
       },
       {
         "kind": "paragraph",
@@ -179,7 +179,7 @@
     "blocks": [
       {
         "kind": "paragraph",
-        "text": "Each owner controls one combined multi-sport roster with a maximum of 65 players."
+        "text": "Each owner controls one combined multi-sport roster with a maximum of 80 players."
       },
       {
         "kind": "paragraph",
@@ -227,7 +227,7 @@
       },
       {
         "kind": "paragraph",
-        "text": "Overall roster maximum: 65 players."
+        "text": "Overall roster maximum: 80 players."
       },
       {
         "kind": "paragraph",
@@ -235,15 +235,15 @@
       },
       {
         "kind": "paragraph",
-        "text": "Because Fantrax cannot see an owner's combined roster across all five sports, MultiSportFantasy.com is the official source for determining compliance with the 65-player roster limit."
+        "text": "Because Fantrax cannot see an owner's combined roster across all five sports, MultiSportFantasy.com is the official source for determining compliance with the 80-player roster limit."
       },
       {
         "kind": "paragraph",
-        "text": "The website updates rosters each morning at approximately 4:00 a.m. If an owner is above the 65-player maximum when the daily roster check occurs, all fantasy points accumulated by that owner's players that day will be forfeited."
+        "text": "The website checks combined rosters at 4:00 a.m. Eastern, counting all rostered players including IR and minors, but not draft picks. Exactly 80 players is compliant. For NFL, MLB, NBA and Premier League, an overage removes the previous day's positive starting-lineup contributions; negative contributions still count."
       },
       {
         "kind": "paragraph",
-        "text": "The penalty continues each day until the owner is compliant with the 65-player limit. Roster corrections made after the daily update will not restore points for that day."
+        "text": "PGA tournament results finalize Tuesday at 8:00 a.m. Eastern. PGA loses positive starter contributions only when the owner is over the cap at both Thursday's and Sunday's 4:00 a.m. checks. Missing evidence leaves eligibility pending. The commissioner may pause overage penalties and make an audited decision when a PGA tournament spans a pause boundary. Historical checks retain the cap effective at their check time."
       }
     ]
   },
@@ -253,7 +253,7 @@
     "blocks": [
       {
         "kind": "paragraph",
-        "text": "The league's initial startup draft will be conducted through MultiSportFantasy.com."
+        "text": "The league's initial startup snake draft will be conducted through MultiSportFantasy.com with 80 rounds per owner (880 selections for 11 owners)."
       },
       {
         "kind": "paragraph",
@@ -516,7 +516,7 @@
         "kind": "list",
         "items": [
           "Final league membership",
-          "65-player roster maximum and 10-round annual draft",
+          "80-player roster maximum and 10-round annual draft",
           "final starting-lineup sizes, particularly PGA",
           "exact PGA opening event",
           "MLB and Premier League waiver rules",

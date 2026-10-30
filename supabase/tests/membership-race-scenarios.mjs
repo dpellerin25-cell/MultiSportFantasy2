@@ -109,7 +109,7 @@ export async function membershipRaceScenarios({admin,race,report}) {
   rejected(second,/started or completed/);assert.deepEqual(await memberState(),before);assert.equal(await eventCount(),audit);
   const d=(await rows(admin,'select status,current_pick_number,deadline_at from draft.drafts where id=$1',[c.draft_id]))[0];
   assert.equal(d.status,'running');assert.equal(d.current_pick_number,1);assert.ok(d.deadline_at);
-  assert.equal(await scalar(admin,'select count(*)::int from draft.draft_picks where draft_id=$1',[c.draft_id]),585);
-  report('draft start first: queued membership change rejected; clock and all 585 snake slots preserved');
+  assert.equal(await scalar(admin,'select count(*)::int from draft.draft_picks where draft_id=$1',[c.draft_id]),720);
+  report('draft start first: queued membership change rejected; clock and all 720 snake slots preserved');
  }
 }
