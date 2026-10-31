@@ -1,8 +1,8 @@
 {
   "sport": "NBA",
   "league_id": "u1byx3qkmtj47ogg",
-  "fetch_started_at": "2026-10-30T14:52:47.556394+00:00",
-  "updated_at": "2026-10-30T14:52:48.852212+00:00",
+  "fetch_started_at": "2026-10-31T14:21:25.231825+00:00",
+  "updated_at": "2026-10-31T14:21:26.615110+00:00",
   "team_count": 11,
   "total_players": 10,
   "rosters": [
@@ -155,8 +155,8 @@
           "player_id": "0621d",
           "name": "Ochai Agbaji",
           "position": "G,F/C",
-          "pro_team": "(N/A)",
-          "pro_team_name": "Not on a team",
+          "pro_team": "OKC",
+          "pro_team_name": "Oklahoma City Thunder",
           "status_id": "2",
           "roster_position_id": "302",
           "headshot_url": "https://fantraximg.com/si/headshots/NBA/hs0621d_96_6.png"
