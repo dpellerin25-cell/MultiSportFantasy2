@@ -4,6 +4,7 @@ import {useEffect, useRef, useState, type FormEvent} from "react";
 import type {Session} from "@supabase/supabase-js";
 import {leagueSettingsClient} from "@/lib/league-settings-client";
 import type {TradeRoster} from "@/lib/trade-model";
+import Link from 'next/link';
 
 const button = "min-h-11 rounded-lg bg-blue-800 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-900 disabled:opacity-50";
 
@@ -89,6 +90,10 @@ export default function SiteAccount() {
         {error && <p role="alert" className="text-sm text-red-800">{error}</p>}
         <div className="flex justify-end gap-3"><button type="button" disabled={busy} className="min-h-11 rounded-lg px-4 text-sm font-semibold hover:bg-slate-100" onClick={() => setOpen(false)}>Cancel</button><button className={button} disabled={busy || !ready}>{busy ? "Signing in…" : "Sign in"}</button></div>
       </form>}
+      <div className="mt-5 grid gap-3 text-sm text-blue-800">
+        <Link href="/auth/create" onClick={()=>setOpen(false)} className="underline">Create an Account</Link>
+        <Link href="/auth/reset" onClick={()=>setOpen(false)} className="underline">I&apos;m an idiot and forgot my password</Link>
+      </div>
     </dialog>
   </header>;
 }
