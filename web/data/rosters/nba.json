@@ -1,8 +1,8 @@
 {
   "sport": "NBA",
   "league_id": "u1byx3qkmtj47ogg",
-  "fetch_started_at": "2026-11-01T15:50:08.614750+00:00",
-  "updated_at": "2026-11-01T15:50:10.030228+00:00",
+  "fetch_started_at": "2026-11-02T19:14:27.345012+00:00",
+  "updated_at": "2026-11-02T19:14:28.241513+00:00",
   "team_count": 11,
   "total_players": 10,
   "rosters": [
@@ -129,7 +129,7 @@
           "pro_team_name": "Los Angeles Lakers",
           "status_id": "1",
           "roster_position_id": "307",
-          "headshot_url": "https://fantraximg.com/si/headshots/NBA/hs06mm1_96_3.png"
+          "headshot_url": "https://fantraximg.com/si/headshots/NBA/hs06mm1_96_4.png"
         },
         {
           "player_id": "051p4",
