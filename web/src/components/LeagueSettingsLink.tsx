@@ -17,5 +17,6 @@ export default function LeagueSettingsLink(){
   return()=>{live=false;};
  },[user]);
  if(!allowed)return null;
- return <>{[{href:'/league-settings',label:'League Settings'},{href:'/scoring-controls',label:'Scoring Controls'}].map(({href,label})=><Link key={href} href={href} aria-current={path===href?'page':undefined} className={`inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-semibold sm:px-4 sm:text-base ${path===href?'bg-blue-800 text-white shadow-sm':'text-blue-800 hover:bg-blue-100'}`}>{label}</Link>)}</>;
+ return <>{[{href:'/league-settings',label:'League Settings'}].map(({href,label})=><Link key={href} href={href} aria-current={path===href?'page':undefined} className={`inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-semibold sm:px-4 sm:text-base ${path===href?'bg-blue-800 text-white shadow-sm':'text-blue-800 hover:bg-blue-100'}`}>{label}</Link>)}</>;
 }
+
