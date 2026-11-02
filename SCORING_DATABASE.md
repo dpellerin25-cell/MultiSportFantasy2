@@ -1,5 +1,9 @@
 # Scoring ledger — local foundation
 
+For scheduled collection, player totals, source approvals and rollout, see
+[SCHEDULED_SCORING.md](SCHEDULED_SCORING.md). That extension preserves this ledger
+and does not connect adjusted scoring to published standings.
+
 For the manual diagnostic importer, historical roster checks, and exact Codespaces
 preview/import commands, see [SCORING_IMPORT.md](SCORING_IMPORT.md).
 

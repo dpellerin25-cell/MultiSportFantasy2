@@ -1,6 +1,6 @@
 # Commissioner Scoring Controls
 
-The `/scoring-controls` page uses existing website sign-in and appears in navigation only for a commissioner. Every new database API also requires a linked, active commissioner; hiding the navigation is not the security boundary.
+Scoring Controls is an expandable section at the top of `/league-settings`, using existing website sign-in. League Settings appears in navigation only for a commissioner. The old `/scoring-controls` address redirects here. Every new database API also requires a linked, active commissioner; hiding the navigation is not the security boundary.
 
 ## Included
 
@@ -50,7 +50,7 @@ Reuse the existing test Supabase URL/publishable key in `web/.env.local`. No new
 
 ## Two-account browser validation
 
-1. Sign in as Doug; open **Scoring Controls**. Check the selected Eastern date and owner roster evidence. Tomorrow's scheduled run should supply real evidence; do not invent historical checkpoints.
+1. Sign in as Doug; open **League Settings**, then expand **Scoring Controls**. Check the selected Eastern date and owner roster evidence. Tomorrow's scheduled run should supply real evidence; do not invent historical checkpoints.
 2. In a separate private browser, sign in as another owner. The navigation link must be absent and visiting `/scoring-controls` directly must show access denied. Sign out and verify data is not displayed.
 3. In the test project, enter a reason, review a pause, cancel it, and confirm no history entry was created. Then review and confirm a pause. Confirm the status and history update. Immediately review and confirm resume after testing so the test project is not inadvertently left paused.
 4. Use two Doug tabs to review the same pause state. Apply one change, then attempt the older confirmation. It must reject the stale state; refresh and review again.
@@ -58,3 +58,4 @@ Reuse the existing test Supabase URL/publishable key in `web/.env.local`. No new
 6. For an eligible fixture, verify the preview totals, reason, confirmation and audit history; enforce must retain negatives, and a later waiver must preserve the earlier decision in history.
 
 Hosted HTTP/browser tests and multi-session tests were not run as part of local implementation. No hosted settings or migrations were changed.
+

@@ -92,7 +92,8 @@ try {
  assert.equal(await one("select scoring.set_penalty_pause($1,true,'Draft grace period',0)",[pauseReq]),eid);
  await assert.rejects(()=>q("select scoring.set_penalty_pause($1,false,'End grace period',0)",[uuid()]),/Stale/);
  await db.exec('reset role');
- assert.equal(await one("select count(*)::int from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='scoring' and c.relkind='r' and c.relrowsecurity"),8);
+ assert.equal(await one("select count(*)::int from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='scoring' and c.relkind='r' and c.relrowsecurity"),11);
+ assert.equal(await one("select count(*)::int from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='scoring' and c.relkind='r' and not c.relrowsecurity"),0);
  await db.exec('set role anon');
  await assert.rejects(()=>q('select * from scoring.current_outcomes'),/permission denied/);
  await db.exec('reset role');

@@ -1,3 +1,4 @@
+import PlayerScoringRows from './PlayerScoringRows';
 import {currentLeague,missingOwners} from "@/lib/current-membership";
 import MainNavigation from "@/components/MainNavigation";
 import Link from "next/link";
@@ -114,18 +115,7 @@ export default function SportStandings({
                   team.zScore * 10;
 
                 return (
-                  <tr
-                    key={team.team}
-                    className="border-b border-blue-50 last:border-b-0 hover:bg-blue-50/50"
-                  >
-                    <td className="p-4 text-center font-bold text-slate-900">
-                      {ordinal(team.rank)}
-                    </td>
-
-                    <td className="p-4 font-semibold text-slate-900">
-                      {team.team}
-                    </td>
-
+                  <PlayerScoringRows key={team.team} owner={team.team} sport={title === "Premier League" ? "EPL" : title} finish={ordinal(team.rank)}>
                     <td className="p-4 text-right text-slate-800">
                       {team.fantasyPoints.toFixed(1)}
                     </td>
@@ -147,10 +137,10 @@ export default function SportStandings({
                     <td className="p-4 text-right font-bold text-blue-800 sm:text-blue-700">
                       {team.sportScore.toFixed(1)}
                     </td>
-                  </tr>
+                  </PlayerScoringRows>
                 );
               })}
-              {missingOwners(league).map(owner=><tr key={owner} className="border-t border-blue-100"><td className="p-4 text-center">—</td><td className="p-4 font-semibold">{owner}</td><td colSpan={5} className="p-4 text-sm text-slate-500">No result available</td></tr>)}
+              {missingOwners(league).map(owner=><PlayerScoringRows key={owner} owner={owner} sport={title === "Premier League" ? "EPL" : title} finish="—"><td colSpan={5} className="p-4 text-sm text-slate-500">No result available</td></PlayerScoringRows>)}
             </tbody>
           </table>
         </div>
