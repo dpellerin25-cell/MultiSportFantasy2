@@ -58,7 +58,8 @@ try {
  }
  await assert.rejects(()=>season('NBA',2027,false),/unique constraint/);
  await assert.rejects(()=>period('MLB','2028-01-20',2027),/outside season/);
- assert.equal((await one('select scoring.deadline($1)',[await period('PGA')])).toISOString(),'2020-06-16T12:00:00.000Z');
+ assert.equal((await one('select scoring.deadline($1)',[await period('PGA')])).toISOString(),'2020-06-16T05:00:00.000Z');
+ assert.equal((await one('select scoring.deadline($1)',[await period('PGA','2020-01-09')])).toISOString(),'2020-01-14T06:00:00.000Z');
  assert.equal((await one('select scoring.deadline($1)',[await period('NFL','2020-01-10')])).toISOString(),'2020-01-11T09:00:00.000Z');
  assert.equal((await one('select scoring.deadline($1)',[daily])).toISOString(),'2020-06-12T08:00:00.000Z');
  console.log('PASS all five sports, overlapping Cups, pre-launch isolation, PGA two-check rule and Tuesday deadline');
@@ -138,5 +139,6 @@ try {
  assert.equal((await evaluate(pgCorrected)).status,'pending');
  console.log('PASS commissioner PGA review/enforce/waive, corrections, evidence-bound confirmation, safe retries and owner denial');
 } finally {await db.close();}
+
 
 

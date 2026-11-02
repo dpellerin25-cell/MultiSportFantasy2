@@ -103,7 +103,7 @@ No background refresh flags or speculative methods are introduced.
 - Cap: 80 players (historical checks before policy activation retain 65) combined across all five sports, including IR and minors.
 - Scheduled daily roster pulls determine counts at their actual run time, even when delayed from 4 a.m. America/New_York.
 - NFL/MLB/NBA/EPL: that check determines the previous calendar day's eligibility.
-- PGA: finalize tournament scoring Tuesday at 8 a.m. America/New_York.
+- PGA: finalize tournament scoring Tuesday at 1 a.m. America/New_York.
 - PGA: apply a tournament penalty only if over cap at BOTH Thursday and Sunday
   scheduled checks associated with that tournament. Either compliant check prevents it.
 - Remove positive starter contributions individually; retain negative contributions.
@@ -113,3 +113,4 @@ No background refresh flags or speculative methods are introduced.
   policy before enforcement is implemented.
 - The timestamp, complete roster snapshots and penalty decisions require future
   persistent storage; no such storage or timer is implemented by this diagnostic.
+

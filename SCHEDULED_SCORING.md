@@ -8,8 +8,8 @@ On a sport page, click an owner's name. Choose the Cup year to see known starter
 
 ## Collection and corrections
 
-- Daily sport jobs start the day after the configured scoring date. PGA periods become due Tuesday at 8 a.m. Eastern, with explicit unfinished events remaining pending.
-- The workflow runs at 5:30 a.m., 11:30 a.m., 5:30 p.m. and 11:30 p.m. Eastern, plus Tuesday 8 a.m. GitHub can delay execution; due-time checks prevent early finalization.
+- Daily sport jobs start the day after the configured scoring date. PGA periods become due Tuesday at 1 a.m. Eastern, with explicit unfinished events remaining pending.
+- The workflow runs at 5:30 a.m., 11:30 a.m., 5:30 p.m. and 11:30 p.m. Eastern, plus Tuesday 1 a.m. GitHub can delay execution; due-time checks prevent early finalization.
 - Each run handles at most 200 jobs, oldest unattempted/last-attempted first. All configured dates are retained, so outages leave a backlog rather than silent omissions.
 - Completed dates in the most recent 14 days are re-read. Pending/failed jobs continue retrying after six hours, even when older. An older finalized correction can be requested with `--run JOB_UUID`.
 - Identical content does not create another scoring revision, even with a later observation time. Changed content appends a revision; older captures cannot overwrite newer results. Attempt records remain as an audit trail.
@@ -141,3 +141,4 @@ Publishing player totals is separate from connecting adjusted points to the over
 ## Validation boundaries
 
 Local tests use the actual minimized five-sport captures for Python parsing and explicitly synthetic database fixtures for schedules, trade ownership, correction ordering, 79/80/81 boundaries and overlapping Cup separation. No live Fantrax calls, hosted migration, notifications, deployment or production standings updates are performed during implementation. Run the Docker and hosted/browser checks above before production activation.
+

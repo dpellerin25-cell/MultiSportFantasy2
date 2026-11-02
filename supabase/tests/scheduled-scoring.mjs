@@ -54,7 +54,7 @@ export async function enqueue(db){
  cross join lateral generate_series((src.specification->>'start_date')::date,least((src.specification->>'end_date')::date,(clock_timestamp() at time zone 'America/New_York')::date-1),interval '1 day') d(day)
  where src.enabled and s.sport<>'PGA' on conflict do nothing`);
  await db.query(`insert into scoring.jobs(source_id,owner_id,team_id,start_date,end_date,source_period,due_at)
- select src.id,o.id,t->>'team_id',(p->>'start_date')::date,(p->>'start_date')::date+3,(p->>'period')::int,((p->>'start_date')::date+5+time '08:00') at time zone 'America/New_York'
+ select src.id,o.id,t->>'team_id',(p->>'start_date')::date,(p->>'start_date')::date+3,(p->>'period')::int,scoring.pga_finalization((p->>'start_date')::date+3)
  from scoring.sources src join scoring.seasons s on s.id=src.season_id
  cross join lateral jsonb_array_elements(src.specification->'teams') t join draft.owners o on o.id=(t->>'owner_id')::uuid
  cross join lateral jsonb_array_elements(src.specification->'periods') p
@@ -120,4 +120,5 @@ export async function markPending(db,id,detail){
   await db.query('commit');
  }catch(e){await db.query('rollback');throw e;}
 }
+
 

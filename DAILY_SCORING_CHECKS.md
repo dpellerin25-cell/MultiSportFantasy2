@@ -12,7 +12,7 @@ because it ran after 4:59. Its actual Eastern date determines the checkpoint:
 daily sports apply it to the previous date, and PGA uses Thursday and Sunday.
 There is no backdating if a run slips into another calendar day. Cross-midnight
 captures remain pending/skipped because they do not provide a single dated snapshot.
-PGA still finalizes no earlier than Tuesday 8 a.m. Eastern.
+PGA still finalizes no earlier than Tuesday 1 a.m. Eastern.
 
 After transferring these local changes through your normal reviewed Git workflow:
 
@@ -148,3 +148,4 @@ No blanket missing-to-zero conversion or website scoring publication is enabled.
 Once paired evidence resolves these cases, add source-backed fixtures and an
 audited correction path; ordinary import files must not silently mark unknown
 records as proven no-activity.
+

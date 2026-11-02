@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '30 5,11,17,23 * * *'
       timezone: America/New_York
-    - cron: '0 8 * * 2'
+    - cron: '0 1 * * 2'
       timezone: America/New_York
 permissions:
   contents: read
@@ -35,3 +35,4 @@ jobs:
           TRADE_ROSTER_CA_CERT: ${{ secrets.TRADE_ROSTER_CA_CERT }}
           FANTRAX_COOKIE: ${{ secrets.FANTRAX_COOKIE }}
         run: node supabase/tests/run-scheduled-scoring.mjs --run
+

@@ -44,6 +44,14 @@ try{
  await markPending(db,j.id,'INCOMPLETE_RESPONSE');assert.equal(await one('select last_error from scoring.jobs where id=$1',[j.id]),'INCOMPLETE_RESPONSE');await saveCapture(db,j,capture(j,{n:11,at:'2026-11-01T12:03:00Z'}));assert.equal(await one('select last_error from scoring.jobs where id=$1',[j.id]),null);
  await assert.rejects(()=>markPending(db,j.id,'secret response'));
  const pga=(await q(`select j.*,s.sport,s.league_id,s.season_year,s.is_test,src.specification,o.display_name owner from scoring.jobs j join scoring.sources src on src.id=j.source_id join scoring.seasons s on s.id=src.season_id join draft.owners o on o.id=j.owner_id where s.sport='PGA' and o.display_name='Doug'`))[0];
+ assert.equal(new Date(pga.due_at).toISOString(),'2026-11-03T06:00:00.000Z');
+ assert.equal(await one("select due_at<='2026-11-03T05:59:59Z'::timestamptz from scoring.jobs where id=$1",[pga.id]),false);
+ assert.equal(await one("select due_at<='2026-11-03T06:00:00Z'::timestamptz from scoring.jobs where id=$1",[pga.id]),true);
+ // Rehearse upgrade of an existing 8 a.m. job; repeat migration is safe.
+ await q("update scoring.jobs set due_at='2026-11-03T13:00:00Z' where id=$1",[pga.id]);
+ const timingMigration=await readFile(new URL('../migrations/202611020001_pga_finalization_1am.sql',import.meta.url),'utf8');
+ await db.exec(timingMigration);await db.exec(timingMigration);
+ assert.equal(new Date(await one('select due_at from scoring.jobs where id=$1',[pga.id])).toISOString(),'2026-11-03T06:00:00.000Z');
  const p=await saveCapture(db,pga,capture(pga));await counts(pga.owner_id,'2026-10-29',81);await counts(pga.owner_id,'2026-11-01',80);
  assert.equal((await one("select scoring.evaluate($1,'2026-11-03T13:00:00Z')",[p.result_id])).status,'eligible');
  await counts(pga.owner_id,'2026-11-01',81,1);assert.equal((await one("select scoring.evaluate($1,'2026-11-03T13:00:00Z')",[p.result_id])).adjusted_total,-3);
