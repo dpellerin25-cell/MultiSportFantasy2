@@ -37,7 +37,7 @@ Existing draft/player/trade records are referenced, not rewritten.
 ## Rules and corrections
 
 Daily eligibility uses the following day's Eastern roster check. PGA uses both
-Thursday and Sunday checks, and remains pending until Tuesday 8 a.m. Eastern.
+Thursday and Sunday checks, and remains pending until Tuesday 1 a.m. Eastern.
 Daily results also require finished events. PGA's deadline is the agreed
 finalization policy, not a claim that Fantrax exposes a final flag.
 
@@ -202,4 +202,5 @@ Rollback removes fixture rows even on failure; identity sequences may retain
 gaps, and Auth sign-in sessions may remain until expiry. A dropped connection
 also aborts the open transaction. Final success reports rollback and scope;
 do not confuse offline scenario output with an actual hosted run.
+
 
