@@ -389,6 +389,18 @@ def parse_roster(roster_data):
             if not scorer:
                 continue
 
+            # Do not publish unidentified rows or silently drop a potentially
+            # rostered player. Empty-slot markers need verified response evidence.
+            if not isinstance(scorer, dict) or any(
+                not isinstance(scorer.get(field), str) or not scorer[field].strip()
+                for field in ("scorerId", "name")
+            ):
+                raise ValueError(
+                    "Roster row has no valid player ID/name. It may be an empty-slot "
+                    "placeholder; inspect a getTeamRosterInfo response before treating "
+                    "it as empty. Refusing to publish unknown players."
+                )
+
             player = {
                 "player_id": scorer.get("scorerId"),
                 "name": scorer.get("name"),
