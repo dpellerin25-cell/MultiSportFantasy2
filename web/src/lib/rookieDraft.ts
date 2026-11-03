@@ -1,4 +1,5 @@
 import settings from "../../data/league-settings.json" with { type: "json" };
+import policy from "../../data/rookie-draft-policy.json" with {type:"json"};
 export const DRAFT_OWNERS: readonly string[] = settings.owners.map(owner => owner.name);
 
 export type DraftTrade = {
@@ -22,7 +23,7 @@ export type RookiePick = {
 export type TransferInput = Omit<DraftTrade, "id" | "tradedAt">;
 
 export function getDraftYears(now = new Date()): number[] {
-  const nextYear = now.getUTCFullYear() + 1;
+  const nextYear = Math.max(policy.first_annual_draft_year, now.getUTCFullYear() + 1);
   return [nextYear, nextYear + 1];
 }
 

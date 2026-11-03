@@ -1,0 +1,38 @@
+import {PGlite} from '@electric-sql/pglite';
+import {readFile,readdir} from 'node:fs/promises';
+import {randomUUID as uuid} from 'node:crypto';
+import assert from 'node:assert/strict';
+const db=await PGlite.create();
+try{
+ await db.exec(`create role anon;create role authenticated;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth,public to anon,authenticated;`);
+ const dir=new URL('../migrations/',import.meta.url),target='202611030002_rookie_picks_2028.sql';
+ for(const f of (await readdir(dir)).filter(f=>f.endsWith('.sql')&&f<target).sort())await db.exec(await readFile(new URL(f,dir),'utf8'));
+ await db.query('select trading.import_pick_ledger($1)',[{version:1,trades:[]}]);
+ const owners=(await db.query('select id,slug from draft.owners')).rows;const doug=owners.find(o=>o.slug==='doug').id,chris=owners.find(o=>o.slug==='chris').id;
+ const a=uuid(),b=uuid();await db.query('insert into auth.users values($1),($2)',[a,b]);await db.query('insert into draft.owner_accounts values($1,$2),($3,$4)',[a,doug,b,chris]);await db.query("insert into draft.league_roles values($1,'commissioner')",[a]);
+ const command=async(user,action,args)=>{await db.query("select set_config('request.jwt.claim.sub',$1,false)",[user]);return (await db.query('select public.trade_command($1,$2,$3) r',[uuid(),action,args])).rows[0].r;};
+ const pick=async(year,round)=>(await db.query('select * from trading.picks where year=$1 and round=$2 and original_owner_id=$3',[year,round,doug])).rows[0];
+ const p28=await pick(2028,1),p27=await pick(2027,1);
+ const accepted=await command(a,'propose',{recipient_id:chris,assets:[{from_owner_id:doug,pick_id:p28.id}]});await command(b,'accept',{trade_id:accepted.trade_id,revision:accepted.revision});
+ const pending=await command(a,'propose',{recipient_id:chris,assets:[{from_owner_id:doug,pick_id:p27.id}]});
+ const before=(await db.query('select * from trading.pick_history order by id')).rows;
+ await db.exec(await readFile(new URL(target,dir),'utf8'));
+ const policy=JSON.parse(await readFile(new URL('../../web/data/rookie-draft-policy.json',import.meta.url),'utf8'));
+ assert.equal((await db.query("select trading.first_rookie_pick_year('2026-11-03') y")).rows[0].y,policy.first_annual_draft_year);
+ assert.equal((await db.query("select trading.first_rookie_pick_year('2027-01-01') y")).rows[0].y,2028);
+ assert.equal((await db.query("select trading.first_rookie_pick_year('2028-01-01') y")).rows[0].y,2029);
+ const catalogue=(await db.query('select public.rookie_pick_ownership() r')).rows[0].r;
+ assert.deepEqual(catalogue.years,[2028,2029]);assert.equal(catalogue.ledger_ready,true);assert.equal(catalogue.picks.length,owners.length*20);
+ assert.equal(catalogue.picks.find(p=>p.id===p28.id).owner_id,chris);assert.equal(catalogue.picks.some(p=>p.year===2027),false);
+ assert.equal((await pick(2027,1)).id,p27.id);assert.equal((await db.query('select status from trading.trades where id=$1',[pending.trade_id])).rows[0].status,'invalidated');
+ assert.deepEqual((await db.query('select * from trading.pick_history order by id')).rows,before);
+ await assert.rejects(()=>command(a,'propose',{recipient_id:chris,assets:[{from_owner_id:doug,pick_id:p27.id}]}),/next two/);
+ await db.query("select set_config('request.jwt.claim.sub',$1,false)",[a]);const roster=(await db.query('select public.trade_rosters() r')).rows[0].r;
+ assert.deepEqual([...new Set(roster.picks.map(p=>p.year))].sort(),[2028,2029]);
+ const p29=await pick(2029,1);const offer=await command(a,'propose',{recipient_id:chris,assets:[{from_owner_id:doug,pick_id:p29.id}]});await command(b,'accept',{trade_id:offer.trade_id,revision:offer.revision});
+ await db.query('select trading.seed_picks(2029)');assert.equal((await pick(2029,1)).owner_id,chris);
+ const snapshots=['NFL','MLB','NBA','EPL','PGA'].map(sport=>({sport,league:'rookie-'+sport,observed:new Date().toISOString(),rosters:owners.map(o=>({owner:o.slug,players:[]}))}));await db.query('select trading.ingest_roster_batch($1)',[snapshots]);
+ assert.equal((await pick(2028,1)).owner_id,chris);assert.equal((await pick(2029,1)).owner_id,chris);
+ await db.exec('set role anon');assert.deepEqual((await db.query('select public.rookie_pick_ownership() r')).rows[0].r.years,[2028,2029]);await db.exec('reset role');
+ console.log('PASS retirement without deletion/relabeling, unchanged 2028 IDs/ownership/history, 2029 seed/retry/trading, closed 2027 proposals, rejected retired picks, public/member parity and calendar/config parity.');
+}finally{await db.close();}
