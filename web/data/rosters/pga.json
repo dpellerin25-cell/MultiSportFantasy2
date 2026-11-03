@@ -1,197 +1,76 @@
 {
   "sport": "PGA",
   "league_id": "xa7tza2hmthqz8bo",
-  "fetch_started_at": "2026-11-03T16:52:14.925400+00:00",
-  "updated_at": "2026-11-03T16:52:15.921015+00:00",
+  "fetch_started_at": "2026-11-03T19:36:20.680567+00:00",
+  "updated_at": "2026-11-03T19:36:21.218519+00:00",
   "team_count": 11,
-  "total_players": 11,
+  "total_players": 0,
   "rosters": [
     {
       "owner": "Chris",
       "team_id": "plyo3at2mtj6q46k",
-      "player_count": 1,
-      "players": [
-        {
-          "player_id": null,
-          "name": null,
-          "position": null,
-          "pro_team": null,
-          "pro_team_name": null,
-          "status_id": "y",
-          "roster_position_id": null,
-          "headshot_url": null
-        }
-      ]
+      "player_count": 0,
+      "players": []
     },
     {
       "owner": "Ryan",
       "team_id": "w3mbfb09mtj6q46k",
-      "player_count": 1,
-      "players": [
-        {
-          "player_id": null,
-          "name": null,
-          "position": null,
-          "pro_team": null,
-          "pro_team_name": null,
-          "status_id": "y",
-          "roster_position_id": null,
-          "headshot_url": null
-        }
-      ]
+      "player_count": 0,
+      "players": []
     },
     {
       "owner": "Jack",
       "team_id": "tsbwv11smtj6q46j",
-      "player_count": 1,
-      "players": [
-        {
-          "player_id": null,
-          "name": null,
-          "position": null,
-          "pro_team": null,
-          "pro_team_name": null,
-          "status_id": "y",
-          "roster_position_id": null,
-          "headshot_url": null
-        }
-      ]
+      "player_count": 0,
+      "players": []
     },
     {
       "owner": "Brendan",
       "team_id": "427i3hphmtj6q46k",
-      "player_count": 1,
-      "players": [
-        {
-          "player_id": null,
-          "name": null,
-          "position": null,
-          "pro_team": null,
-          "pro_team_name": null,
-          "status_id": "y",
-          "roster_position_id": null,
-          "headshot_url": null
-        }
-      ]
+      "player_count": 0,
+      "players": []
     },
     {
       "owner": "Hatch",
       "team_id": "flahplbgmtj6q46k",
-      "player_count": 1,
-      "players": [
-        {
-          "player_id": null,
-          "name": null,
-          "position": null,
-          "pro_team": null,
-          "pro_team_name": null,
-          "status_id": "y",
-          "roster_position_id": null,
-          "headshot_url": null
-        }
-      ]
+      "player_count": 0,
+      "players": []
     },
     {
       "owner": "Jacob",
       "team_id": "9099fo49mtj6q46j",
-      "player_count": 1,
-      "players": [
-        {
-          "player_id": null,
-          "name": null,
-          "position": null,
-          "pro_team": null,
-          "pro_team_name": null,
-          "status_id": "y",
-          "roster_position_id": null,
-          "headshot_url": null
-        }
-      ]
+      "player_count": 0,
+      "players": []
     },
     {
       "owner": "Doug",
       "team_id": "trhdyd34mthqz8ng",
-      "player_count": 1,
-      "players": [
-        {
-          "player_id": null,
-          "name": null,
-          "position": null,
-          "pro_team": null,
-          "pro_team_name": null,
-          "status_id": "y",
-          "roster_position_id": null,
-          "headshot_url": null
-        }
-      ]
+      "player_count": 0,
+      "players": []
     },
     {
       "owner": "Nik",
       "team_id": "ojnvnzywmtj6q46k",
-      "player_count": 1,
-      "players": [
-        {
-          "player_id": null,
-          "name": null,
-          "position": null,
-          "pro_team": null,
-          "pro_team_name": null,
-          "status_id": "y",
-          "roster_position_id": null,
-          "headshot_url": null
-        }
-      ]
+      "player_count": 0,
+      "players": []
     },
     {
       "owner": "John",
       "team_id": "zcomnpjymvfvmm09",
-      "player_count": 1,
-      "players": [
-        {
-          "player_id": null,
-          "name": null,
-          "position": null,
-          "pro_team": null,
-          "pro_team_name": null,
-          "status_id": "y",
-          "roster_position_id": null,
-          "headshot_url": null
-        }
-      ]
+      "player_count": 0,
+      "players": []
     },
     {
       "owner": "Tucker",
       "team_id": "y4qgi9k9mtj6q46e",
-      "player_count": 1,
-      "players": [
-        {
-          "player_id": null,
-          "name": null,
-          "position": null,
-          "pro_team": null,
-          "pro_team_name": null,
-          "status_id": "y",
-          "roster_position_id": null,
-          "headshot_url": null
-        }
-      ]
+      "player_count": 0,
+      "players": []
     },
     {
       "owner": "Billy",
       "team_id": "b012611tmvfvmm3w",
-      "player_count": 1,
-      "players": [
-        {
-          "player_id": null,
-          "name": null,
-          "position": null,
-          "pro_team": null,
-          "pro_team_name": null,
-          "status_id": "y",
-          "roster_position_id": null,
-          "headshot_url": null
-        }
-      ]
+      "player_count": 0,
+      "players": []
     }
   ]
 }
