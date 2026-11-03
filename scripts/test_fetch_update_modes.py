@@ -55,6 +55,22 @@ class UpdateModesTest(unittest.TestCase):
         ]}]})
         self.assertEqual(players[0]["player_id"], "001")
 
+    def test_empty_team_status_y_pattern(self):
+        # Reconstructed input from the user's normalized empty-team output;
+        # not a raw response capture. All exported player fields were null.
+        scorer = dict.fromkeys(("scorerId", "name", "posShortNames",
+                               "teamShortName", "teamName", "headshotUrl"))
+        empty = {"statusId": "y", "posId": None, "scorer": scorer}
+        data = {"tables": [{"rows": [empty]}, {"rows": [empty]}]}
+        self.assertEqual(fetch.parse_roster(data), [])
+        real = {"statusId": "y", "scorer": {"scorerId": "001", "name": "Player"}}
+        self.assertEqual(len(fetch.parse_roster({"tables": [{"rows": [empty, real]}]})), 1)
+        for changed in ({**empty, "statusId": "1"},
+                        {**empty, "posId": "100"},
+                        {**empty, "scorer": {**scorer, "name": "Player"}}):
+            with self.assertRaises(ValueError):
+                fetch.parse_roster({"tables": [{"rows": [changed]}]})
+
     def run_mode(self, mode):
         with patch.object(fetch, 'create_session'), patch.object(fetch, 'fetch_league', return_value={}), patch.object(fetch, 'save_league_json') as standings, patch.object(fetch, 'fetch_all_rosters', return_value=[]) as read_rosters, patch.object(fetch, 'save_roster_json') as rosters, contextlib.redirect_stdout(io.StringIO()):
             fetch.main(['--only', mode])
