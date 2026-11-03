@@ -3,8 +3,13 @@ import {randomUUID} from 'node:crypto';
 import {readFile,readdir} from 'node:fs/promises';
 import {PGlite} from '@electric-sql/pglite';
 import {FROM,emailConfig,notificationPayload,deliverQueue} from './trade-email.mjs';
+import {previewQueue,suppressionPlan} from './notification-admin.mjs';
 const env={TRADE_EMAIL_MODE:'test',TRADE_EMAIL_NOT_BEFORE:'2020-01-01T00:00:00Z',TRADE_EMAIL_SITE_URL:'https://example.com',TRADE_EMAIL_TEST_RECIPIENT:'doug@example.com',TRADE_ROSTER_PROJECT_REF:'tgvuntuhdqucazpoxrrg'};
 const config=emailConfig(env);
+const live=emailConfig({...env,TRADE_EMAIL_MODE:'live',TRADE_EMAIL_LIVE_CONFIRM:`LIVE_EMAIL:${env.TRADE_ROSTER_PROJECT_REF}`});
+assert.equal(live.mode,'live');
+assert.throws(()=>emailConfig({...env,TRADE_EMAIL_MODE:'live',TRADE_EMAIL_LIVE_CONFIRM:'wrong'}));
+assert.throws(()=>emailConfig({...env,TRADE_EMAIL_MODE:'live',TRADE_ROSTER_PROJECT_REF:'other',TRADE_EMAIL_LIVE_CONFIRM:'LIVE_EMAIL:other'}));
 for(const patch of [{TRADE_EMAIL_MODE:'live'},{TRADE_EMAIL_NOT_BEFORE:'bad'},{TRADE_EMAIL_SITE_URL:'http://example.com'},{TRADE_EMAIL_TEST_RECIPIENT:''}])assert.throws(()=>emailConfig({...env,...patch}));
 for(const kind of ['proposal','counter','acceptance','decline']){
  const p=notificationPayload({kind,email:'doug@example.com',email_confirmed_at:true,proposer:'<Doug>',recipient:'Chris',assets:[{from_name:'Doug',to_name:'Chris',label:'2027 pick & player'}]},config);
@@ -103,5 +108,49 @@ try{
  await q('begin');await batch(81);await q('rollback');
  assert.equal((await q('select count(*)::int n from trading.roster_limit_alerts where resolved_at is null'))[0].n,0);
  console.log('PASS 80/81 boundary, one alert per violation, fresh alert after correction, corrected pending alert suppression and private state');
+
+ await q('insert into draft.league_roles values($1,\'commissioner\')',[user]);
+ const cleanup=await fixture('proposal','private message must not appear');
+ const plan={notification_ids:[cleanup],reason:'Doug approved removal of obsolete rehearsal notification'};
+ const before=await q('select * from trading.notifications order by id');
+ const queue=await previewQueue(db);
+ assert.ok(!JSON.stringify(queue).includes('private message'));
+ assert.ok(!JSON.stringify(queue).includes('@example.com'));
+ assert.deepEqual(await q('select * from trading.notifications order by id'),before);
+ const preview=await suppressionPlan(db,plan);
+ assert.equal(preview.applied,false);
+ assert.equal((await q('select count(*)::int n from trading.notification_suppressions'))[0].n,0);
+ const failure={query:async(sql,args)=>{
+  if(sql.startsWith('update trading.notifications set status=')&&sql.includes('administratively_suppressed'))throw Error('Synthetic failure after audit insert');
+  return db.query(sql,args);
+ }};
+ await assert.rejects(()=>suppressionPlan(failure,plan,{apply:true,approval:preview.approval_hash}));
+ assert.equal((await q('select count(*)::int n from trading.notification_suppressions'))[0].n,0);
+ assert.deepEqual(await q('select * from trading.notifications order by id'),before);
+ await assert.rejects(()=>suppressionPlan(db,{...plan,notification_ids:[cleanup,id]}));
+ await q('update trading.notifications set attempts=1 where id=$1',[cleanup]);
+ await assert.rejects(()=>suppressionPlan(db,plan,{apply:true,approval:preview.approval_hash}),/Queue changed/);
+ const fresh=await suppressionPlan(db,plan);
+ assert.equal((await suppressionPlan(db,plan,{apply:true,approval:fresh.approval_hash})).applied,true);
+ assert.equal((await suppressionPlan(db,plan,{apply:true,approval:fresh.approval_hash})).already_applied,true);
+ await assert.rejects(()=>suppressionPlan(db,{...plan,reason:'Changed approval reason'},{apply:true,approval:fresh.approval_hash}));
+ await assert.rejects(()=>suppressionPlan(db,{...plan,notification_ids:[id]}),/Only unsuppressed/);
+ assert.equal((await q('select status from trading.notifications where id=$1',[id]))[0].status,'sent');
+ await assert.rejects(()=>q('delete from trading.notification_suppressions'));
+ for(const role of ['anon','authenticated']){
+  await db.exec(`set role ${role}`);await assert.rejects(()=>q('select * from trading.notification_suppressions'));await db.exec('reset role');
+ }
+ // Even accidental requeue cannot resend a permanently suppressed message.
+ await q("update trading.notifications set status='pending',next_attempt_at=now() where id=$1",[cleanup]);
+ const callCount=calls.length;
+ await deliverQueue(db,{...live},opts);
+ assert.equal(calls.length,callCount);
+ // A previously frozen test email must never become a live send on mode change.
+ const frozenTest=await fixture();
+ await q('update trading.notifications set delivery_payload=$2 where id=$1',[frozenTest,JSON.stringify(notificationPayload({kind:'proposal',email:'new@example.com',email_confirmed_at:true,proposer:'Chris',recipient:'Doug'},config))]);
+ await deliverQueue(db,live,opts);
+ assert.equal((await q('select last_error from trading.notifications where id=$1',[frozenTest]))[0].last_error,'delivery_mode_changed');
+ assert.equal(calls.length,callCount);
+ console.log('PASS explicit live opt-in, read-only private queue preview, stale approval rejection, audited suppression/retry, sent preservation, immutable/private audit, requeue exclusion and frozen test/live separation');
 
 }finally{await db.close();}

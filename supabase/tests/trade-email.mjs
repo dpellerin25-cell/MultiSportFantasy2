@@ -11,8 +11,11 @@ export function emailConfig(env){
   assert.ok(site.protocol==='https:'&&!site.username&&!site.password&&!site.search&&!site.hash&&site.pathname==='/','Use the HTTPS website origin');
   const recipient=env.TRADE_EMAIL_TEST_RECIPIENT?.trim().toLowerCase();
   if(env.TRADE_EMAIL_MODE==='test')assert.ok(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient??''),'Configure the test recipient');
-  // Test projects must never broadcast to every rehearsal account.
-  if(env.TRADE_ROSTER_PROJECT_REF==='tgvuntuhdqucazpoxrrg')assert.equal(env.TRADE_EMAIL_MODE,'test','Keep the Supabase test project in test email mode');
+  // Promoting the existing project must be explicit; changing mode alone is insufficient.
+  if(env.TRADE_EMAIL_MODE==='live'){
+    assert.equal(env.TRADE_ROSTER_PROJECT_REF,'tgvuntuhdqucazpoxrrg','Unapproved production email project');
+    assert.equal(env.TRADE_EMAIL_LIVE_CONFIRM,`LIVE_EMAIL:${env.TRADE_ROSTER_PROJECT_REF}`,'Explicit production email approval required');
+  }
   return {mode:env.TRADE_EMAIL_MODE,since:since.toISOString(),recipient,site:site.origin};
 }
 export function notificationPayload(row,config){
@@ -67,6 +70,7 @@ export async function deliverQueue(db,config,{send=false,key,fetcher=fetch}={}){
       join auth.users u on u.id=n.recipient_user_id
       left join draft.owners op on op.id=t.proposer_id left join draft.owners ot on ot.id=t.recipient_id
       where n.status in ('pending','failed','sending') and n.next_attempt_at<=clock_timestamp()
+        and not exists(select 1 from trading.notification_suppressions s where s.notification_id=n.id)
         and coalesce(e.occurred_at,ra.opened_at) >= $1
         and ($2::text is null or lower(u.email)=$2)
       order by n.next_attempt_at,n.id limit 20`,[config.since,config.mode==='test'?config.recipient:null]);
@@ -78,6 +82,7 @@ export async function deliverQueue(db,config,{send=false,key,fetcher=fetch}={}){
       else if(row.retry_expired||row.attempts>=8)reason='review_required';
       else if(['proposal','counter'].includes(row.kind)&&(row.trade_status!=='proposed'||row.offer_expired))reason='superseded_offer';
       else if(row.delivery_payload&&row.delivery_payload.to[0]!==row.email)reason='recipient_changed';
+      else if(row.delivery_payload&&row.delivery_payload.subject.startsWith('[TEST] ')!==(config.mode==='test'))reason='delivery_mode_changed';
       if(reason){summary.held++;if(send)await q("update trading.notifications set status='failed',next_attempt_at='infinity',last_error=$2 where id=$1",[row.id,reason]);continue;}
       let payload;
       try{payload=row.delivery_payload??notificationPayload(row,config);}catch{summary.held++;if(send)await q("update trading.notifications set status='failed',next_attempt_at='infinity',last_error='invalid_payload' where id=$1",[row.id]);continue;}

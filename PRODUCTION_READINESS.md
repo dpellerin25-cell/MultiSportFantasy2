@@ -11,7 +11,7 @@
 | Approved configuration has 11 owners including Billy and John | `web/data/league-settings.json` |
 | Current cap/startup/annual rules are 80/80/10 | `web/data/roster-policy.json`; additive versioned policy migration |
 | Draft, trade, public-pick and account clients require the existing test project | `web/src/lib/draft-model.ts`, `web/src/components/Trades.tsx`, `web/src/lib/public-picks.ts`, `web/src/lib/league-settings-client.ts` |
-| Trade notification delivery forces this project into test mode | `supabase/tests/trade-email.mjs`, `emailSettings`: current project cannot use `TRADE_EMAIL_MODE=live` |
+| Trade notification live delivery requires explicit project approval | `supabase/tests/trade-email.mjs`: `TRADE_EMAIL_MODE=live` also requires `TRADE_EMAIL_LIVE_CONFIRM=LIVE_EMAIL:tgvuntuhdqucazpoxrrg`; delivery remains disabled until configured |
 | Hosted validation utilities deliberately restrict their target | `supabase/tests/hosted-validation.mjs`; keep destructive/fixture test guards separate from future production configuration |
 | Scoring publication is separate from standings | `SCHEDULED_SCORING.md`; publication defaults off and historical test sources cannot be published |
 | Scoring collection uses approved season sources, not current roster ownership | Scheduled-scoring implementation/documentation; source configuration must be verified for all owners |
@@ -20,7 +20,7 @@
 
 ## Needs attention before production
 
-1. **Choose the permanent project and implement explicit production targeting.** Keeping the present project requires a reviewed change to the email test-mode restriction plus fixture/delivery cutoff review. Moving projects requires updating the four website project guards, all runtime credentials/settings, migrations and approved state, and an explicit Auth/account-link migration plan. Never simply remove test protections globally. Existing test runners should stay restricted.
+1. **Prepare the present project for permanent use.** Explicit email targeting, read-only queue review and audited suppression are implemented locally; see `TRADE_EMAILS.md` for migration, cutoff and enablement steps. Hosted delivery is not yet approved or enabled by this work. Moving projects would still require updating website guards, runtime credentials/settings, migrations/state and Auth/account links. Existing test runners remain restricted.
 2. **Inventory real versus rehearsal data.** Drafts/trades do not have a universally reliable test flag. The report exposes counts and draft IDs but deliberately does not classify fixtures from names. Doug must identify the real startup draft and any historical test activity. Preserve audit history and existing player/pick ownership; do not delete data merely to obtain a clean report.
 3. **Review pending email queue before live delivery.** Confirm intended recipients and `TRADE_EMAIL_NOT_BEFORE`. Authentication SMTP success does not establish trade/overage delivery readiness.
 4. **Approve actual championship scoring sources as leagues become available.** Future missing sources are a launch checklist item, not a reason to invent metadata. PGA needs verified periods. Missing player data stays pending. Connecting penalty-adjusted totals to published standings remains a separate task/approval.
