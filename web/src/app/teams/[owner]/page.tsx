@@ -7,6 +7,7 @@ import { CURRENT_SEASON, getSeason, seasons } from "@/config/seasons";
 import SeasonSelector from "@/components/SeasonSelector";
 import { getOverallStandings } from "@/lib/overallStandings";
 import { getOwnerRosterCounts, getOwnerRosterPlayers } from "@/lib/ownerRosters";
+import {ProspectProvider,OwnerCapCount,OwnerProspects} from '@/components/Prospects';
 
 const sports = ["NFL", "MLB", "NBA", "EPL", "PGA"] as const;
 
@@ -71,11 +72,12 @@ export default async function TeamPage({
           <div className="rounded-xl border border-blue-100 bg-white p-5 shadow-sm sm:p-6">
             <dt className="text-sm font-semibold"><Link href="/rosters" className="inline-flex min-h-11 items-center rounded text-blue-800 underline underline-offset-4 hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-800">Full Roster</Link></dt>
             <dd className={`mt-2 text-4xl font-bold ${totalPlayers > ROSTER_LIMIT ? "text-red-800" : "text-blue-900"}`}>
-              {isCurrentSeason ? totalPlayers : "—"} {isCurrentSeason && <span className="text-base font-semibold">/ {ROSTER_LIMIT} players</span>}
+              {isCurrentSeason ? <ProspectProvider><OwnerCapCount owner={team.owner}/></ProspectProvider> : "—"}
             </dd>
-            <dd className="mt-3 text-sm text-slate-600">{isCurrentSeason ? "Across all sports, from the latest roster update." : "Historical roster counts have not been archived."}</dd>
+            <dd className="mt-3 text-sm text-slate-600">{isCurrentSeason ? "Across all sports, including commissioner-added prospects." : "Historical roster counts have not been archived."}</dd>
           </div>
         </dl>
+        {isCurrentSeason&&<ProspectProvider><OwnerProspects owner={team.owner}/></ProspectProvider>}
 
         <section aria-labelledby="sport-results">
           <h2 id="sport-results" className="mb-4 text-xl font-bold">Sport results</h2>

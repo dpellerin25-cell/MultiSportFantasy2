@@ -3,6 +3,7 @@
 import { ROSTER_LIMIT } from "@/lib/roster-policy";
 
 import { useState, type ReactNode } from "react";
+import {OwnerProspects,useOwnerProspects} from './Prospects';
 
 export type RosterPlayer = {
   player_id: string | null;
@@ -51,11 +52,13 @@ export default function RosterCard({
   action,
 }: RosterCardProps) {
   const [expanded, setExpanded] = useState(false);
+  const prospectState=useOwnerProspects(owner);
 
-  const totalPlayers = sports.reduce(
+  const fantraxPlayers = sports.reduce(
     (total, sport) => total + sport.players.length,
     0
   );
+  const totalPlayers=prospectState.data?.sports_observed===5&&prospectState.owner?prospectState.owner.total:fantraxPlayers+prospectState.prospects.length;
 
   return (
     <div className="overflow-hidden rounded-xl border border-blue-100 bg-white shadow-sm">
@@ -74,6 +77,7 @@ export default function RosterCard({
           <p className="mt-1 text-sm font-medium text-slate-700">
             {expanded ? "Hide roster" : "View roster"}
           </p>
+          {!prospectState.data&&<p className="text-xs text-amber-800">{prospectState.error?'Cap count awaiting prospect data':'Loading prospect count…'}</p>}
         </div>
 
         <div className="flex items-center gap-3">
@@ -160,6 +164,7 @@ export default function RosterCard({
               )}
             </section>
           ))}
+          <OwnerProspects owner={owner}/>
           {children}
         </div>
       )}

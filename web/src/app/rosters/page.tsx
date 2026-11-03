@@ -5,6 +5,7 @@ import MainNavigation from "@/components/MainNavigation";
 import {Trades,ProposeTradeButton} from "@/components/Trades";
 import { connection } from "next/server";
 import { RookieDraftProvider, OwnerRookiePicks } from "@/components/RookieDraft";
+import {ProspectProvider,ProspectControls} from '@/components/Prospects';
 
 import nfl from "../../../data/rosters/nfl.json";
 import mlb from "../../../data/rosters/mlb.json";
@@ -167,6 +168,8 @@ export default async function RostersPage() {
         </div>
 
         {settings.owners.some(o=>leagues.some(l=>!l.data.rosters.some(r=>r.owner===o.name)))&&<p className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">Some owners are awaiting a fresh Fantrax roster sync. Empty rosters may not yet reflect their Fantrax teams.</p>}
+        <ProspectProvider>
+        <ProspectControls />
         <RookieDraftProvider>
         <Trades rosters={owners}>
         <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
@@ -184,6 +187,7 @@ export default async function RostersPage() {
         </div>
         </Trades>
         </RookieDraftProvider>
+        </ProspectProvider>
       </div>
     </main>
   );
