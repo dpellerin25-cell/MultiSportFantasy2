@@ -181,7 +181,7 @@ export default async function Home({
           </p>
           <p className="mt-2 text-sm text-slate-600">
             Standings last updated: {lastUpdated ? <time dateTime={lastUpdated.toISOString()}>{lastUpdated.toLocaleString("en-US", {timeZone: "America/New_York", dateStyle: "medium", timeStyle: "short"})} Eastern</time> : "Not yet available"}.
-            {selectedYear === CURRENT_SEASON && " Scheduled updates: Tuesdays at 4 a.m. Eastern. Rosters update daily."}
+            {selectedYear === CURRENT_SEASON && " Scheduled updates: Tuesdays at 1:16 a.m. Eastern. Rosters update daily."}
           </p>
 
           {currentSeason && (

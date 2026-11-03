@@ -2,9 +2,7 @@ name: Collect player scoring
 on:
   workflow_dispatch:
   schedule:
-    - cron: '30 5,11,17,23 * * *'
-      timezone: America/New_York
-    - cron: '0 1 * * 2'
+    - cron: '33 1 * * *'
       timezone: America/New_York
 permissions:
   contents: read

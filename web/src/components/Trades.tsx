@@ -155,7 +155,7 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
     {data&&<section role="tabpanel" id="trade-panel-accepted" aria-labelledby="trade-tab-accepted" hidden={tradeTab!=="accepted"} tabIndex={0} className="pt-4">
       <h3 className="sr-only">League Pending Trades</h3>
       {acceptedTrades.length===0&&<p className="text-sm text-slate-600">No accepted trades awaiting transfer or recently completed trades.</p>}
-      <p className="mt-2 text-sm text-slate-600">Website rosters automatically update every morning at 4 a.m. Eastern. If a trade needs to be pushed through right away, contact Doug.</p>
+      <p className="mt-2 text-sm text-slate-600">Website rosters automatically update every morning at 1:09 a.m. Eastern. If a trade needs to be pushed through right away, contact Doug.</p>
       <div className="mt-3 space-y-3">{acceptedTrades.map(o=><article key={o.id} className="rounded-lg border border-blue-200 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-semibold">{ownerName(o.proposer_id)} ↔ {ownerName(o.recipient_id)}</p><span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">{o.status==="completed"?"Trade Complete":o.status==="accepted"?(o.corrected_at?"Reversal awaiting Fantrax":"Accepted · Awaiting Fantrax"):o.recipient_id===data.viewer_owner_id?"Received proposal":"Sent proposal"}</span></div>
         <ul className="mt-3 space-y-2 text-sm text-slate-700">{o.assets.map((a,i)=><li key={i}>{ownerName(o.corrected_at?a.to_owner_id:a.from_owner_id)} sends <strong>{assets.find(x=>x.id===(a.player_id??a.pick_id))?.label??"Previously recorded asset"}</strong> to {ownerName(o.corrected_at?a.from_owner_id:a.to_owner_id)}</li>)}</ul>

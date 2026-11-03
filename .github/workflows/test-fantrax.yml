@@ -12,9 +12,9 @@ on:
           - standings
 
   schedule:
-    - cron: "0 4 * * *"
+    - cron: "9 1 * * *"
       timezone: "America/New_York"
-    - cron: "0 4 * * 2"
+    - cron: "16 1 * * 2"
       timezone: "America/New_York"
 
 concurrency:
@@ -28,7 +28,7 @@ jobs:
   update-standings:
     runs-on: ubuntu-latest
     env:
-      UPDATE_DATA: ${{ github.event_name == 'workflow_dispatch' && inputs.data || (github.event.schedule == '0 4 * * 2' && 'standings' || 'rosters') }}
+      UPDATE_DATA: ${{ github.event_name == 'workflow_dispatch' && inputs.data || (github.event.schedule == '16 1 * * 2' && 'standings' || 'rosters') }}
 
     steps:
       - name: Get repository code
