@@ -54,7 +54,7 @@ function TradeWorkspace({client,rosters,children}:{client:SupabaseClient;rosters
     let active=true,inFlight=false;
     const load=async()=>{if(inFlight||sending.current||pending.current||responsePending.current)return;inFlight=true;const version=++loadVersion.current;try{const [r,l]=await Promise.all([client.rpc("trade_rosters"),client.rpc("trade_list")]);if(!active||sending.current||version!==loadVersion.current)return;if(r.error||l.error){setError("Could not load trade data. The list will retry automatically.");return;}setData(r.data);setOffers(l.data);}catch{if(active)setError("Could not connect to trades. Please refresh.");}finally{inFlight=false;}};
     void load();const timer=setInterval(()=>{if(document.visibilityState==="visible")void load();},30000);
-    window.addEventListener("focus",load);return()=>{active=false;clearInterval(timer);window.removeEventListener("focus",load);};
+    window.addEventListener("focus",load);window.addEventListener("prospects-changed",load);return()=>{active=false;clearInterval(timer);window.removeEventListener("focus",load);window.removeEventListener("prospects-changed",load);};
   },[client]);
   const close=()=>{if(sending.current||uncertain)return;setRecipient(null);setSelection([]);setReview(false);setCounter(null);pending.current=null;setError("");};
   async function refresh(){const version=++loadVersion.current;setError("");const [r,l]=await Promise.all([client.rpc("trade_rosters"),client.rpc("trade_list")]);if(version!==loadVersion.current)return;if(r.error||l.error){setError("Could not refresh trades. Please try again.");return;}setData(r.data);setOffers(l.data);}

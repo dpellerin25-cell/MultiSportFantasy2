@@ -3,6 +3,12 @@ import assert from 'node:assert/strict';
 import {canCorrect,correctionCommand,tradeAssets,proposal,tradeWarnings,activeOffers,archivedOffers,leagueCompletedTrades,recentlyCompleted,completedTradeHours,canRespond,offerResponse,counterSelection,counterProposal} from '../src/lib/trade-model.ts';
 const data={viewer_owner_id:'doug',ledger_ready:true,owners:[{id:'doug',name:'Doug',can_receive:true},{id:'chris',name:'Chris',can_receive:true},{id:'jack',name:'Jack',can_receive:false}],
   players:[{id:'p',owner_id:'doug',name:'Player',sport:'NFL',reserved:false}],picks:[{id:'pick',owner_id:'chris',original_owner_id:'doug',year:2027,round:1}]};
+test('manual prospects count in trade projections but are not selectable trade assets',()=>{
+ const roster={...data,prospect_counts:{doug:79}};
+ assert.equal(tradeWarnings(roster,'chris',[]).length,0);
+ assert.match(tradeWarnings({...roster,prospect_counts:{doug:80}},'chris',[])[0],/81 players/);
+ assert.equal(tradeAssets(roster).length,2);
+});
 test('mixed proposal uses stable database IDs, current owners, original pick label and exact request ID',()=>{
   const assets=tradeAssets(data);assert.match(assets[1].label,/Doug/);
   const command=proposal(data,'chris',assets,'retry-id');

@@ -23,11 +23,16 @@ export function dailyCheckPlan(snapshots,finishedAt){
 export async function storeDailyChecks(db,snapshots,finishedAt){
  const plan=dailyCheckPlan(snapshots,finishedAt);if(plan.skipped)return plan;
  await db.query('select pg_advisory_xact_lock(731944,1)');
+ const prospects=(await db.query('select * from trading.prospect_checkpoint($1)',[finishedAt])).rows;
  const result=[];
  for(const slug of plan.owners){
    const owners=(await db.query('select id from draft.owners where slug=$1 and active',[slug])).rows;
    assert.equal(owners.length,1,'Active scoring owner mapping required');const owner=owners[0].id;
-   const sports=snapshots.map(s=>({sport:s.sport,count:s.rosters.find(r=>r.owner===slug).players.length,source_ref:`sha256:${hash(s)}`,observed_at:s.observed}));
+   const sports=snapshots.map(s=>{
+     const players=s.rosters.find(r=>r.owner===slug).players;
+     const extras=prospects.filter(p=>p.owner_id===owner&&p.sport===s.sport&&!players.some(x=>x.player_id===p.fantrax_id));
+     return {sport:s.sport,count:players.length+extras.length,fantrax_count:players.length,prospect_ids:extras.map(p=>p.id).sort(),source_ref:`sha256:${hash(s)}`,observed_at:s.observed};
+   });
    const body={owner_id:owner,check_date:plan.day,complete:plan.complete,timing_policy:'scheduled-observation-v2',observed_at:finishedAt,reason:'Scheduled daily roster observation at actual fetch completion time',sports};
    const req=requestId(hash({kind:'daily-scoring-count-v2',body}));
    const existing=(await db.query('select request_id,complete from scoring.roster_checks where owner_id=$1 and check_date=$2 order by revision desc limit 1',[owner,plan.day])).rows[0];
