@@ -93,7 +93,7 @@ try{
  // Isolate alert delivery from previous test notifications.
  await q("update trading.notifications set next_attempt_at='infinity' where kind<>'roster_limit'");
  assert.equal((await deliverQueue(db,{...config,recipient:'new@example.com'},opts)).sent,1);
- const mail=JSON.parse(calls.at(-1).body);assert.ok(mail.text.includes('82 players'));assert.ok(mail.text.includes('will not count toward the Pentagon Cup'));assert.ok(mail.text.includes('contact Doug'));assert.ok(mail.text.includes('4 am Eastern'));
+ const mail=JSON.parse(calls.at(-1).body);assert.ok(mail.text.includes('82 players'));assert.ok(mail.text.includes('will not count toward the Pentagon Cup'));assert.ok(mail.text.includes('contact Doug'));assert.ok(mail.text.includes('1:09 am Eastern'));
  await batch(80);await batch(81);
  assert.equal((await q('select count(*)::int n from trading.roster_limit_alerts'))[0].n,2);
  await batch(80);
