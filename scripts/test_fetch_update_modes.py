@@ -44,6 +44,17 @@ class UpdateModesTest(unittest.TestCase):
         self.assertEqual(fetch.parse_roster({"tables": [{"rows": []}]}), [])
         self.assertEqual(fetch.parse_roster({"tables": [{"rows": [{"scorer": None}]}]}), [])
 
+    def test_unidentified_roster_rows_cannot_be_published(self):
+        # Synthetic malformed rows; these are not verified Fantrax empty-slot captures.
+        for scorer in ({"posShortNames": "QB"}, {"scorerId": "abc"},
+                       {"scorerId": "", "name": ""}, "invalid"):
+            with self.assertRaisesRegex(ValueError, "Refusing to publish unknown players"):
+                fetch.parse_roster({"tables": [{"rows": [{"scorer": scorer}]}]})
+        players = fetch.parse_roster({"tables": [{"rows": [
+            {"scorer": {"scorerId": "001", "name": "Player", "posShortNames": None}}
+        ]}]})
+        self.assertEqual(players[0]["player_id"], "001")
+
     def run_mode(self, mode):
         with patch.object(fetch, 'create_session'), patch.object(fetch, 'fetch_league', return_value={}), patch.object(fetch, 'save_league_json') as standings, patch.object(fetch, 'fetch_all_rosters', return_value=[]) as read_rosters, patch.object(fetch, 'save_roster_json') as rosters, contextlib.redirect_stdout(io.StringIO()):
             fetch.main(['--only', mode])
