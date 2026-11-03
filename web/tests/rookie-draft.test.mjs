@@ -8,8 +8,8 @@ const trade = { year: 2027, round: 1, originalOwner: "Doug", from: "Doug", to: "
 
 test("each owner begins with ten distinct picks per year, for only two years", () => {
   const picks = buildRookiePicks(empty, years);
-  assert.equal(picks.length, 180);
-  assert.equal(new Set(picks.map((pick) => pick.id)).size, 180);
+  assert.equal(picks.length, DRAFT_OWNERS.length * 20);
+  assert.equal(new Set(picks.map((pick) => pick.id)).size, DRAFT_OWNERS.length * 20);
   for (const owner of DRAFT_OWNERS) for (const year of years) {
     assert.deepEqual(picks.filter((pick) => pick.owner === owner && pick.year === year).map((pick) => pick.round), [1,2,3,4,5,6,7,8,9,10]);
   }
@@ -19,7 +19,7 @@ test("a pick can be traded repeatedly without duplication or losing its origin",
   let ledger = applyTransfer(empty, trade, "one", "2026-09-20T12:00:00Z", years);
   ledger = applyTransfer(ledger, { ...trade, from: "Chris", to: "Jack" }, "two", "2026-09-20T13:00:00Z", years);
   const picks = buildRookiePicks(ledger, years);
-  assert.equal(picks.length, 180);
+  assert.equal(picks.length, DRAFT_OWNERS.length * 20);
   assert.equal(picks.find((pick) => pick.id === "2027:1:Doug").owner, "Jack");
   assert.equal(picks.filter((pick) => pick.owner === "Jack" && pick.year === 2027).length, 11);
   assert.equal(picks.filter((pick) => pick.owner === "Doug" && pick.year === 2027).length, 9);
@@ -37,7 +37,7 @@ test("invalid and stale transfers cannot change ownership", () => {
 });
 
 test("year rollover hides old picks and preserves future traded picks", () => {
-  assert.deepEqual(getDraftYears(new Date("2026-12-31T23:59:59Z")), [2027, 2028]);
+  assert.deepEqual(getDraftYears(new Date("2026-12-31T23:59:59Z")), [2028, 2029]);
   const nextYears = getDraftYears(new Date("2027-01-01T00:00:00Z"));
   assert.deepEqual(nextYears, [2028, 2029]);
   const ledger = applyTransfer(empty, { ...trade, year: 2028 }, "one", "2026-09-20T12:00:00Z", years);
