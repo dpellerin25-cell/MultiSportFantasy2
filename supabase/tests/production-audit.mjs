@@ -7,7 +7,7 @@ export const queries = {
  policy: `select roster_limit,startup_rounds,annual_rounds,effective_at from draft.roster_policy_versions where effective_at<=now() order by effective_at desc limit 1`,
  drafts: `select d.id,d.kind,d.status,d.championship_year,d.rounds,d.participant_count,d.rounds*d.participant_count planned_picks,(select count(*)::int from draft.draft_picks p where p.draft_id=d.id) stored_picks,(select count(*)::int from draft.draft_selections s where s.draft_id=d.id) selection_history,(select count(*)::int from draft.draft_pool_players p where p.draft_id=d.id) pool_players,exists(select 1 from draft.retired_rehearsals r where r.draft_id=d.id) retired from draft.drafts d order by d.created_at`,
  trades: `select status,count(*)::int records from trading.trades group by status order by status`,
- notifications: `select status,count(*)::int records,min(next_attempt_at) earliest_attempt from trading.notifications group by status order by status`,
+ notifications: `select case when s.notification_id is not null then 'suppressed' else n.status end status,count(*)::int records,min(n.next_attempt_at) earliest_attempt from trading.notifications n left join trading.notification_suppressions s on s.notification_id=n.id group by 1 order by 1`,
  picks: `select year,count(*)::int records,count(*) filter(where owner_id<>original_owner_id)::int transferred from trading.picks group by year order by year`,
  connections: `select sport,league_id,season_year,standings_league_id,standings_championship_year from trading.fantrax_state order by sport`,
  rosters: `select sport,max(observed_at) last_observation from trading.roster_snapshots group by sport order by sport`,
