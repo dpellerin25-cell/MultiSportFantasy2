@@ -1,128 +1,307 @@
 {
   "sport": "Premier League",
   "league_id": "j08ymyupmtj415q3",
-  "fetch_started_at": "2026-11-02T19:14:28.347220+00:00",
-  "updated_at": "2026-11-02T19:14:28.970289+00:00",
+  "fetch_started_at": "2026-11-03T16:52:13.590793+00:00",
+  "updated_at": "2026-11-03T16:52:14.814645+00:00",
   "team_count": 11,
-  "total_players": 5,
+  "total_players": 22,
   "rosters": [
     {
       "owner": "Jack",
       "team_id": "n1ifyr4umtug18ye",
-      "player_count": 0,
-      "players": []
+      "player_count": 2,
+      "players": [
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        },
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        }
+      ]
     },
     {
       "owner": "Chris",
       "team_id": "dxxlben8mtug18ye",
-      "player_count": 1,
+      "player_count": 2,
       "players": [
         {
-          "player_id": "061vq",
-          "name": "Erling Haaland",
-          "position": "F",
-          "pro_team": "MCI",
-          "pro_team_name": "Manchester City",
-          "status_id": "1",
-          "roster_position_id": "701",
-          "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Manchester_City.png"
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        },
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
         }
       ]
     },
     {
       "owner": "John",
       "team_id": "b7ryxgmxmux6wud7",
-      "player_count": 0,
-      "players": []
+      "player_count": 2,
+      "players": [
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        },
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        }
+      ]
     },
     {
       "owner": "Doug",
       "team_id": "y00vzeaumtj4175c",
-      "player_count": 4,
+      "player_count": 2,
       "players": [
         {
-          "player_id": "04sjt",
-          "name": "Alisson Becker",
-          "position": "G",
-          "pro_team": "LIV",
-          "pro_team_name": "Liverpool",
-          "status_id": "1",
-          "roster_position_id": "704",
-          "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Liverpool.png"
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
         },
         {
-          "player_id": "07a45",
-          "name": "Mack Allan",
-          "position": "G",
-          "pro_team": "BOU",
-          "pro_team_name": "Bournemouth",
-          "status_id": "2",
-          "roster_position_id": "704",
-          "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Bournemouth.png"
-        },
-        {
-          "player_id": "078fx",
-          "name": "Owen Asemota",
-          "position": "G",
-          "pro_team": "AVL",
-          "pro_team_name": "Aston Villa",
-          "status_id": "2",
-          "roster_position_id": "704",
-          "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Aston_Villa.png"
-        },
-        {
-          "player_id": "05r9b",
-          "name": "Martin Odegaard",
-          "position": "M",
-          "pro_team": "ARS",
-          "pro_team_name": "Arsenal",
-          "status_id": "1",
-          "roster_position_id": "702",
-          "headshot_url": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Arsenal.png"
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
         }
       ]
     },
     {
       "owner": "Tucker",
       "team_id": "yuhhd6skmtug18ye",
-      "player_count": 0,
-      "players": []
+      "player_count": 2,
+      "players": [
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        },
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        }
+      ]
     },
     {
       "owner": "Ryan",
       "team_id": "hfwwgo47mtug18ye",
-      "player_count": 0,
-      "players": []
+      "player_count": 2,
+      "players": [
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        },
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        }
+      ]
     },
     {
       "owner": "Brendan",
       "team_id": "288rr3ycmtug18ye",
-      "player_count": 0,
-      "players": []
+      "player_count": 2,
+      "players": [
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        },
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        }
+      ]
     },
     {
       "owner": "Hatch",
       "team_id": "e98kovyqmtug18ye",
-      "player_count": 0,
-      "players": []
+      "player_count": 2,
+      "players": [
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        },
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        }
+      ]
     },
     {
       "owner": "Billy",
       "team_id": "i81q1t2hmvfvh51m",
-      "player_count": 0,
-      "players": []
+      "player_count": 2,
+      "players": [
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        },
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        }
+      ]
     },
     {
       "owner": "Nik",
       "team_id": "kgvxraa7mtug18yf",
-      "player_count": 0,
-      "players": []
+      "player_count": 2,
+      "players": [
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        },
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        }
+      ]
     },
     {
       "owner": "Jacob",
       "team_id": "wi8jwabymtug18ye",
-      "player_count": 0,
-      "players": []
+      "player_count": 2,
+      "players": [
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        },
+        {
+          "player_id": null,
+          "name": null,
+          "position": null,
+          "pro_team": null,
+          "pro_team_name": null,
+          "status_id": "y",
+          "roster_position_id": null,
+          "headshot_url": null
+        }
+      ]
     }
   ]
 }
