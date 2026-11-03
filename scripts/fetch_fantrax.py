@@ -389,8 +389,17 @@ def parse_roster(roster_data):
             if not scorer:
                 continue
 
+            # Observed on emptied teams: status y with every exported player
+            # field and roster position absent. Do not generalize to other rows.
+            if (isinstance(scorer, dict) and row.get("statusId") == "y"
+                    and row.get("posId") is None
+                    and all(scorer.get(field) is None for field in (
+                        "scorerId", "name", "posShortNames", "teamShortName",
+                        "teamName", "headshotUrl"))):
+                continue
+
             # Do not publish unidentified rows or silently drop a potentially
-            # rostered player. Empty-slot markers need verified response evidence.
+            # rostered player outside the verified empty-row pattern.
             if not isinstance(scorer, dict) or any(
                 not isinstance(scorer.get(field), str) or not scorer[field].strip()
                 for field in ("scorerId", "name")
