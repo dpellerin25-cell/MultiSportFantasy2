@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {PGlite} from '@electric-sql/pglite';
 import {PROJECT,PREFIX,encryptBundle,decryptBundle,keyFrom,sha,objectKey,retention,inventory} from './backup-core.mjs';
-import {restoreConfig} from './backup-restore.mjs';
+import {restoreConfig,prepareEmptyRestore} from './backup-restore.mjs';
 import {r2Settings,uploadVerified} from './backup-io.mjs';
 import {backupFailureCode} from './backup-errors.mjs';
 assert.equal(backupFailureCode({stderr:'pg_restore: schema "public" already exists PRIVATE_SECRET'}),'SCHEMA_EXISTS');
@@ -23,6 +23,21 @@ assert.throws(()=>restoreConfig('postgresql://postgres:fake@127.0.0.1:5432/postg
 assert.equal(restoreConfig('postgresql://postgres:fake@127.0.0.1:5432/pentagon_restore_test','pentagon_restore_test').database,'pentagon_restore_test');
 assert.throws(()=>r2Settings({R2_ENDPOINT:'https://evil.example.com',R2_BUCKET:'pentagon-cup-backups'}));
 console.log('PASS authenticated encryption, unique nonces, wrong-key/tamper rejection and restore/R2 destination guards');
+const emptyTarget=await PGlite.create();
+try{
+ await emptyTarget.exec('create table public.keep_me(id integer)');
+ await assert.rejects(()=>prepareEmptyRestore(emptyTarget));
+ await emptyTarget.exec('drop table public.keep_me; create function public.keep_me() returns int language sql as $$select 1$$');
+ await assert.rejects(()=>prepareEmptyRestore(emptyTarget));
+ assert.equal((await emptyTarget.query('select public.keep_me() n')).rows[0].n,1);
+ await emptyTarget.exec('drop function public.keep_me(); create schema keep_me');
+ await assert.rejects(()=>prepareEmptyRestore(emptyTarget));
+ await emptyTarget.exec('drop schema keep_me');
+ await prepareEmptyRestore(emptyTarget);
+ assert.equal((await emptyTarget.query("select count(*)::int n from pg_namespace where nspname='public'")).rows[0].n,0);
+ await emptyTarget.exec('create schema public');
+ console.log('PASS fresh public schema preparation; existing tables, functions and other schemas preserved/rejected');
+}finally{await emptyTarget.close();}
 const now=new Date('2027-05-01T12:00:00Z'),objects=[];
 for(let i=0;i<100;i++){
  const date=new Date(now-i*86400000);objects.push({Key:objectKey('daily',randomUUID(),date),LastModified:date.toISOString(),Size:100});
