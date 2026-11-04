@@ -11,12 +11,19 @@ export function restoreConfig(value,confirm){
  const database=u.pathname.slice(1);assert.match(database,/^pentagon_restore_[a-z0-9_]+$/);assert.equal(confirm,database);
  return {host:'127.0.0.1',port:Number(u.port),database,user:'postgres',password:decodeURIComponent(u.password),ssl:false};
 }
+export async function prepareEmptyRestore(db){
+ const existing=(await db.query("select nspname from pg_namespace where nspname not in ('public','information_schema') and nspname not like 'pg_%'")).rows;
+ assert.equal(existing.length,0,'Restore target must be empty');
+ assert.equal((await db.query("select count(*)::int n from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public'")).rows[0].n,0,'Restore target public schema must be empty');
+ // A fresh PostgreSQL database includes public, but the archive creates it.
+ // RESTRICT also refuses functions/types or other dependencies that the table
+ // inventory does not see. Never use CASCADE or a broad pg_restore --clean.
+ await db.query('drop schema if exists public restrict');
+}
 export async function restoreDisposable(bundle,config,dir){
  const db=new pg.Client(config);await db.connect();
  try{
-  const existing=(await db.query("select nspname from pg_namespace where nspname not in ('public','information_schema') and nspname not like 'pg_%'")).rows;
-  assert.equal(existing.length,0,'Restore target must be empty');
-  assert.equal((await db.query("select count(*)::int n from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public'")).rows[0].n,0,'Restore target public schema must be empty');
+  await prepareEmptyRestore(db);
   // Rehearsal roles cannot log in. Hosted role passwords/config must be recreated separately.
   for(const role of bundle.roles){
    if(!(await db.query('select 1 from pg_roles where rolname=$1',[role.rolname])).rows.length)await db.query(`create role ${identifier(role.rolname)} nologin`);
