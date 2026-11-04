@@ -10,6 +10,7 @@ import {exportDatabase} from './backup-export.mjs';
 import {restoreDisposable} from './backup-restore.mjs';
 import {encryptBundle,decryptBundle} from './backup-core.mjs';
 import {backupFailureCode} from './backup-errors.mjs';
+import {readyPostgres} from './backup-postgres-ready.mjs';
 const docker=(args,env=process.env)=>{
  const r=spawnSync('docker',args,{env,encoding:'utf8',timeout:300000,windowsHide:true});
  if(r.error||r.status!==0){const error=Error('Docker operation failed');error.code=backupFailureCode(r.error??r);throw error;}return r.stdout.trim();
@@ -24,13 +25,12 @@ try{
  docker(['run','-d','--name',container,'-e','POSTGRES_PASSWORD','-p','127.0.0.1::5432','postgres:17-alpine'],{...process.env,POSTGRES_PASSWORD:password});
  console.log('Disposable container: '+container);
  step('PostgreSQL startup');
- let ready=false;for(let i=0;i<45;i++){try{docker(['exec',container,'pg_isready','-U','postgres']);ready=true;break;}catch{await new Promise(r=>setTimeout(r,1000));}}
- assert.ok(ready);
  const port=JSON.parse(docker(['inspect',container]))[0].NetworkSettings.Ports['5432/tcp'][0];assert.equal(port.HostIp,'127.0.0.1');
  const base={host:'127.0.0.1',port:Number(port.HostPort),user:'postgres',password,ssl:false};
+ const admin=await readyPostgres({...base,database:'postgres'});
  step('creating empty source and restore databases');
- const admin=new pg.Client({...base,database:'postgres'});await admin.connect();
- await admin.query('create database pentagon_backup_source');await admin.query('create database pentagon_restore_test');await admin.end();
+ try{await admin.query('create database pentagon_backup_source');await admin.query('create database pentagon_restore_test');}
+ finally{await admin.end();}
  // Use the container's version-matched pg_dump/pg_restore via isolated wrappers.
  step('preparing PostgreSQL tool wrappers');
  for(const tool of ['pg_dump','pg_restore']){

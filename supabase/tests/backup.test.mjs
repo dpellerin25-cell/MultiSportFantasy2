@@ -8,6 +8,22 @@ import {PROJECT,PREFIX,encryptBundle,decryptBundle,keyFrom,sha,objectKey,retenti
 import {restoreConfig,prepareEmptyRestore} from './backup-restore.mjs';
 import {r2Settings,uploadVerified} from './backup-io.mjs';
 import {backupFailureCode} from './backup-errors.mjs';
+import {readyPostgres} from './backup-postgres-ready.mjs';
+let probes=0,closed=0,queries=0;
+class StartingClient {
+ constructor(config){assert.equal(config.host,'127.0.0.1');this.attempt=++probes;}
+ on(){}
+ async connect(){if(this.attempt===1)throw Object.assign(Error(),{code:'ECONNREFUSED'});}
+ async query(){queries++;if(this.attempt===2)throw Error('Connection terminated unexpectedly');}
+ async end(){closed++;}
+}
+const ready=await readyPostgres({host:'127.0.0.1'},{Client:StartingClient,sleep:async()=>{},attempts:3});
+assert.equal(probes,3);assert.equal(queries,2);assert.equal(closed,2);await ready.end();
+class NeverReady extends StartingClient {async connect(){throw Error('Not ready');}}
+await assert.rejects(()=>readyPostgres({host:'127.0.0.1'},{Client:NeverReady,sleep:async()=>{},attempts:2}),{code:'POSTGRES_STARTUP_TIMEOUT'});
+class BadPassword extends StartingClient {async connect(){throw Object.assign(Error(),{code:'28P01'});}}
+await assert.rejects(()=>readyPostgres({host:'127.0.0.1'},{Client:BadPassword,sleep:async()=>{throw Error('Should not retry credentials');}}),{code:'28P01'});
+console.log('PASS authenticated TCP startup retries, connection reuse, cleanup, timeout and credential failure');
 assert.equal(backupFailureCode({stderr:'pg_restore: schema "public" already exists PRIVATE_SECRET'}),'SCHEMA_EXISTS');
 assert.equal(backupFailureCode({stderr:'BACKUP_CODE:SNAPSHOT_INVALID PRIVATE_SECRET'}),'SNAPSHOT_INVALID');
 assert.equal(backupFailureCode({code:'42501',message:'PRIVATE_SECRET'}),'42501');
