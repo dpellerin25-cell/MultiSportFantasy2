@@ -4,11 +4,12 @@ import {readFile,writeFile,stat} from 'node:fs/promises';
 import {join} from 'node:path';
 import assert from 'node:assert/strict';
 import {sha,PREFIX} from './backup-core.mjs';
+import {backupFailureCode} from './backup-errors.mjs';
 const exec=promisify(execFile);
 // Never expose subprocess stderr (it may contain database values or credentials).
 export async function command(program,args,env=process.env){
  try{return (await exec(program,args,{env,maxBuffer:32*1024*1024,timeout:20*60*1000,windowsHide:true})).stdout;}
- catch{throw new Error(`${program} failed; raw output withheld`);}
+ catch(cause){const error=new Error(`${program} failed; raw output withheld`);error.code=backupFailureCode(cause);throw error;}
 }
 export async function pgEnvironment(config,dir){
  const env={...process.env,PGHOST:config.host,PGPORT:String(config.port),PGDATABASE:config.database,PGUSER:config.user,PGPASSWORD:config.password,PGSSLMODE:config.ssl?'verify-full':'disable'};
