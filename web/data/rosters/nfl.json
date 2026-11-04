@@ -1,10 +1,10 @@
 {
   "sport": "NFL",
   "league_id": "yg0olhfrmtj45dd6",
-  "fetch_started_at": "2026-11-03T19:39:21.814189+00:00",
-  "updated_at": "2026-11-03T19:39:23.314636+00:00",
+  "fetch_started_at": "2026-11-04T14:21:53.414197+00:00",
+  "updated_at": "2026-11-04T14:21:54.034341+00:00",
   "team_count": 11,
-  "total_players": 1,
+  "total_players": 0,
   "rosters": [
     {
       "owner": "John",
@@ -57,19 +57,8 @@
     {
       "owner": "Doug",
       "team_id": "61pwhedumtj45e7v",
-      "player_count": 1,
-      "players": [
-        {
-          "player_id": "06b9s",
-          "name": "Tyson Bagent",
-          "position": "QB",
-          "pro_team": "CHI",
-          "pro_team_name": "Chicago Bears",
-          "status_id": "1",
-          "roster_position_id": "100",
-          "headshot_url": "https://fantraximg.com/si/headshots/NFL/hs06b9s_96_3.png"
-        }
-      ]
+      "player_count": 0,
+      "players": []
     },
     {
       "owner": "Nik",
