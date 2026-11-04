@@ -1,0 +1,5 @@
+# Backup material must never be committed.
+*.pcbackup
+*.dump
+*.backup-key
+backup-work/

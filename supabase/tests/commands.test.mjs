@@ -121,5 +121,16 @@ try{
     assert.equal(result.status,'awaiting_makeups');
     await call('assign',{pick_id:(await slots())[2].id,player_id:players[2]});
   });
+  await test('backup checkpoints include authenticated makeup/undo history and final command',async()=>{
+    const checkpoints=await q('select * from backup.draft_checkpoints where draft_id=$1 order by revision',[draftId]);
+    assert.ok(checkpoints.some(c=>c.completed_rounds.includes(1)));
+    assert.ok(checkpoints.some(c=>c.payload.draft_selections.some(s=>s.voided_at)));
+    assert.ok(new Set(checkpoints.map(c=>c.corrections)).size>1);
+    const last=checkpoints.at(-1);
+    assert.equal(last.terminal,true);
+    assert.equal(Number(last.revision),Number((await q('select revision from draft.drafts where id=$1',[draftId]))[0].revision));
+    assert.equal(last.payload.draft_commands.length,(await q('select count(*)::int n from draft.draft_commands where draft_id=$1',[draftId]))[0].n);
+    assert.equal(last.payload.draft_selections.filter(s=>!s.voided_at).length,4);
+  });
   console.log(`${tests} command tests passed; no hosted database contacted.`);
 }finally{await db.close();}
