@@ -74,4 +74,25 @@ try{
  const result=(await db.query('select scoring.import_result($1,$2,0) id',[uuid(),{period_id:period,owner_id:doug,team_id:'test',observed_at:await stamp(),starter_total:7,bench_total:0,events_finished:true,reason:'Synthetic prospect cap scoring',players:[{player_id:'a',player_name:'A',lineup:'ACTIVE',points:10,state:'known'},{player_id:'b',player_name:'B',lineup:'ACTIVE',points:-3,state:'known'}]}])).rows[0].id;
  const outcome=(await db.query("select scoring.evaluate($1,'2090-01-01') r",[result])).rows[0].r;assert.equal(outcome.adjusted_total,-3);
  console.log('PASS prospect authorization, duplicate/retry/stale guards, 79+2 overage and 80 compliance, alerts, immutable historical cap evidence, same-owner ID reconciliation, name/wrong-owner rejection, public privacy and negative-score preservation.');
+ // Owner permission, confirmation and retry checks on the actual migrated functions.
+ const own=await command('add',add('Chris own prospect',null,chris));
+ const drop=(who,req=uuid(),id=own.id,revision=1,confirmed=true,role='authenticated')=>as(who,async()=> (await db.query('select public.drop_own_prospect($1,$2,$3,$4) r',[req,id,revision,confirmed])).rows[0].r,role);
+ assert.equal((await as(other,()=>db.query('select public.prospect_owner() id'))).rows[0].id,chris);
+ await assert.rejects(()=>drop(null,uuid(),own.id,1,true,'anon'),/permission denied/);
+ await assert.rejects(()=>drop(uuid()),/Active linked/);
+ await assert.rejects(()=>drop(user),/only drop your own/);
+ await assert.rejects(()=>drop(other,uuid(),own.id,1,false),/Confirm/);
+ await assert.rejects(()=>drop(other,uuid(),own.id,99),/changed/);
+ const beforeDrop=await stamp(),dropId=uuid();
+ const removed=await drop(other,dropId);assert.equal(removed.status,'removed');
+ assert.deepEqual(await drop(other,dropId),removed);
+ await assert.rejects(()=>drop(other,dropId,own.id,2),/Conflicting/);
+ await assert.rejects(()=>drop(other),/changed/);
+ const audit=(await db.query("select * from trading.prospect_events where prospect_id=$1 and action='owner_drop'",[own.id])).rows;
+ assert.equal(audit.length,1);assert.equal(audit[0].actor_id,other);
+ assert.ok((await db.query('select * from trading.prospect_checkpoint($1)',[beforeDrop])).rows.some(p=>p.id===own.id));
+ assert.equal((await db.query('select trading.prospect_count($1) n',[chris])).rows[0].n,0);
+ await assert.rejects(()=>command('link',{id:atomic.id,revision:1,fantrax_id:'nope',reason:'Owner cannot link'},uuid(),other),/Commissioner/);
+ await assert.rejects(()=>drop(user,uuid(),p.id,2),/changed/);
+ console.log('PASS owner-only drops, confirmation, stale/confirmed rejection, retries, audit and historical counts; adding/linking remains commissioner-only.');
 }finally{await db.close();}
