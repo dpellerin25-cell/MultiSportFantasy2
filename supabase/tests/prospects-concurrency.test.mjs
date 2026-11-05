@@ -36,6 +36,17 @@ try{
  assert.ifError(removed[1].error);assert.equal(await one(db,'select status from trading.prospects where id=$1',[fresh.id]),'removed');
  assert.equal(Number((await one(db,'select public.prospect_rosters()')).owners.find(o=>o.id===owner).total),2);
  console.log('PASS independent sessions: removal first does not delete subsequent Fantrax ownership or reactivate prospect');
+ const own=await command(db,uuid(),'add',{...args,name:'Owner drop race',fantrax_id:'race03'});
+ const dropReq=uuid();
+ const drop=c=>one(c,'select public.drop_own_prospect($1,$2,1,true)',[dropReq,own.id]);
+ const [dropped,duplicate]=await race(()=>drop(a),()=>drop(b));
+ assert.ifError(duplicate.error);assert.deepEqual(duplicate.value,dropped);
+ assert.equal(await one(db,"select count(*)::int from trading.prospect_events where prospect_id=$1 and action='owner_drop'",[own.id]),1);
+ const confirming=await command(db,uuid(),'add',{...args,name:'Owner drop after confirmation',fantrax_id:'race04'});
+ const captured=JSON.stringify(owners.map(o=>({owner:o.slug,players:o.slug==='doug'?[{player_id:'race04',name:'Confirmed prospect'}]:[]})));
+ const [,staleDrop]=await race(()=>a.query("select trading.ingest_rosters('NFL','race-nfl',clock_timestamp(),$1,false)",[captured]),()=>one(b,'select public.drop_own_prospect($1,$2,1,true)',[uuid(),confirming.id]));
+ assert.match(staleDrop.error?.message??'',/changed/);
+ console.log('PASS owner drop retries serialize once; roster confirmation rejects queued owner drop');
  console.log('No hosted database contacted. Synthetic fixtures retained.');
 }catch(e){console.error('FAIL prospect concurrency: '+e.message);process.exitCode=1;}
 finally{for(const c of clients){await c.query('rollback').catch(()=>{});await c.end().catch(()=>{});}}

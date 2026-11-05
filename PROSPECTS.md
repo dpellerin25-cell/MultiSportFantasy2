@@ -2,6 +2,10 @@
 
 ## Behavior
 
+Owners can drop only their own active prospects using **Drop prospect → Confirm drop**. The confirmation warns: “If you drop this prospect, the only way to acquire them again will be through the annual league draft.” Cancellation makes no change. Adding prospects and linking verified IDs remain commissioner-only. Drops record the acting account and warning acknowledgement in immutable history, update current cap/alert counts, and preserve historical evidence. They do not remove a player from Fantrax. The annual-draft restriction is communicated and audited; existing commissioner correction powers remain available.
+
+Owner-drop rollout: apply `202611050001_owner_prospect_drops.sql` before deploying the updated UI. Run `node supabase/tests/prospects.test.mjs` and the prospect concurrency tests in Codespaces. Test with two linked accounts: each sees drops only on their own prospects; cancelling preserves the prospect; confirming removes it and updates the count. Verify commissioner additions still work. No hosted changes were performed during implementation.
+
 Doug can open **Rosters → Commissioner · Manage prospects**, choose an active owner and sport, enter a name, optional verified Fantrax player ID and audit reason, then review and confirm. Each active prospect uses one roster-cap slot across the five sports. 80 is compliant; 81 is over the cap. There are no new sport limits or roster restrictions on adding a prospect.
 
 Commissioners can remove an active prospect at any time. Removal ends the manual cap slot; it never deletes a Fantrax player, past roster evidence, trade, draft selection or scoring history. To move a prospect to another owner, remove it with an explanation and add it to the receiving owner. These are separate audited operations. Prospects are not selectable trade assets in this version; commissioner management is the supported way to change their assignment.

@@ -17,7 +17,7 @@ export function ProspectProvider({children}:{children:ReactNode}){
 }
 export function useOwnerProspects(owner:string){const ctx=useContext(Context);const who=ctx.data?.owners.find(x=>x.name===owner);return {...ctx,owner:who,prospects:ctx.data?.prospects.filter(x=>x.owner_id===who?.id)??[]};}
 export function OwnerCapCount({owner}:{owner:string}){const c=useOwnerProspects(owner);return <span className={c.owner&&c.owner.total>ROSTER_LIMIT?'text-red-800':''}>{c.data?.sports_observed===5?c.owner?.total??'—':'—'} / {ROSTER_LIMIT} players{!c.data&&<span className="block text-sm font-normal">{c.error||'Loading roster and prospect counts…'}</span>}</span>;}
-export function OwnerProspects({owner}:{owner:string}){const c=useOwnerProspects(owner);return <section className="border-b border-blue-100 p-4"><h3 className="font-bold">Prospects</h3>{c.error?<p role="status" className="text-sm text-amber-900">{c.error}</p>:!c.data?<p>Loading prospects…</p>:c.prospects.length===0?<p className="text-sm text-slate-600">No manual prospects.</p>:<ul className="divide-y">{c.prospects.map(p=><li key={p.id} className="py-2"><strong>{p.name}</strong> · {p.sport} <span className="rounded bg-amber-100 px-2 text-xs">Prospect</span><p className="text-xs text-slate-600">Counts toward the cap. {p.fantrax_id?'Waiting for Fantrax roster confirmation.':'Waiting for a verified Fantrax player ID.'}</p>{p.other_owner_match&&<p className="text-sm text-red-800">Fantrax shows this player on another team. Doug must review.</p>}</li>)}</ul>}</section>;}
+export function OwnerProspects({owner}:{owner:string}){const c=useOwnerProspects(owner);return <section className="border-b border-blue-100 p-4"><h3 className="font-bold">Prospects</h3>{c.error?<p role="status" className="text-sm text-amber-900">{c.error}</p>:!c.data?<p>Loading prospects…</p>:c.prospects.length===0?<p className="text-sm text-slate-600">No manual prospects.</p>:<ul className="divide-y">{c.prospects.map(p=><li key={p.id} className="py-2"><strong>{p.name}</strong> · {p.sport} <OwnerProspectDrop prospect={p}/> <span className="rounded bg-amber-100 px-2 text-xs">Prospect</span><p className="text-xs text-slate-600">Counts toward the cap. {p.fantrax_id?'Waiting for Fantrax roster confirmation.':'Waiting for a verified Fantrax player ID.'}</p>{p.other_owner_match&&<p className="text-sm text-red-800">Fantrax shows this player on another team. Doug must review.</p>}</li>)}</ul>}</section>;}
 
 export function ProspectControls(){
  const {data,error:loadError,refresh}=useContext(Context);
@@ -35,4 +35,42 @@ export function ProspectControls(){
  {data?.prospects.map(p=><details key={p.id} className="border-t py-3"><summary className="cursor-pointer">{p.name} · {p.sport} · {data.owners.find(o=>o.id===p.owner_id)?.name}</summary><form onSubmit={e=>prepare(e,'remove',p)} className="my-3 flex flex-wrap gap-2"><label>Removal reason<input name="reason" required minLength={5} maxLength={1000} className={input}/></label><button className={button}>Review removal</button></form>{!p.fantrax_id&&<form onSubmit={e=>prepare(e,'link',p)} className="flex flex-wrap gap-2"><label>Verified Fantrax ID<input name="fantrax_id" required pattern="[A-Za-z0-9_-]{1,64}" maxLength={64} className={input}/></label><label>Verification reason<input name="reason" required minLength={5} maxLength={1000} className={input}/></label><button className={button}>Review ID link</button></form>}{p.fantrax_id&&<p>Verified ID: {p.fantrax_id}. To correct it, remove and re-add with an audit reason.</p>}</details>)}
  </>}
  <details className="mt-4"><summary className="cursor-pointer">Recent prospect changes</summary>{events.map((e,i)=><p key={i} className="border-t py-2 text-sm">{e.recorded_at} · {e.owner}: {e.name} ({e.sport}) · {e.action} · {e.reason}</p>)}</details></details></section>;
+}
+
+function OwnerProspectDrop({prospect}:{prospect:Prospect}){
+ const {refresh}=useContext(Context);
+ const [owner,setOwner]=useState<string|null>(null),[request,setRequest]=useState<string|null>(null),[busy,setBusy]=useState(false),[uncertain,setUncertain]=useState(false),[message,setMessage]=useState('');
+ const lock=useRef(false);
+ useEffect(()=>{
+  const client=leagueSettingsClient();if(!client)return;
+  let generation=0,alive=true;
+  async function load(){const v=++generation;setOwner(null);setRequest(null);setMessage('');setUncertain(false);
+   try{const r=await client!.rpc('prospect_owner');if(alive&&v===generation)setOwner(r.error?null:r.data);}catch{ /* Hide controls when identity cannot be verified. */ }}
+  void load();
+  const {data}=client.auth.onAuthStateChange(()=>{++generation;setOwner(null);setRequest(null);setTimeout(()=>{if(alive)void load();},0);});
+  return()=>{alive=false;++generation;data.subscription.unsubscribe();};
+ },[]);
+ async function drop(){
+  if(!request||lock.current)return;lock.current=true;setBusy(true);
+  try{
+   const r=await leagueSettingsClient()!.rpc('drop_own_prospect',{req:request,prospect:prospect.id,expected_revision:prospect.revision,confirmed:true});
+   if(r.error){
+    if(['P0001','42501','22P02'].includes(r.error.code)){setRequest(null);setUncertain(false);setMessage('Drop rejected. Refresh and check that this prospect is still on your team.');}
+    else{setUncertain(true);setMessage('Confirmation unavailable. Retry the same drop safely.');}
+    return;
+   }
+   setRequest(null);setUncertain(false);await refresh();window.dispatchEvent(new Event('prospects-changed'));
+  }catch{setUncertain(true);setMessage('Confirmation unavailable. Retry the same drop safely.');}
+  finally{lock.current=false;setBusy(false);}
+ }
+ if(owner!==prospect.owner_id)return null;
+ return <span className="block mt-2">
+  {request?<span className="block rounded border border-amber-300 bg-amber-50 p-3">
+   <span className="block font-semibold">Drop {prospect.name}?</span>
+   <span className="block my-2">If you drop this prospect, the only way to acquire them again will be through the annual league draft.</span>
+   <button type="button" className={button} disabled={busy} onClick={()=>void drop()}>{uncertain?'Retry same drop':'Confirm drop'}</button>
+   <button type="button" className="ml-3 p-2" disabled={busy||uncertain} onClick={()=>setRequest(null)}>Cancel</button>
+  </span>:<button type="button" className="text-sm font-semibold text-red-800 underline" onClick={()=>{setMessage('');setRequest(crypto.randomUUID());}}>Drop prospect</button>}
+  {message&&<span role="status" className="block text-sm">{message}</span>}
+ </span>;
 }
