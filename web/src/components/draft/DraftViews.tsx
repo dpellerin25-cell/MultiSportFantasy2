@@ -13,18 +13,18 @@ export default function DraftViews({
   state: DraftState;
   availablePlayers: React.ReactNode;
 }) {
-  const [round, setRound] = useState("current"),
+  const [round, setRound] = useState<number | null>(null),
     [lineupSport, setLineupSport] = useState("NFL"),
     [chosenOwner, setOwner] = useState("");
   const current =
     state.picks.find((p) => p.pick_number === state.current_pick_number)
       ?.round ?? 1;
-  const shown = round === "current" ? current : Number(round);
+  const shown = round ?? current;
   const preview = setupOrderPreview(state);
   const isPreview = preview.length > 0;
   const boardPicks = isPreview ? preview : state.picks;
   const visiblePicks = boardPicks.filter(
-    (p) => round === "all" || p.round === shown,
+    (p) => p.round === shown,
   );
   const owner =
     chosenOwner ||
@@ -38,7 +38,7 @@ export default function DraftViews({
     "Owner";
   return (
     <>
-      <section className={`${box} ${round === "all" ? "xl:max-h-[80vh] xl:overflow-y-auto" : ""}`} aria-labelledby="board-title">
+      <section className={box} aria-labelledby="board-title">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 id="board-title" className="text-xl font-bold">
             Draft Board
@@ -47,11 +47,9 @@ export default function DraftViews({
             Round{" "}
             <select
               className="ml-2 min-h-11 rounded-lg border px-2"
-              value={round}
-              onChange={(e) => setRound(e.target.value)}
+              value={shown}
+              onChange={(e) => setRound(Number(e.target.value))}
             >
-              <option value="current">{state.status === "setup" ? "First round" : "Current"}</option>
-              <option value="all">All rounds</option>
               {Array.from({ length: state.rounds }, (_, i) => (
                 <option key={i} value={i + 1}>
                   {i + 1}
@@ -62,7 +60,7 @@ export default function DraftViews({
         </div>
         <p className="mt-2 text-sm text-slate-600">
           {state.picks.filter((p) => p.player_id).length} selections recorded ·
-          {round === "all" ? "All rounds" : `Round ${shown}`}
+          {`Round ${shown}`}
         </p>
         {isPreview && <p className="mt-2 text-sm text-blue-800">Draft order preview · The draft has not started. No timer is running.</p>}
         {!!boardPicks.length && !visiblePicks.length && (
