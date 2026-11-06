@@ -1,4 +1,5 @@
 export type Player = {
+  is_prospect?: boolean;
   source_rank?: number | null;
   player_id: string;
   player_name: string;
@@ -8,6 +9,7 @@ export type Player = {
   availability_status: string;
 };
 export type Pick = {
+  is_prospect?: boolean;
   selection_id: string | null;
   skipped_at: string | null;
   sport: string | null;

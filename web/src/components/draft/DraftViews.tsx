@@ -29,7 +29,7 @@ export default function DraftViews({
     state.participants[0]?.owner_id ||
     "";
   const roster = state.picks.filter((p) => p.owner_id === owner && p.player_id);
-  const lineup = proposedLineup(roster, lineupSport);
+  const lineup = proposedLineup(roster.filter(p=>!p.is_prospect), lineupSport);
   const ownerName =
     state.participants.find((p) => p.owner_id === owner)?.display_name ??
     "Owner";
@@ -92,6 +92,7 @@ export default function DraftViews({
                   </span>
                 </div>
                 <p className="mt-1 text-sm">
+                  {p.is_prospect && <span className="mr-1 rounded bg-amber-100 px-1">Prospect</span>}
                   {p.player_name ??
                     (p.skipped_at
                       ? "Skipped · awaiting commissioner assignment"
@@ -200,9 +201,9 @@ export default function DraftViews({
           <ul className="mt-3 divide-y divide-blue-100">
             {roster.map((p) => (
               <li className="py-3" key={p.pick_id}>
-                <strong>{p.player_name}</strong>
+                <strong>{p.player_name}</strong>{p.is_prospect && <span className="ml-2 rounded bg-amber-100 px-2 text-xs">Prospect</span>}
                 <p className="text-sm text-slate-500">
-                  {[p.sport, p.position, p.professional_team]
+                  {[p.is_prospect && p.sport === "EPL" ? "Soccer (outside EPL)" : p.sport, p.position, p.professional_team]
                     .filter(Boolean)
                     .join(" · ")}{" "}
                   · Pick #{p.pick_number}

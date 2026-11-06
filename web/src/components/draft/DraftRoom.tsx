@@ -513,9 +513,9 @@ function AuthenticatedRoom({
                   </h2>
                   <p className="mt-1 text-sm text-slate-500">
                     Search the saved league pool. Free agents and waiver players
-                    are eligible.
+                    are eligible. The Prospects tab contains the approved supplemental list.
                   </p>
-                  {rankingSnapshot ? (
+                  {sport === "Prospects" ? <p className="mt-2 rounded-lg bg-amber-50 p-2 text-xs text-amber-900">Approved startup prospects · Alphabetical order · Each selection uses one draft pick and one roster-cap slot.</p> : rankingSnapshot ? (
                     <p className="mt-2 rounded-lg bg-blue-50 p-2 text-xs text-blue-900">
                       Fixed rankings · {rankingSnapshot}. Ranked players first,
                       unranked players last.
@@ -550,7 +550,7 @@ function AuthenticatedRoom({
                     aria-label="Filter by sport"
                     className="my-4 flex flex-wrap gap-2"
                   >
-                    {["", "NFL", "MLB", "NBA", "EPL", "PGA"].map((s) => (
+                    {["", "NFL", "MLB", "NBA", "EPL", "PGA", "Prospects"].map((s) => (
                       <button
                         key={s}
                         aria-pressed={sport === s}
@@ -609,7 +609,8 @@ function AuthenticatedRoom({
                         >
                           <div className="min-w-0">
                             <p className="font-semibold">{p.player_name}</p>
-                            {rankingSnapshot && (
+                            {p.is_prospect && <p className="text-xs text-amber-900">Prospect · Counts toward your roster cap · Not yet in Fantrax</p>}
+                            {rankingSnapshot && !p.is_prospect && (
                               <p className="text-xs font-semibold text-blue-800">
                                 {p.source_rank == null
                                   ? "Unranked / unmatched"
@@ -617,12 +618,12 @@ function AuthenticatedRoom({
                               </p>
                             )}
                             <p className="mt-1 text-sm text-slate-600">
-                              {[p.sport, p.position, p.professional_team]
+                              {[p.is_prospect && p.sport === "EPL" ? "Soccer (outside EPL)" : p.sport, p.position, p.professional_team]
                                 .filter(Boolean)
                                 .join(" · ")}{" "}
                               <span className="text-slate-400">
                                 ·{" "}
-                                {p.availability_status === "waivers"
+                                {p.is_prospect ? "Prospect" : p.availability_status === "waivers"
                                   ? "Waivers"
                                   : "Free agent"}
                               </span>
