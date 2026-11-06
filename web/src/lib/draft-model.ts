@@ -53,6 +53,20 @@ export type CommissionerAction =
   | "set_order"
   | "assign"
   | "undo";
+
+// Display only: never pass these synthetic slots to draft commands.
+export function setupOrderPreview(state: DraftState): Pick[] {
+  if (state.status !== "setup" || state.picks.length || !Number.isInteger(state.rounds) || state.rounds < 1) return [];
+  const order = [...state.participants].sort((a,b)=>a.order_position-b.order_position);
+  if (order.length < 2 || new Set(order.map(p=>p.owner_id)).size !== order.length || order.some((p,i)=>p.order_position!==i+1)) return [];
+  return Array.from({length:state.rounds*order.length},(_,i)=>{
+    const round=Math.floor(i/order.length)+1, slot=i%order.length;
+    return {pick_id:`preview-${i+1}`,round,pick_number:i+1,
+      owner_id:order[round%2 ? slot : order.length-1-slot].owner_id,
+      player_id:null,player_name:null,selection_id:null,skipped_at:null,
+      sport:null,position:null,professional_team:null,selected_at:null};
+  });
+}
 export function commissionerCommand(
   state: DraftState,
   action: CommissionerAction,

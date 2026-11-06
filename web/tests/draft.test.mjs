@@ -1,4 +1,22 @@
 import test from "node:test";
+import {setupOrderPreview} from '../src/lib/draft-model.ts';
+test('setup preview uses saved order for 880 snake picks without mutating real state',()=>{
+ const order=['jack','brendan','ryan','jacob','john','doug','hatch','billy','tucker','chris','nik'];
+ const s={status:'setup',rounds:80,picks:[],participants:order.map((owner_id,i)=>({owner_id,order_position:i+1})).reverse()};
+ const before=JSON.stringify(s),p=setupOrderPreview(s);
+ assert.equal(p.length,880);
+ assert.deepEqual(p.slice(0,11).map(x=>x.owner_id),order);
+ assert.deepEqual(p.slice(11,22).map(x=>x.owner_id),[...order].reverse());
+ assert.deepEqual(p.slice(-11).map(x=>x.owner_id),[...order].reverse());
+ assert.equal(p.at(-1).pick_number,880);assert.equal(p.at(-1).round,80);
+ assert.ok(p.every(x=>x.player_id===null&&x.selection_id===null));
+ assert.equal(JSON.stringify(s),before);
+ for(const status of ['running','paused','completed','cancelled'])assert.deepEqual(setupOrderPreview({...s,status}),[]);
+ assert.deepEqual(setupOrderPreview({...s,picks:[{pick_id:'real'}]}),[]);
+ assert.deepEqual(setupOrderPreview({...s,participants:[]}),[]);
+ assert.deepEqual(setupOrderPreview({...s,participants:[{owner_id:'a',order_position:1},{owner_id:'b',order_position:3}]}),[]);
+ assert.equal(setupOrderPreview({...s,rounds:2,participants:[{owner_id:'b',order_position:2},{owner_id:'a',order_position:1}]}).length,4);
+});
 import {
   proposedLineup,
   STARTING_SLOTS,
