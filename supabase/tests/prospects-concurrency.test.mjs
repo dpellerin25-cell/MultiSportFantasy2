@@ -47,6 +47,19 @@ try{
  const [,staleDrop]=await race(()=>a.query("select trading.ingest_rosters('NFL','race-nfl',clock_timestamp(),$1,false)",[captured]),()=>one(b,'select public.drop_own_prospect($1,$2,1,true)',[uuid(),confirming.id]));
  assert.match(staleDrop.error?.message??'',/changed/);
  console.log('PASS owner drop retries serialize once; roster confirmation rejects queued owner drop');
+ const secondOwner=await one(db,"select id from draft.owners where slug='chris'");
+ const draftId=await one(db,"insert into draft.drafts(name,kind,championship_year,rounds,participant_count) values('Prospect race','startup',2027,80,2) returning id");
+ await db.query('insert into draft.draft_participants values($1,$2,1),($1,$3,2)',[draftId,owner,secondOwner]);
+ await db.query('select draft.attach_startup_prospects($1)',[draftId]);
+ await db.query('select draft.generate_snake_picks($1)',[draftId]);
+ await db.query("update draft.drafts set status='paused' where id=$1",[draftId]);
+ const pickSlots=(await db.query('select id,current_owner_id from draft.draft_picks where draft_id=$1 order by overall_pick_number limit 2',[draftId])).rows;
+ const prospectId=await one(db,'select player_id from draft.prospect_catalog order by id limit 1');
+ const insert=(c,slot)=>one(c,"insert into draft.draft_selections(draft_id,pick_id,owner_id,player_id,sport,method,actor_user_id) values($1,$2,$3,$4,'NFL','commissioner',$5) returning id",[draftId,slot.id,slot.current_owner_id,prospectId,user]);
+ const [,conflict]=await race(()=>insert(a,pickSlots[0]),()=>insert(b,pickSlots[1]));
+ assert.equal(conflict.error?.code,'23505');
+ assert.equal(await one(db,'select count(*)::int from trading.prospects where draft_selection_id is not null'),1);
+ console.log('PASS simultaneous prospect selections create only one selection and one cap slot');
  console.log('No hosted database contacted. Synthetic fixtures retained.');
 }catch(e){console.error('FAIL prospect concurrency: '+e.message);process.exitCode=1;}
 finally{for(const c of clients){await c.query('rollback').catch(()=>{});await c.end().catch(()=>{});}}

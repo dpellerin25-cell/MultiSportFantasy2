@@ -1,0 +1,650 @@
+{
+  "source_file": "Prospect List Startup 2027.xlsx",
+  "sha256": "53aae2c17f27893b25ce2900d1c917abbfc4c445ffd51e78b35174cf2e077b1e",
+  "players": [
+    {
+      "catalog_id": "startup-2027-001",
+      "name": "Jeremiah Smith",
+      "position": "WR",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-002",
+      "name": "Charlie Becker",
+      "position": "WR",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-003",
+      "name": "Nick Marsh",
+      "position": "WR",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-004",
+      "name": "Drew Mestemaker",
+      "position": "QB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-005",
+      "name": "Jadan Baugh",
+      "position": "RB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-006",
+      "name": "Nate Frazier",
+      "position": "RB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-007",
+      "name": "Kewan Lacy",
+      "position": "RB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-008",
+      "name": "K.J. Duff",
+      "position": "WR",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-009",
+      "name": "Trey’Dez Green",
+      "position": "TE",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-010",
+      "name": "Ryan Coleman-Williams",
+      "position": "WR",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-011",
+      "name": "Jamari Johnson",
+      "position": "TE",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-012",
+      "name": "Cam Coleman",
+      "position": "WR",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-013",
+      "name": "Trinidad Chambliss",
+      "position": "QB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-014",
+      "name": "Dante Moore",
+      "position": "QB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-015",
+      "name": "Sam Leavitt",
+      "position": "QB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-016",
+      "name": "C.J. Carr",
+      "position": "QB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-017",
+      "name": "Wayshawn Parker",
+      "position": "RB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-018",
+      "name": "Luke Reynolds",
+      "position": "TE",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-019",
+      "name": "Deuce Alexander",
+      "position": "WR",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-020",
+      "name": "Ryan Wingo",
+      "position": "WR",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-021",
+      "name": "Jackson Harris",
+      "position": "WR",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-022",
+      "name": "Bryant Wesco Jr.",
+      "position": "WR",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-023",
+      "name": "Antwan Raymond",
+      "position": "RB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-024",
+      "name": "Dylan Riley",
+      "position": "RB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-025",
+      "name": "Amare Thomas",
+      "position": "WR",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-026",
+      "name": "Junior Sherrill",
+      "position": "WR",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-027",
+      "name": "Justice Haynes",
+      "position": "RB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-028",
+      "name": "Fluff Bothwell",
+      "position": "RB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-029",
+      "name": "Reed Harris",
+      "position": "WR",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-030",
+      "name": "Mario Craver",
+      "position": "WR",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-031",
+      "name": "Hollywood Smothers",
+      "position": "RB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-032",
+      "name": "L.J. Martin",
+      "position": "RB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-033",
+      "name": "Austin Simmons",
+      "position": "QB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-034",
+      "name": "Arch Manning",
+      "position": "QB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-035",
+      "name": "Darian Mensah",
+      "position": "QB",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-036",
+      "name": "Tyran Stokes",
+      "position": "SF",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-037",
+      "name": "Caleb Holt",
+      "position": "SG",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-038",
+      "name": "Jordan Smith Jr.",
+      "position": "SG/PG",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-039",
+      "name": "Bruce Branch III",
+      "position": "SF",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-040",
+      "name": "Stefan Joksimovic",
+      "position": "PG/SG",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-041",
+      "name": "Anthony Thompson",
+      "position": "SF",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-042",
+      "name": "Brandon McCoy Jr.",
+      "position": "SG/PG",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-043",
+      "name": "Cameron Williams",
+      "position": "PF",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-044",
+      "name": "Baba Oladotun",
+      "position": "SF/PF",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-045",
+      "name": "Dylan Mingo",
+      "position": "PG",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-046",
+      "name": "Hugo Yimga-Moukouri",
+      "position": "SF",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-047",
+      "name": "Amari Allen",
+      "position": "SF",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-048",
+      "name": "Braylon Mullins",
+      "position": "SG",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-049",
+      "name": "Jason Crowe Jr.",
+      "position": "PG",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-050",
+      "name": "Ivan Kharchenkov",
+      "position": "SF",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-051",
+      "name": "Patrick Ngongba II",
+      "position": "C",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-052",
+      "name": "Quentin Coleman",
+      "position": "SG",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-053",
+      "name": "Thomas Haugh",
+      "position": "PF",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-054",
+      "name": "Tounde Yessoufou",
+      "position": "SG/SF",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-055",
+      "name": "Mikkail Mourtinen",
+      "position": "PF",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-056",
+      "name": "JJ Andrews",
+      "position": "SF",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-057",
+      "name": "Luigi Suigo",
+      "position": "C",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-058",
+      "name": "Motejus Krivas",
+      "position": "C",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-059",
+      "name": "Christian Collins",
+      "position": "SF/PF",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-060",
+      "name": "Davis Fogle",
+      "position": "SG",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-061",
+      "name": "Billy Richmond III",
+      "position": "SF",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-062",
+      "name": "Alijah Arenas",
+      "position": "SG",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-063",
+      "name": "Tyler Tanner",
+      "position": "PG",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-064",
+      "name": "David Mirkovic",
+      "position": "PF",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-065",
+      "name": "Milan Momcilovic",
+      "position": "SF/PF",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-066",
+      "name": "Kylian Mbappé",
+      "position": "FWD",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-067",
+      "name": "Harry Kane",
+      "position": "FWD",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-068",
+      "name": "Lamine Yamal",
+      "position": "MID",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-069",
+      "name": "Khvicha Kvaratskhelia",
+      "position": "MID",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-070",
+      "name": "Ousmane Dembélé",
+      "position": "FWD",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-071",
+      "name": "Julián Álvarez",
+      "position": "FWD",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-072",
+      "name": "Raphinha",
+      "position": "MID",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-073",
+      "name": "Vinícius Júnior",
+      "position": "FWD",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-074",
+      "name": "Lautaro Martínez",
+      "position": "FWD",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-075",
+      "name": "Michael Olise",
+      "position": "MID",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-076",
+      "name": "Jude Bellingham",
+      "position": "MID",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-077",
+      "name": "Serhou Guirassy",
+      "position": "FWD",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-078",
+      "name": "Désiré Doué",
+      "position": "MID",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-079",
+      "name": "Luis Díaz",
+      "position": "MID",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-080",
+      "name": "Alejandro Garnacho",
+      "position": "MID",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-081",
+      "name": "Victor Osimhen",
+      "position": "FWD",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-082",
+      "name": "Jamal Musiala",
+      "position": "MID",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-083",
+      "name": "Dani Olmo",
+      "position": "MID",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-084",
+      "name": "Randal Kolo Muani",
+      "position": "FWD",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-085",
+      "name": "Vitinha",
+      "position": "MID",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-086",
+      "name": "Pedri",
+      "position": "MID",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-087",
+      "name": "Mason Greenwood",
+      "position": "MID",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-088",
+      "name": "Marcus Thuram",
+      "position": "FWD",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-089",
+      "name": "Scott McTominay",
+      "position": "MID",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-090",
+      "name": "Fermín López",
+      "position": "MID",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-091",
+      "name": "Yan Diomande",
+      "position": "MID",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    },
+    {
+      "catalog_id": "startup-2027-092",
+      "name": "Jonathan David",
+      "position": "FWD",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    }
+  ]
+}
