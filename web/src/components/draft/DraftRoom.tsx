@@ -613,7 +613,7 @@ function AuthenticatedRoom({
                             {rankingSnapshot && !p.is_prospect && (
                               <p className="text-xs font-semibold text-blue-800">
                                 {p.source_rank == null
-                                  ? "Unranked / unmatched"
+                                  ? "Unranked"
                                   : `${p.sport} rank #${p.source_rank}`}
                               </p>
                             )}
