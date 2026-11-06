@@ -8,7 +8,15 @@ try{
  await db.exec("create role anon;create role authenticated;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;");
  const dir=new URL('../migrations/',import.meta.url);for(const f of (await readdir(dir)).filter(f=>f.endsWith('.sql')).sort())await db.exec(await readFile(new URL(f,dir),'utf8'));
  const cat=JSON.parse(await readFile(new URL('../../data/startup-prospects-2027.json',import.meta.url),'utf8'));
- assert.equal(cat.players.length,92);assert.deepEqual(cat.players.reduce((a,p)=>(a[p.sport]=(a[p.sport]??0)+1,a),{}),{NFL:35,NBA:30,EPL:27});
+ assert.equal(cat.players.length,89);assert.deepEqual(cat.players.reduce((a,p)=>(a[p.sport]=(a[p.sport]??0)+1,a),{}),{NFL:34,NBA:29,EPL:26});
+ assert.equal((await q('select count(*)::int n from draft.prospect_catalog_removals'))[0].n,3);
+ assert.deepEqual((await q('select id from draft.prospect_catalog order by id')).map(p=>p.id),cat.players.map(p=>p.catalog_id));
+ const removedNames=cat.excluded_players.map(p=>p.name);
+ for(const name of removedNames)await q("insert into draft.players(sport,name) values('NFL',$1)",[name]);
+ const beforeRemovalRetry=await q('select * from draft.players order by id');
+ await db.exec(await readFile(new URL('../migrations/202611060002_remove_three_startup_prospects.sql',import.meta.url),'utf8'));
+ assert.deepEqual(await q('select * from draft.players order by id'),beforeRemovalRetry);
+ assert.equal((await q('select count(*)::int n from draft.prospect_catalog_removals'))[0].n,3);
  const user=uuid(),other=uuid();const owners=await q("select id from draft.owners where slug in ('doug','chris') order by slug desc");
  await q('insert into auth.users values($1),($2)',[user,other]);await q('insert into draft.owner_accounts values($1,$2),($3,$4)',[user,owners[0].id,other,owners[1].id]);await q("insert into draft.league_roles values($1,'commissioner')",[user]);
  await q("select set_config('request.jwt.claim.sub',$1,false)",[user]);
@@ -19,9 +27,9 @@ try{
  await q("insert into draft.player_pool_entries select $1,p.id,s.id,p.sport,p.name,null,null,'free_agent' from draft.players p join draft.player_source_ids s on s.player_id=p.id",[imp]);
  await q("update draft.player_pool_imports set status='ready' where id=$1",[imp]);
  await q("insert into draft.draft_pool_players(draft_id,import_id,player_id,sport,name,availability,eligible) select $1,import_id,player_id,sport,name,availability,true from draft.player_pool_entries where import_id=$2",[id,imp]);
- const preview=await attachProspects(db,id);assert.equal(preview.prospects,92);assert.equal((await q('select count(*)::int n from draft.prospect_catalog where player_id is not null'))[0].n,0);
+ const preview=await attachProspects(db,id);assert.equal(preview.prospects,89);assert.equal((await q('select count(*)::int n from draft.prospect_catalog where player_id is not null'))[0].n,0);
  await assert.rejects(()=>attachProspects(db,id,{approval:'bad'}),/Preview changed/);
- const result=await attachProspects(db,id,{approval:preview.approval_hash});assert.equal(result.added,92);
+ const result=await attachProspects(db,id,{approval:preview.approval_hash});assert.equal(result.added,89);
  const again=await attachProspects(db,id);assert.equal(again.added,0);
  const command=async(action,args={},who=user,request=uuid(),rev=null)=>{
   await q("select set_config('request.jwt.claim.sub',$1,false)",[who]);
@@ -31,7 +39,7 @@ try{
  await command('set_order',{owners:owners.map(o=>o.id)});
  const available=async(sport,search='',cursor=null,size=100)=> (await q('select public.draft_available_players($1,$2,$3,$4,$5,null) r',[id,sport,search,cursor,size]))[0].r;
  const first=await available('Prospects','',null,40),second=await available('Prospects','',first.next_cursor,100);
- assert.equal(new Set([...first.players,...second.players].map(p=>p.player_id)).size,92);
+ assert.equal(new Set([...first.players,...second.players].map(p=>p.player_id)).size,89);
  assert.equal((await available('EPL')).players.length,0);assert.equal((await available('NFL')).players.some(p=>p.is_prospect),false);
  assert.equal((await available(null)).players.some(p=>p.is_prospect),false);
  const soccer=(await available('Prospects','Mbapp')).players[0];assert.equal(soccer.availability_status,'prospect');assert.equal(soccer.sport,'EPL');
@@ -66,6 +74,6 @@ try{
  await q("select trading.ingest_rosters('EPL','future-epl',clock_timestamp(),$1,false)",[rosters.map(r=>r.owner==='doug'?{...r,players:[{player_id:'future01',name:soccer.player_name}]}:r)]);
  assert.equal((await q('select status from trading.prospects where id=$1',[assigned.id]))[0].status,'confirmed');
  assert.equal((await q('select trading.prospect_count($1) n',[owners[0].id]))[0].n,0);
- console.log('PASS 92 supplied prospects, rollback preview/approval, attachment retry, private helpers, separate tabs, pagination, pick ownership/cap, duplicate denial, idempotent pick and audited undo.');
+ console.log('PASS 89 supplied prospects, rollback preview/approval, attachment retry, private helpers, separate tabs, pagination, pick ownership/cap, duplicate denial, idempotent pick and audited undo.');
 }finally{await db.close();}
 
