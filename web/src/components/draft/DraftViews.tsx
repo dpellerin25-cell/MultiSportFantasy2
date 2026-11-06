@@ -2,7 +2,7 @@
 
 import { STARTUP_ROUNDS } from "@/lib/roster-policy";
 import { useState } from "react";
-import { type DraftState } from "@/lib/draft-model";
+import { setupOrderPreview, type DraftState } from "@/lib/draft-model";
 import { proposedLineup, STARTING_SLOTS } from "@/lib/draft-lineups";
 const box =
   "min-w-0 rounded-2xl border border-blue-100 bg-white p-4 shadow-sm";
@@ -20,7 +20,10 @@ export default function DraftViews({
     state.picks.find((p) => p.pick_number === state.current_pick_number)
       ?.round ?? 1;
   const shown = round === "current" ? current : Number(round);
-  const visiblePicks = state.picks.filter(
+  const preview = setupOrderPreview(state);
+  const isPreview = preview.length > 0;
+  const boardPicks = isPreview ? preview : state.picks;
+  const visiblePicks = boardPicks.filter(
     (p) => round === "all" || p.round === shown,
   );
   const owner =
@@ -47,7 +50,7 @@ export default function DraftViews({
               value={round}
               onChange={(e) => setRound(e.target.value)}
             >
-              <option value="current">Current</option>
+              <option value="current">{state.status === "setup" ? "First round" : "Current"}</option>
               <option value="all">All rounds</option>
               {Array.from({ length: state.rounds }, (_, i) => (
                 <option key={i} value={i + 1}>
@@ -61,21 +64,22 @@ export default function DraftViews({
           {state.picks.filter((p) => p.player_id).length} selections recorded ·
           {round === "all" ? "All rounds" : `Round ${shown}`}
         </p>
-        {!!state.picks.length && !visiblePicks.length && (
+        {isPreview && <p className="mt-2 text-sm text-blue-800">Draft order preview · The draft has not started. No timer is running.</p>}
+        {!!boardPicks.length && !visiblePicks.length && (
           <p className="py-4 text-sm text-slate-500">
             No selections match these filters.
           </p>
         )}
-        {!state.picks.length ? (
+        {!boardPicks.length ? (
           <p className="py-6 text-slate-500">
-            Pick slots appear when the commissioner starts the draft.
+            {state.status === "setup" ? "Waiting for the commissioner to save a complete draft order." : "No pick slots available."}
           </p>
         ) : (
           <ol className="mt-4 divide-y divide-blue-100">
             {visiblePicks.map((p) => (
               <li
                 key={p.pick_id}
-                className={`rounded-lg p-3 ${p.pick_number === state.current_pick_number ? "bg-blue-50 ring-1 ring-blue-300" : ""}`}
+                className={`rounded-lg p-3 ${!isPreview && p.pick_number === state.current_pick_number ? "bg-blue-50 ring-1 ring-blue-300" : ""}`}
               >
                 <div className="flex justify-between gap-2">
                   <strong>
@@ -86,14 +90,14 @@ export default function DraftViews({
                     }
                   </strong>
                   <span className="text-xs text-slate-500">
-                    {p.pick_number === state.current_pick_number
+                    {!isPreview && p.pick_number === state.current_pick_number
                       ? "On the clock"
                       : ""}
                   </span>
                 </div>
                 <p className="mt-1 text-sm">
                   {p.is_prospect && <span className="mr-1 rounded bg-amber-100 px-1">Prospect</span>}
-                  {p.player_name ??
+                  {isPreview ? "Awaiting draft start" : p.player_name ??
                     (p.skipped_at
                       ? "Skipped · awaiting commissioner assignment"
                       : "Not selected")}
