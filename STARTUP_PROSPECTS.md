@@ -1,6 +1,8 @@
 # Startup 2027 prospect pool
 
-The supplied workbook contains **92 players: 35 NFL, 30 NBA, 27 soccer**. Names, accents and positions are preserved exactly; spreadsheet order is not treated as a ranking. `data/startup-prospects-2027.json` records the workbook hash and stable catalogue keys. No external roster claims or invented Fantrax IDs are used.
+The approved list now contains **89 players: 34 NFL, 29 NBA, 26 soccer**. The original workbook had 92; the commissioner subsequently excluded Jackson Harris, Brandon McCoy Jr. and Alejandro Garnacho. Their original entries remain recorded under `excluded_players` in `data/startup-prospects-2027.json`, alongside the workbook hash and unchanged catalogue keys. Names, accents and positions are preserved exactly; spreadsheet order is not treated as a ranking. No external roster claims or invented Fantrax IDs are used.
+
+Apply `202611060002_remove_three_startup_prospects.sql` to remove these three catalogue entries before attachment. It records the removals, leaves existing Fantrax players/snapshots untouched, and refuses if an excluded entry is already attached to a draft. The original applied migration is unchanged. Re-run attachment preview afterward and use its new approval hash.
 
 The **Prospects** tab follows PGA. These players appear only there, not under All or the regular sport tabs. Soccer is internally associated with the soccer sport for identity/cap integration, but displayed as outside EPL. Prospects do not fill proposed starting lineups. Search, position filters and alphabetical cursor pagination work within the tab.
 

@@ -2,7 +2,8 @@
 import {readFile,writeFile} from 'node:fs/promises';
 const catalogue=JSON.parse(await readFile(new URL('../../data/startup-prospects-2027.json',import.meta.url),'utf8'));
 const quote=x=>"'"+x.replaceAll("'","''")+"'";
-const seed=catalogue.players.map(p=>`(${[p.catalog_id,p.name,p.sport,p.position,p.source_league,catalogue.sha256].map(quote).join(',')})`).join(',\n');
+// Reconstruct original applied migration; later exclusions have their own migration.
+const seed=[...catalogue.players,...(catalogue.excluded_players??[])].sort((a,b)=>a.catalog_id.localeCompare(b.catalog_id)).map(p=>`(${[p.catalog_id,p.name,p.sport,p.position,p.source_league,catalogue.sha256].map(quote).join(',')})`).join(',\n');
 const base=await readFile(new URL('../migrations/202609290002_available_position_filter.sql',import.meta.url),'utf8');
 let api=base.slice(base.indexOf('create or replace function'),base.indexOf("notify pgrst"));
 api=api.replace("'EPL','PGA'))","'EPL','PGA','Prospects'))");

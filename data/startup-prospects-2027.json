@@ -143,13 +143,6 @@
       "source_league": "NFL"
     },
     {
-      "catalog_id": "startup-2027-021",
-      "name": "Jackson Harris",
-      "position": "WR",
-      "sport": "NFL",
-      "source_league": "NFL"
-    },
-    {
       "catalog_id": "startup-2027-022",
       "name": "Bryant Wesco Jr.",
       "position": "WR",
@@ -286,13 +279,6 @@
       "catalog_id": "startup-2027-041",
       "name": "Anthony Thompson",
       "position": "SF",
-      "sport": "NBA",
-      "source_league": "NBA"
-    },
-    {
-      "catalog_id": "startup-2027-042",
-      "name": "Brandon McCoy Jr.",
-      "position": "SG/PG",
       "sport": "NBA",
       "source_league": "NBA"
     },
@@ -556,13 +542,6 @@
       "source_league": "Soccer (Not in Premier League)"
     },
     {
-      "catalog_id": "startup-2027-080",
-      "name": "Alejandro Garnacho",
-      "position": "MID",
-      "sport": "EPL",
-      "source_league": "Soccer (Not in Premier League)"
-    },
-    {
       "catalog_id": "startup-2027-081",
       "name": "Victor Osimhen",
       "position": "FWD",
@@ -643,6 +622,29 @@
       "catalog_id": "startup-2027-092",
       "name": "Jonathan David",
       "position": "FWD",
+      "sport": "EPL",
+      "source_league": "Soccer (Not in Premier League)"
+    }
+  ],
+  "excluded_players": [
+    {
+      "catalog_id": "startup-2027-021",
+      "name": "Jackson Harris",
+      "position": "WR",
+      "sport": "NFL",
+      "source_league": "NFL"
+    },
+    {
+      "catalog_id": "startup-2027-042",
+      "name": "Brandon McCoy Jr.",
+      "position": "SG/PG",
+      "sport": "NBA",
+      "source_league": "NBA"
+    },
+    {
+      "catalog_id": "startup-2027-080",
+      "name": "Alejandro Garnacho",
+      "position": "MID",
       "sport": "EPL",
       "source_league": "Soccer (Not in Premier League)"
     }
