@@ -9,7 +9,7 @@ import {decryptBundle,keyFrom} from './backup-core.mjs';
 import {restoreDisposable} from './backup-restore.mjs';
 import {readyPostgres} from './backup-postgres-ready.mjs';
 import {backupFailureCode} from './backup-errors.mjs';
-import {RESTORE_IMAGE,bootstrap,checkCompatibility} from './backup-real-guards.mjs';
+import {RESTORE_IMAGE,bootstrap,checkCompatibility,VERIFIED_LEGACY_LOCALE,localeQuery,restoreDatabaseSql,verifyLocale} from './backup-real-guards.mjs';
 let dir,container,admin,stage='authenticating local backup',created=false;
 const oldPath=process.env.PATH;
 const docker=args=>command('docker',args);
@@ -34,7 +34,10 @@ try{
  stage='checking PostgreSQL and exact extension versions';console.log('Checking '+stage);
  checkCompatibility(bundle,(await admin.query('show server_version')).rows[0].server_version,(await admin.query('select name,version from pg_available_extension_versions')).rows);
  assert.equal((await admin.query('show cron.launch_active_jobs')).rows[0]['cron.launch_active_jobs'],'off');
- await admin.query('create database pentagon_restore_real template template0');
+ stage='creating database with verified source locale';console.log('Checking '+stage);
+ const sourceLocale=bundle.database_locale??VERIFIED_LEGACY_LOCALE;
+ await admin.query(restoreDatabaseSql(sourceLocale));
+ verifyLocale(sourceLocale,(await admin.query(localeQuery,['pentagon_restore_real'])).rows[0]);
  await admin.end();admin=null;
  // Stream the dump to the container utility; no plaintext copy remains in Docker.
  const wrapper=`#!/usr/bin/env node

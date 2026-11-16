@@ -19,6 +19,8 @@ unset BACKUP_ENCRYPTION_KEY
 
 Use the existing key, not a new one. Docker must be running; no hosted database URI, R2 credentials, migration, or production setting is needed. The initial image download may take several minutes.
 
+The restored database uses the source locale recorded in new backups. Older backups use the commissioner-verified source settings: ICU `en-US`, LC_COLLATE/LC_CTYPE `en_US.UTF-8`, collation version `153.121`. The runner checks these settings before restoring. It does not override a version mismatch or ignore generated-column differences. This is needed because ranking name keys are regenerated during restore and depend on Unicode case conversion. Existing encrypted backups remain unchanged.
+
 Success reports `restored: true`, table count, total row count and `checkpoint_count: 3` for this rehearsal export. Every exported table's row count and content hash must match. The runner removes its disposable container, anonymous volumes and decrypted temporary dump after success or failure. The original encrypted file remains. If Docker cleanup fails, run the specific removal command it prints; do not publish this database through Codespaces ports. Retry creates a new empty container.
 
 A missing extension/version is a failed prerequisite, not permission to skip it. Share only the stage and fixed error code. No raw SQL errors or restored account data are printed. The runner is not a full Supabase platform clone: Auth login, role ownership/equivalence, platform secrets, Storage files and hosted recovery still require their own recovery validation. It restores grants but does not certify every role's effective permission behavior.
