@@ -49,7 +49,10 @@ if(r.status!==0){process.stderr.write('BACKUP_CODE:RESTORE_SQL_FAILED');process.
  const result=await restoreDisposable(bundle,{...config,database:'pentagon_restore_real'},dir);
  console.log(JSON.stringify(result,null,2));
  console.log('PASS real encrypted backup restored and table contents verified. No hosted database, website, email service or R2 contacted.');
-}catch(error){console.error(`FAIL real restore while ${stage} (${backupFailureCode(error)}). Raw errors withheld to protect account data. No live database targeted.`);process.exitCode=1;}
+}catch(error){
+ if(error.code==='RESTORE_CONTENT_MISMATCH')console.error(JSON.stringify({table_differences:error.safeDifferences},null,2));
+ console.error(`FAIL real restore while ${stage} (${backupFailureCode(error)}). Raw errors withheld to protect account data. No live database targeted.`);process.exitCode=1;
+}
 finally{
  process.env.PATH=oldPath;
  if(admin)await admin.end().catch(()=>{});

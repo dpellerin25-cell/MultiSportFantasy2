@@ -27,6 +27,22 @@ export async function ensureExtensionSchema(db,schema){
  assert.ok(!schema.startsWith('pg_')&&schema!=='information_schema','Required system schema missing');
  await db.query(`create schema ${identifier(schema)}`);
 }
+export function verifyRestoreInventory(expected,actual){
+ // Source and disposable databases can sort table names differently by locale.
+ // Match identity, then require exactly the same count and content checksum.
+ const key=t=>JSON.stringify([t.schemaname,t.tablename]);
+ const wanted=new Map(expected.map(t=>[key(t),t])),found=new Map(actual.map(t=>[key(t),t]));
+ assert.equal(wanted.size,expected.length,'Duplicate manifest tables');
+ assert.equal(found.size,actual.length,'Duplicate restored tables');
+ const differences=[];
+ for(const id of new Set([...wanted.keys(),...found.keys()])){
+  const e=wanted.get(id),a=found.get(id),t=e??a;
+  if(!e||!a||String(e.count)!==String(a.count)||e.checksum!==a.checksum){
+   differences.push({schema:t.schemaname,table:t.tablename,issue:!e?'unexpected_table':!a?'missing_table':String(e.count)!==String(a.count)?'row_count_mismatch':'content_mismatch',expected_rows:e?.count??null,actual_rows:a?.count??null});
+  }
+ }
+ if(differences.length){const error=Error('Restored inventory differs');error.code='RESTORE_CONTENT_MISMATCH';error.safeDifferences=differences;throw error;}
+}
 export async function restoreDisposable(bundle,config,dir){
  const db=new pg.Client(config);await db.connect();
  try{
@@ -47,7 +63,7 @@ export async function restoreDisposable(bundle,config,dir){
   const env=await pgEnvironment(config,dir);
   await command('pg_restore',['--no-owner','--exit-on-error','--single-transaction','--dbname='+config.database,dump],env);
   await db.query("set timezone='UTC'");
-  assert.deepEqual(await inventory(db),bundle.inventory,'Restored table contents differ');
+  verifyRestoreInventory(bundle.inventory,await inventory(db));
   return {restored:true,verified_tables:bundle.inventory.length,rows:bundle.inventory.reduce((n,t)=>n+Number(t.count),0),checkpoint_count:bundle.checkpoints.length,
    scope:'Disposable database row counts and content hashes verified. Hosted Auth login, platform settings and role ownership require separate validation.'};
  }finally{await db.end();}
