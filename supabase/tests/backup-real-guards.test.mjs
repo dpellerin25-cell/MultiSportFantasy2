@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
+import {PGlite} from '@electric-sql/pglite';
+import {ensureExtensionSchema} from './backup-restore.mjs';
 import {checkCompatibility,bootstrap,RESTORE_IMAGE} from './backup-real-guards.mjs';
 const bundle={server_version:'17.6',extensions:[{extname:'pg_cron',extversion:'1.6.4'},{extname:'supabase_vault',extversion:'0.3.1'}]};
 const available=[{name:'pg_cron',version:'1.6.4'},{name:'supabase_vault',version:'0.3.1'}];
@@ -14,4 +16,14 @@ const runner=await readFile(new URL('./restore-real-backup.mjs',import.meta.url)
 assert.match(runner,/'--network','none'/);
 assert.match(runner,/docker\(\['rm','-fv',container\]\)/);
 assert.ok(!runner.includes('DRAFT_TEST_DATABASE_URL')&&!runner.includes('TRADE_ROSTER_DATABASE_URL'));
-console.log('PASS real-restore version/extension refusal and isolation configuration. Offline only; no Docker or actual backup restored.');
+const db=await PGlite.create();
+try{
+ await db.query('set allow_system_table_mods=off');
+ await assert.rejects(()=>db.query('create schema if not exists pg_catalog'),{code:'42939'});
+ await ensureExtensionSchema(db,'pg_catalog');
+ await ensureExtensionSchema(db,'extensions');
+ await ensureExtensionSchema(db,'extensions');
+ await assert.rejects(()=>ensureExtensionSchema(db,'pg_nonexistent_reserved'));
+ assert.equal((await db.query("select count(*)::int n from pg_namespace where nspname='extensions'")).rows[0].n,1);
+}finally{await db.close();}
+console.log('PASS reserved pg_catalog 42939 reproduction and schema reuse; real-restore version/extension refusal and isolation configuration. Offline only; no Docker or actual backup restored.');
