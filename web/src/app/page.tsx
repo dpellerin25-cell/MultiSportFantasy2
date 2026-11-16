@@ -1,4 +1,3 @@
-import {missingOwners} from "@/lib/current-membership";
 import MainNavigation from "@/components/MainNavigation";
 import Link from "next/link";
 
@@ -181,7 +180,7 @@ export default async function Home({
           </p>
           <p className="mt-2 text-sm text-slate-600">
             Standings last updated: {lastUpdated ? <time dateTime={lastUpdated.toISOString()}>{lastUpdated.toLocaleString("en-US", {timeZone: "America/New_York", dateStyle: "medium", timeStyle: "short"})} Eastern</time> : "Not yet available"}.
-            {selectedYear === CURRENT_SEASON && " Scheduled updates: Tuesdays at 1:16 a.m. Eastern. Rosters update daily."}
+            {selectedYear === CURRENT_SEASON && " Scheduled updates: Tuesday mornings. Rosters update daily."}
           </p>
 
           {currentSeason && (
@@ -231,7 +230,6 @@ export default async function Home({
         </div>
 
 
-        {selectedYear===CURRENT_SEASON&&currentSeason?.sports.some(s=>s.status!=="final"&&missingOwners(getSeasonLeagueData(selectedYear,s.sport)).length>0)&&<p className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">Owners absent from a sport’s Fantrax standings are shown as a dash and earn no points for that sport. Dominance uses only the teams reported by Fantrax.</p>}
         <div className="overflow-x-auto rounded-xl border border-blue-100 bg-white shadow-sm">
           <table className="w-full min-w-[850px] border-collapse">
             <thead>
