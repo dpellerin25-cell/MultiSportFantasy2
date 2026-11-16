@@ -23,13 +23,14 @@ export async function exportDatabase(db,config,dir){
   const checkpoints=(await db.query('select c.* from backup.draft_checkpoints c where not exists(select 1 from backup.receipts r where r.checkpoint_id=c.id) order by c.created_at,c.id')).rows;
   const databaseBytes=(await db.query('select pg_database_size(current_database())::text bytes')).rows[0].bytes;
   const serverVersion=(await db.query('show server_version')).rows[0].server_version;
+  const databaseLocale=(await db.query('select datlocprovider as provider,datcollate as collation,datctype as ctype,datlocale as locale,datcollversion as version from pg_database where datname=current_database()')).rows[0];
   const dump=join(dir,'database.dump'),env=await pgEnvironment(config,dir);
   // One exported MVCC snapshot is shared by hashes, checkpoints and pg_dump.
   await command('pg_dump',['--format=custom','--compress=6','--no-owner','--snapshot='+snapshot,'--file='+dump,...SCHEMAS.map(s=>'--schema='+s)],env);
   assert.ok((await stat(dump)).size<512*1024*1024,'Dump exceeds 512 MiB safety budget; review exporter memory limits');
   const bytes=await readFile(dump);
   const bundle={version:1,project:PROJECT,created_at:new Date().toISOString(),database_bytes:databaseBytes,server_version:serverVersion,
-   schemas:SCHEMAS,inventory:counts,roles,memberships,extensions,drafts,checkpoints,dump_sha256:sha(bytes),dump:bytes.toString('base64'),
+   database_locale:databaseLocale,schemas:SCHEMAS,inventory:counts,roles,memberships,extensions,drafts,checkpoints,dump_sha256:sha(bytes),dump:bytes.toString('base64'),
    exclusions:['Storage object bytes','Platform/Auth/SMTP settings and API secrets','Role passwords','Database schemas outside the explicit allowlist','Cron configuration outside these schemas']};
   await db.query('commit');return bundle;
  }catch(e){await db.query('rollback');throw e;}
