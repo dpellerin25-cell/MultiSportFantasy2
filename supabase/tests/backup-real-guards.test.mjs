@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {PGlite} from '@electric-sql/pglite';
-import {ensureExtensionSchema} from './backup-restore.mjs';
+import {ensureExtensionSchema,verifyRestoreInventory} from './backup-restore.mjs';
 import {checkCompatibility,bootstrap,RESTORE_IMAGE} from './backup-real-guards.mjs';
 const bundle={server_version:'17.6',extensions:[{extname:'pg_cron',extversion:'1.6.4'},{extname:'supabase_vault',extversion:'0.3.1'}]};
 const available=[{name:'pg_cron',version:'1.6.4'},{name:'supabase_vault',version:'0.3.1'}];
@@ -17,6 +17,13 @@ assert.match(runner,/'--network','none'/);
 assert.match(runner,/docker\(\['rm','-fv',container\]\)/);
 assert.ok(!runner.includes('DRAFT_TEST_DATABASE_URL')&&!runner.includes('TRADE_ROSTER_DATABASE_URL'));
 const db=await PGlite.create();
+const tables=[{schemaname:'auth',tablename:'oauth_clients',count:'2',checksum:'one'},{schemaname:'auth',tablename:'oauth_client_states',count:'1',checksum:'two'}];
+verifyRestoreInventory(tables,[...tables].reverse());
+for(const actual of [tables.slice(1),[...tables,{schemaname:'auth',tablename:'extra',count:'0',checksum:'x'}],[{...tables[0],count:'3'},tables[1]],[{...tables[0],checksum:'changed'},tables[1]]]){
+ assert.throws(()=>verifyRestoreInventory(tables,actual),e=>e.code==='RESTORE_CONTENT_MISMATCH'&&!JSON.stringify(e.safeDifferences).includes('checksum'));
+}
+assert.throws(()=>verifyRestoreInventory(tables,[tables[0],tables[0]]));
+console.log('PASS table ordering independence; missing/extra tables, changed counts and changed content still fail with metadata-only diagnostics.');
 try{
  await db.query('set allow_system_table_mods=off');
  await assert.rejects(()=>db.query('create schema if not exists pg_catalog'),{code:'42939'});
