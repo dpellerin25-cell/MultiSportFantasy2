@@ -20,6 +20,13 @@ export async function prepareEmptyRestore(db){
  // inventory does not see. Never use CASCADE or a broad pg_restore --clean.
  await db.query('drop schema if exists public restrict');
 }
+export async function ensureExtensionSchema(db,schema){
+ // PostgreSQL rejects CREATE SCHEMA pg_catalog even with IF NOT EXISTS.
+ // Reuse existing system namespaces; never try to recreate them.
+ if((await db.query('select 1 from pg_namespace where nspname=$1',[schema])).rows.length)return;
+ assert.ok(!schema.startsWith('pg_')&&schema!=='information_schema','Required system schema missing');
+ await db.query(`create schema ${identifier(schema)}`);
+}
 export async function restoreDisposable(bundle,config,dir){
  const db=new pg.Client(config);await db.connect();
  try{
@@ -32,7 +39,7 @@ export async function restoreDisposable(bundle,config,dir){
    await db.query(`grant ${identifier(grant.role)} to ${identifier(grant.member)}${grant.admin_option?' with admin option':''}`);
   }
   for(const ext of bundle.extensions.filter(e=>e.extname!=='plpgsql')){
-   await db.query(`create schema if not exists ${identifier(ext.schema)}`);
+   await ensureExtensionSchema(db,ext.schema);
    const version=ext.extversion ? ` version '${ext.extversion.replaceAll("'","''")}'` : '';
    await db.query(`create extension if not exists ${identifier(ext.extname)} with schema ${identifier(ext.schema)}${version}`);
   }
