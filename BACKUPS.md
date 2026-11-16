@@ -76,6 +76,8 @@ PostgreSQL client 17 is installed by the workflow. If the hosted database is new
 
 ## Restore procedure
 
+For the real R2 checkpoint backup, use the isolated Codespaces runner documented in [REAL_BACKUP_RESTORE.md](REAL_BACKUP_RESTORE.md). It checks exact extension availability and removes the disposable restored data afterward. The synthetic test below remains a separate check.
+
 Never restore onto the current league as a test. First stop delivery, scoring, roster/renewal jobs and draft timers in the recovery environment. Never copy production API/email credentials into the rehearsal environment.
 
 For the synthetic end-to-end test use `test:backup-docker` above. For an actual encrypted export, prepare a **fresh isolated PostgreSQL/Supabase-compatible instance**, with the required extension versions listed in the backup manifest and matching PostgreSQL major version. Install version-matched `pg_restore` locally. Then load the encryption key and a loopback disposable URI privately:
