@@ -1,7 +1,7 @@
 // Fixed classifications only: never echo stderr, SQL, rows or connection strings.
 export function backupFailureCode(error){
  const text=String(error?.stderr??'');
- for(const code of ['SCHEMA_EXISTS','ROLE_EXISTS','SNAPSHOT_INVALID','AUTH_FAILED','CONNECTION_FAILED','CLIENT_VERSION','PERMISSION_DENIED','FILE_ACCESS','COPY_FAILED']){
+ for(const code of ['SCHEMA_EXISTS','ROLE_EXISTS','SNAPSHOT_INVALID','AUTH_FAILED','CONNECTION_FAILED','CLIENT_VERSION','PERMISSION_DENIED','FILE_ACCESS','COPY_FAILED','RESTORE_SQL_FAILED']){
   if(text.includes(`BACKUP_CODE:${code}`))return code;
  }
  if(/schema .* already exists/i.test(text))return 'SCHEMA_EXISTS';

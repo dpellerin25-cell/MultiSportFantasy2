@@ -33,7 +33,8 @@ export async function restoreDisposable(bundle,config,dir){
   }
   for(const ext of bundle.extensions.filter(e=>e.extname!=='plpgsql')){
    await db.query(`create schema if not exists ${identifier(ext.schema)}`);
-   await db.query(`create extension if not exists ${identifier(ext.extname)} with schema ${identifier(ext.schema)}`);
+   const version=ext.extversion ? ` version '${ext.extversion.replaceAll("'","''")}'` : '';
+   await db.query(`create extension if not exists ${identifier(ext.extname)} with schema ${identifier(ext.schema)}${version}`);
   }
   const dump=join(dir,'restore.dump');await writeFile(dump,Buffer.from(bundle.dump,'base64'),{mode:0o600});
   const env=await pgEnvironment(config,dir);
