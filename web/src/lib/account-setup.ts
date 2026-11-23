@@ -6,7 +6,7 @@ export function authReturnUrl(site:string|undefined){
  return u.origin+'/auth/complete';
 }
 export function validateNewPassword(password:string,confirmation:string){
- if(password.length<12)throw Error('Use at least 12 characters for your password.');
+ if(password.length<6)throw Error('Use at least 6 characters for your password.');
  if(password!==confirmation)throw Error('The passwords do not match.');
 }
 export type EmailLink={type:'invite'|'recovery';token_hash:string}|{type:'invite'|'recovery';access_token:string;refresh_token:string};
