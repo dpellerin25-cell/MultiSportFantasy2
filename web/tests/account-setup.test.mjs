@@ -14,5 +14,7 @@ test('only invite/recovery tokens accepted, including existing implicit email li
 test('password confirmation and non-enumerating reset wording',()=>{
  assert.throws(()=>validateNewPassword('short','short'));assert.throws(()=>validateNewPassword('LongPasswordExample','different'));
  assert.doesNotThrow(()=>validateNewPassword('LongPasswordExample','LongPasswordExample'));
+ assert.doesNotThrow(()=>validateNewPassword('abcdef','abcdef'));
+ assert.throws(()=>validateNewPassword('abcdef','abcdeg'),/do not match/);
  assert.match(resetNotice,/If an account exists/);assert.match(resetNotice,/spam/);
 });

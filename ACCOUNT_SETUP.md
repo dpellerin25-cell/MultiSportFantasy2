@@ -4,7 +4,7 @@
 
 The sign-in dialog now includes **Create an Account** and **I'm an idiot and forgot my password**. New accounts use owner-specific email invitations, not the shared league password. There is no self-service owner dropdown that can claim another owner's identity.
 
-Doug opens **League Settings → Owner Invitations**, selects an unlinked active owner, enters their email and confirms it. The server checks the commissioner's real session before using Supabase's administrative invitation API. The owner verifies the invited email, chooses a password of at least 12 characters and accepts their owner link. The database checks the verified email directly from Auth, not editable user metadata. Invitations cannot grant commissioner privileges or replace an existing owner link.
+Doug opens **League Settings → Owner Invitations**, selects an unlinked active owner, enters their email and confirms it. The server checks the commissioner's real session before using Supabase's administrative invitation API. The owner verifies the invited email, chooses a password of at least 6 characters and accepts their owner link. The database checks the verified email directly from Auth, not editable user metadata. Invitations cannot grant commissioner privileges or replace an existing owner link.
 
 Pending invitations can be revoked. Owner approvals expire after seven days; the actual email token has Supabase's configured, usually shorter, expiry. Accepted links persist independently of invitation expiry. Existing accounts are not overwritten: Doug can approve their email, then they sign in and visit `/auth/create` to accept. If an existing account is unverified, finish its Auth verification before linking.
 
@@ -56,7 +56,7 @@ The service-role key is a private server credential. Never prefix it with `NEXT_
 1. Set the Auth **Site URL** to the same trusted origin as `NEXT_PUBLIC_AUTH_SITE_URL`.
 2. Add the exact `https://YOUR-EXACT-WEBSITE-HOST/auth/complete` URL to allowed redirects. Avoid broad wildcards.
 3. Keep email confirmation enabled. Disable unrestricted new-user signups for this invitation-only flow; admin invitations are created by Doug through the server. Keep password/email sign-in enabled for existing owners.
-4. Set a minimum password length of 12 and retain Auth's rate limits. Do not lower rate limits to bypass errors; the UI also limits commissioner invitation creation to five per minute.
+4. Set a minimum password length of 6 and retain Auth's rate limits. Do not lower rate limits to bypass errors; the UI also limits commissioner invitation creation to five per minute.
 5. Configure **custom SMTP**. The trade-notification Resend API integration does not configure Auth email delivery. Supabase's default sender is restricted and unsuitable for inviting all league members.
 
 For your verified Resend domain, use:
