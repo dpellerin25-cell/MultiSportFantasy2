@@ -9,11 +9,16 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
 async function until(fn){for(let i=0;i<80;i++){if(await fn())return;await wait(500);}throw new Error('Timed out waiting for hosted signal/timer');}
 async function rpc(client,name,args){const {data,error}=await client.rpc(name,args);if(error)throw error;return data;}
 try{
+  const required=['DRAFT_TEST_CONFIRM','DRAFT_TEST_DATABASE_URL','DRAFT_TEST_PUBLISHABLE_KEY',
+    'DRAFT_TEST_DOUG_EMAIL','DRAFT_TEST_DOUG_PASSWORD','DRAFT_TEST_OWNER_EMAIL','DRAFT_TEST_OWNER_PASSWORD'];
+  const missing=required.filter(name=>!process.env[name]?.trim());
+  if(missing.length){console.error('Missing settings: '+missing.join(', '));throw new Error('Missing settings');}
   if(process.env.DRAFT_TEST_CONFIRM!==PROJECT)throw new Error('TEST confirmation required');
   db=new pg.Client(connectionConfig(process.env.DRAFT_TEST_DATABASE_URL));stage='database connection';await db.connect();
   stage='verifying active timer job';assert.ok((await db.query("select 1 from cron.job where jobname='multisport-draft-expiry' and active")).rowCount);
   const ids=[];
   for(const label of ['DOUG','OWNER']){
+    stage='initializing Auth client for '+label;
     const client=createClient(`https://${PROJECT}.supabase.co`,process.env.DRAFT_TEST_PUBLISHABLE_KEY,{auth:{persistSession:false,autoRefreshToken:false}});clients.push(client);
     stage='Auth '+label;const {data,error}=await client.auth.signInWithPassword({email:process.env[`DRAFT_TEST_${label}_EMAIL`],password:process.env[`DRAFT_TEST_${label}_PASSWORD`]});if(error)throw error;ids.push(data.user.id);
     await client.realtime.setAuth(data.session.access_token);
@@ -41,11 +46,13 @@ try{
   }
   const state=()=>rpc(clients[0],'draft_state',{target:d});
   async function command(action,args={},client=clients[0]){const s=await state();return rpc(client,'draft_command',{target:d,request_id:randomUUID(),expected_revision:s.revision,action,args});}
-  await command('set_order',{owners:owners.map(o=>o.id)});await command('set_timer',{seconds:30});
+  await command('set_order',{owners:owners.map(o=>o.id)});await command('set_timer',{seconds:60});
   stage='two authenticated subscriptions';await subscribe(0);await subscribe(1);
   const started=await command('start');await until(()=>seen.every(r=>r>=started.revision));
-  stage='pick visible to both owners';let s=await state();const pick=s.picks[0].pick_id;
-  const picked=await command('pick',{pick_id:pick,player_id:players[0]});await until(()=>seen.every(r=>r>=picked.revision));
+  stage='reading state before first pick';let s=await state();const pick=s.picks[0].pick_id;
+  stage='submitting Doug first pick';
+  const picked=await command('pick',{pick_id:pick,player_id:players[0]});stage='waiting for first pick on both subscribers';await until(()=>seen.every(r=>r>=picked.revision));
+  stage='checking selected player excluded from both pools';
   for(const client of clients){const pool=await rpc(client,'draft_available_players',{target:d});assert.ok(!pool.players.some(p=>p.player_id===players[0]));}
   console.log('PASS both authenticated subscribers receive revisions; selected player excluded for both');
   stage='pause survives scheduler ticks';await command('pause');s=await state();await wait(6500);assert.equal((await state()).revision,s.revision);
@@ -61,7 +68,10 @@ try{
   stage='reconnect and makeup assignment';await subscribe(0);s=await state();const current=s.current_pick_number;
   const makeup=await command('assign',{pick_id:s.picks[1].pick_id,player_id:players[1]});await until(()=>seen[0]>=makeup.revision);assert.equal((await state()).current_pick_number,current);
   console.log('PASS reconnect state recovery and skipped-pick assignment preserves current turn');
-}catch(e){const code=String(e.code??e.name);console.error(`FAIL ${stage} (${/^[A-Za-z0-9_]+$/.test(code)?code:'Error'}). Fixture is retained for inspection.`);process.exitCode=1;}
+}catch(e){
+  const safeMessages=new Set(['Draft changed; refresh before retrying','Not the current running pick','Only the owner on the clock may pick','Pick deadline expired','Missing deadline','Pick is already filled','Player is not eligible','Draft is not accepting selections','Insufficient unfilled slots for sport minimums','Insufficient available players for sport minimums','Sport maximum exceeded']);
+  if(safeMessages.has(e.message))console.error('Database rule: '+e.message);
+  const code=String(e.code??e.name);console.error(`FAIL ${stage} (${/^[A-Za-z0-9_]+$/.test(code)?code:'Error'}). ${d?'Fixture cleanup will be attempted below.':'No rehearsal fixture was created.'}`);process.exitCode=1;}
 finally{
   for(const [client,ch] of channels)await client.removeChannel(ch);
   for(const client of clients)await client.removeAllChannels();
