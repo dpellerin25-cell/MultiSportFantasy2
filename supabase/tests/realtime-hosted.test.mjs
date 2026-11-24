@@ -19,7 +19,9 @@ try{
     await client.realtime.setAuth(data.session.access_token);
   }
   stage='checking fixture identities';
-  const owners=(await db.query("select o.id,o.slug,a.auth_user_id from draft.owners o join draft.owner_accounts a on a.owner_id=o.id where o.slug in ('doug','chris') order by o.slug desc")).rows;
+  // OWNER credentials must belong to Brendan's current linked account.
+  const owners=(await db.query("select o.id,o.slug,a.auth_user_id from draft.owners o join draft.owner_accounts a on a.owner_id=o.id where o.active and o.slug in ('doug','brendan') order by o.slug desc")).rows;
+  assert.deepEqual(owners.map(o=>o.slug),['doug','brendan']);
   assert.equal(owners[0]?.auth_user_id,ids[0]);assert.equal(owners[1]?.auth_user_id,ids[1]);
   stage='creating disposable live test fixture';await db.query('begin');
   const imp=(await db.query("insert into draft.player_pool_imports(checksum,schema_version) values($1,1) returning id",[randomUUID().replaceAll('-','').repeat(2)])).rows[0].id;

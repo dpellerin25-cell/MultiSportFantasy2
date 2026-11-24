@@ -100,8 +100,13 @@ order by start_time desc limit 10;
 
 ## Hosted two-client test
 
-Requires the previously linked Doug/Chris test accounts and exported publishable
+Requires the currently linked Doug/Brendan accounts and exported publishable
 key/account email/password settings, in addition to the database URI/confirmation.
+Use Doug's credentials in `DRAFT_TEST_DOUG_EMAIL`/`DRAFT_TEST_DOUG_PASSWORD`
+and Brendan's in `DRAFT_TEST_OWNER_EMAIL`/`DRAFT_TEST_OWNER_PASSWORD`.
+The runner checks both active owner links before creating its disposable draft.
+This change applies only to this Realtime rehearsal; other hosted suites may
+still require Chris.
 
 ```bash
 NODE_EXTRA_CA_CERTS="$HOME/.config/multisport-draft/supabase-ca.crt" node realtime-hosted.test.mjs
