@@ -14,13 +14,18 @@ owner invitations, scoring controls, hosted scoring scenarios run offline, and
 prospects including owners dropping only their own prospects. These verify
 commissioner write success and owner denials on synthetic data, not the live site.
 
-Needs attention: the existing `trades.test.mjs` stops at its pick-ledger assertion:
-270 rows exist versus an expected 180. Its later permissions scenarios therefore
-did not run. This audit does not change draft-pick policy to satisfy that test.
-The existing `trade-http-offline.test.mjs` also stops during fixture preparation
-because its expected picks are unavailable; it does not establish HTTP scenario
-coverage. Both trade fixture failures need review before declaring the full
-trade permission regression suite green.
+Resolved: trade fixtures now select `trading.first_rookie_pick_year()` instead
+of assuming the next calendar year is eligible. Pick-count expectations use the
+fixture owner count, with preserved 2027 history checked separately. A historical
+2027 transfer retains its ownership and audit record but is rejected in new offers.
+All 11 `trades.test.mjs` groups and `trade-http-offline.test.mjs` now pass,
+including privacy, owner permissions, commissioner reversal, retries and cleanup.
+`rookie-years.test.mjs` also passes. The HTTP scenario uses a mock transport with
+real migrated SQL functions; it does not certify live PostgREST or browser access.
+
+The user-provided hosted read-only audit output verified all 11 linked owners,
+Doug's commissioner reads, other owners' commissioner denials, private table
+protection and outsider/anonymous restrictions. No changes were committed.
 
 ## Run against existing hosted links
 

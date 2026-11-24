@@ -59,7 +59,7 @@ export async function prepare(db,users,run){
     assert.equal((await db.query('select count(*)::int n from trading.picks where owner_id<>original_owner_id')).rows[0].n,0,'Picks must be restored before testing');
     assert.equal((await db.query('select count(*)::int n from trading.players')).rows[0].n,0,'This diagnostic requires no imported player rosters');
     const picks=[];
-    for(const m of members)picks.push((await db.query("select id from trading.picks where owner_id=$1 and year=extract(year from clock_timestamp() at time zone 'UTC')::int+1 order by round limit 1",[m.id])).rows[0]?.id);
+    for(const m of members)picks.push((await db.query("select id from trading.picks where owner_id=$1 and year=trading.first_rookie_pick_year() order by round limit 1",[m.id])).rows[0]?.id);
     assert.ok(picks.every(Boolean));await db.query('commit');
     return {owners:members.map(m=>m.id),picks,message:'HTTP trade test '+run};
   }catch(e){await db.query('rollback');throw e;}
