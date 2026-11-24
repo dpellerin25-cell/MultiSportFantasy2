@@ -29,7 +29,7 @@ try{
   };
   const command=(owner,action,args,id=randomUUID())=>as(owner,()=>scalar('select public.trade_command($1,$2,$3::jsonb)',[id,action,json(args)]));
   const list=owner=>as(owner,()=>scalar('select public.trade_list()'));
-  const year=await scalar("select extract(year from clock_timestamp() at time zone 'UTC')::int+1");
+  const year=await scalar("select trading.first_rookie_pick_year()");
   const pick=(owner,round=1,y=year)=>scalar('select id from trading.picks where original_owner_id=$1 and round=$2 and year=$3',[owners[owner],round,y]);
   const asset=(owner,id,kind='pick')=>({from_owner_id:owners[owner],[kind+'_id']:id});
   const propose=(owner,to,assets,extra={})=>command(owner,'propose',{recipient_id:owners[to],assets,...extra});
@@ -41,12 +41,17 @@ try{
     const transfer={id:'legacy-1',year,round:1,originalOwner:'Doug',from:'Doug',to:'Chris',tradedAt:'2026-09-01T00:00:00Z'};
     await assert.rejects(()=>q('select trading.import_pick_ledger($1)',[json({version:1,trades:[transfer,{...transfer,id:'legacy-2'}]})]),/Contradictory/);
     assert.equal(await scalar('select count(*)::int from trading.picks'),0);
-    const ledger={version:1,trades:[transfer]};
+    const historical={...transfer,id:'legacy-2027',year:2027};
+    const ledger={version:1,trades:[historical,transfer]};
     await q('select trading.import_pick_ledger($1)',[json(ledger)]);
     await q('select trading.import_pick_ledger($1)',[json(ledger)]);
-    assert.equal(await scalar('select count(*)::int from trading.picks'),180);
+    const perYear=Object.keys(owners).length*10;
+    assert.deepEqual(await q('select year,count(*)::int n from trading.picks group by year order by year'),
+      [2027,year,year+1].map(y=>({year:y,n:perYear})));
+    assert.equal(await scalar('select owner_id from trading.picks where id=$1',[await pick('doug',1,2027)]),owners.chris);
+    await assert.rejects(async()=>propose('chris','jack',[asset('chris',await pick('doug',1,2027))]),/next two/);
     assert.equal(await scalar('select owner_id from trading.picks where id=$1',[await pick('doug')]),owners.chris);
-    assert.equal(await scalar('select count(*)::int from trading.pick_history'),1);
+    assert.equal(await scalar('select count(*)::int from trading.pick_history'),2);
     await assert.rejects(()=>q('select trading.import_pick_ledger($1)',[json({version:1,trades:[]})]),/different legacy/);
   });
 
