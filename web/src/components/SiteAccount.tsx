@@ -72,10 +72,11 @@ export default function SiteAccount() {
   }
 
   return <header aria-label="Your account" className="border-b border-blue-100 bg-blue-50 px-4 py-3 text-slate-900 sm:px-8">
-    <div className="flex flex-wrap items-center justify-end gap-3">
+    <div className="flex flex-wrap items-center gap-3">
+      <a className={`${button} mr-auto`} href="https://discord.gg/aJFKbDKhG" target="_blank" rel="noopener noreferrer">Check the Discord<span className="sr-only"> (opens in a new tab)</span></a>
       {session ? <>
         <span className="text-sm font-semibold" role="status">{owner && owner.userId === userId ? `Signed in as ${owner.name}` : "Signed in · Owner name unavailable"}</span>
-        <a className={button} href="https://discord.gg/aJFKbDKhG" target="_blank" rel="noopener noreferrer">Check the Discord<span className="sr-only"> (opens in a new tab)</span></a>
+        <Link href="/auth/password" className="min-h-11 rounded-lg px-3 py-3 text-sm font-semibold text-blue-800 hover:bg-blue-100">Change password</Link>
         <button className="min-h-11 rounded-lg px-3 text-sm font-semibold text-blue-800 hover:bg-blue-100 disabled:opacity-50" disabled={busy} onClick={() => void signOut()}>Sign out</button>
       </> : <button ref={trigger} className={button} onClick={() => {setError("");setOpen(true);}}>Sign in</button>}
     </div>
